@@ -1,19 +1,32 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { Facebook, Github, Lightbulb, Linkedin, Twitter } from "lucide-react";
+import { motion } from "framer-motion";
+import { Facebook, Github, Linkedin, Phone, Twitter } from "lucide-react";
 
+import { SiteLogo } from "@/components/site/site-logo";
+import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
 
 const QUICK_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Products", href: "#products" },
-  { label: "Career", href: "#career" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Process", href: "/process" },
+  { label: "Reviews", href: "/review" },
+  { label: "Schedule a Call", href: "/schedule" },
+  { label: "Careers", href: "/careers" },
+  { label: "Contact", href: "/contact" },
+];
+
+const SERVICE_LINKS = [
+  "Web Development",
+  "Software Development",
+  "Mobile Development",
+  "UI/UX Design",
+  "AI & Machine Learning",
+  "Cloud Solutions",
 ];
 
 export function SiteFooter() {
@@ -38,105 +51,133 @@ export function SiteFooter() {
   ];
 
   return (
-    <footer className="relative mt-auto overflow-hidden bg-zinc-950 text-zinc-300">
-      {/* Watermark */}
-      <div
+    <footer className="relative mt-auto overflow-hidden bg-(--brand-navy) text-slate-300">
+      <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 flex select-none items-end justify-center"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2 }}
       >
-        <span className="translate-y-1/3 text-[18vw] font-black leading-none text-white/5">
-          ULTRABULB
-        </span>
-      </div>
+        <span className="translate-y-1/3 text-[18vw] font-black leading-none text-white/[0.03]">ULTRABULB</span>
+      </motion.div>
 
-      {/* Subtle top gradient line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-(--brand-cyan)/60 to-transparent" />
 
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <Link href="#home" className="flex items-center gap-2.5">
-              <span className="gradient-amber flex size-9 items-center justify-center rounded-full text-primary-foreground">
-                <Lightbulb className="size-5" />
-              </span>
+      <div className="site-container relative py-16 lg:py-20">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8"
+        >
+          <motion.div variants={fadeUpSpring} className="flex flex-col gap-4">
+            <Link href="/" className="flex items-center gap-3">
+              <SiteLogo alt={brand} className="size-10" showWrapper wrapperClassName="size-11 bg-white" />
               <span className="text-base font-bold tracking-tight text-white">{brand}</span>
             </Link>
-            <p className="max-w-xs text-sm leading-relaxed text-zinc-400">{tagline}</p>
+            <p className="max-w-xs text-sm leading-relaxed text-slate-400">{tagline}</p>
             <div className="flex items-center gap-2">
               {socials.map((s) => (
-                <a
+                <motion.a
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="flex size-9 items-center justify-center rounded-full border border-zinc-700 text-zinc-400 transition-colors hover:border-amber-500 hover:text-amber-400"
+                  whileHover={{ y: -4, scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex size-9 items-center justify-center rounded-full border border-white/15 text-slate-400 transition-colors hover:border-(--brand-cyan) hover:text-(--brand-cyan)"
                 >
                   <s.icon className="size-4" />
-                </a>
+                </motion.a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Quick links */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-200">Company</h3>
+          <motion.div variants={fadeUpSpring} className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Company</h3>
             <ul className="flex flex-col gap-2">
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-amber-400"
+                    className="text-sm text-slate-400 transition-colors hover:text-(--brand-cyan)"
                   >
                     {l.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Contact */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-200">Get in Touch</h3>
-            <ul className="flex flex-col gap-2 text-sm text-zinc-400">
+          <motion.div variants={fadeUpSpring} className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Services</h3>
+            <ul className="flex flex-col gap-2">
+              {SERVICE_LINKS.map((s) => (
+                <li key={s}>
+                  <Link href="/services" className="text-sm text-slate-400 transition-colors hover:text-(--brand-cyan)">
+                    {s}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div variants={fadeUpSpring} className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Get in Touch</h3>
+            <ul className="flex flex-col gap-2 text-sm text-slate-400">
               <li>
-                <a href={`mailto:${email}`} className="transition-colors hover:text-amber-400">{email}</a>
+                <a href={`mailto:${email}`} className="transition-colors hover:text-(--brand-cyan)">
+                  {email}
+                </a>
               </li>
               <li>
-                <a href={`tel:${phone}`} className="transition-colors hover:text-amber-400">{phone}</a>
+                <a href={`tel:${phone}`} className="transition-colors hover:text-(--brand-cyan)">
+                  {phone}
+                </a>
               </li>
               <li className="leading-relaxed">{address}</li>
             </ul>
-          </div>
+          </motion.div>
 
-          {/* CTA */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-200">Start a Project</h3>
-            <p className="text-sm text-zinc-400">
+          <motion.div variants={fadeUpSpring} className="flex flex-col gap-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Start a Project</h3>
+            <p className="text-sm text-slate-400">
               Have an idea? Let&apos;s turn it into a product people love.
             </p>
-            <Link
-              href="/schedule"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-amber-950 transition-colors hover:bg-amber-400"
-            >
-              Schedule a Call
-            </Link>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                href="/schedule"
+                className="inline-flex w-fit items-center gap-2 rounded-full bg-(--brand-cyan) px-5 py-2.5 text-sm font-semibold text-(--brand-navy-dark) transition-colors hover:bg-(--brand-cyan)/90"
+              >
+                <Phone className="size-4" />
+                Schedule a Call
+              </Link>
+            </motion.div>
             <Link
               href="/admin"
-              className="mt-1 w-fit text-xs text-zinc-500 transition-colors hover:text-zinc-300"
+              className="mt-1 w-fit text-xs text-slate-500 transition-colors hover:text-slate-300"
             >
               Admin Login →
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="relative mt-12 flex flex-col items-center justify-between gap-3 border-t border-zinc-800 pt-6 sm:flex-row">
-          <p className="text-xs text-zinc-500">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="relative mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row"
+        >
+          <p className="text-xs text-slate-500">
             © {new Date().getFullYear()} {copyright}
           </p>
-          <p className="text-xs text-zinc-600">Crafted with care by ULTRABULB IT</p>
-        </div>
+          <p className="text-xs text-slate-600">Crafted with care by ULTRABULB IT</p>
+        </motion.div>
       </div>
     </footer>
   );

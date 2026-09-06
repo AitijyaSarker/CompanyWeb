@@ -9,22 +9,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeading } from "@/components/site/section-heading";
+import {
+  SPRING_BOUNCY,
+  fadeUpSpring,
+  staggerContainer,
+} from "@/components/site/motion";
 import { getContent, parseContentJson, useSiteData, type Vacancy } from "@/hooks/use-site-data";
+
+const container = staggerContainer;
+const fadeUp = fadeUpSpring;
 
 interface HireStep {
   title: string;
   desc: string;
 }
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
-};
 
 function HiringBadge({ hiring }: { hiring: boolean }) {
   if (hiring) {
@@ -54,8 +52,8 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   return (
     <motion.article
       variants={fadeUp}
-      whileHover={{ y: -4 }}
-      className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6"
+      whileHover={{ y: -8, transition: SPRING_BOUNCY }}
+      className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-sm transition-shadow hover:shadow-lg sm:p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-2">
@@ -101,7 +99,7 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
           }
           disabled={!vacancy.hiring}
         >
-          <Link href="#contact" className="gap-1.5">
+          <Link href="/contact" className="gap-1.5">
             <Mail className="size-3.5" />
             Apply Now
           </Link>
@@ -111,7 +109,7 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
   );
 }
 
-export function Career() {
+export function Career({ hideHeading = false }: { hideHeading?: boolean }) {
   const { data } = useSiteData();
   const content = data?.content;
   const vacancies = data?.vacancies ?? [];
@@ -141,9 +139,9 @@ export function Career() {
     <section
       id="career"
       aria-labelledby="career-title"
-      className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24"
+      className="section-pad site-container w-full"
     >
-      <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />
+      {!hideHeading && <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />}
 
       {/* How We Hire — stepper */}
       <div className="mt-12">
@@ -159,13 +157,17 @@ export function Career() {
             <motion.li
               key={`${step.title}-${i}`}
               variants={fadeUp}
-              whileHover={{ y: -4 }}
-              className="relative flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-4 shadow-sm"
+              whileHover={{ y: -8, scale: 1.02, transition: SPRING_BOUNCY }}
+              className="relative flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-4 shadow-sm transition-shadow hover:border-(--brand-cyan)/30 hover:shadow-md"
             >
               <div className="flex items-center gap-2">
-                <span className="gradient-amber flex size-8 items-center justify-center rounded-full text-sm font-bold text-primary-foreground">
+                <motion.span
+                  className="gradient-brand flex size-8 items-center justify-center rounded-full text-sm font-bold text-white"
+                  whileHover={{ scale: 1.15, rotate: 360 }}
+                  transition={{ duration: 0.5 }}
+                >
                   {i + 1}
-                </span>
+                </motion.span>
                 <span className="text-sm font-semibold text-foreground">{step.title}</span>
               </div>
               <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
@@ -196,13 +198,15 @@ export function Career() {
             className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"
           >
             {whatWeNeed.map((item, i) => (
-              <li
+              <motion.li
                 key={i}
+                variants={fadeUp}
+                whileHover={{ x: 4, transition: SPRING_BOUNCY }}
                 className="flex items-start gap-2 rounded-xl border border-border/60 bg-card p-3 text-sm text-foreground shadow-sm"
               >
                 <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
                 <span>{item}</span>
-              </li>
+              </motion.li>
             ))}
           </motion.ul>
         </motion.div>

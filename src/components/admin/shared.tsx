@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Loader2, PackageOpen } from "lucide-react";
+import { ImagePlus, Loader2, PackageOpen, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -106,6 +106,57 @@ export interface FieldConfig {
   full?: boolean; // span full width in grid
 }
 
+function ImageField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const [uploading, setUploading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  async function upload(file: File) {
+    setError("");
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        credentials: "same-origin",
+        body,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Upload failed");
+      onChange(result.url);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      {value ? (
+        <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted">
+          <img src={value} alt="Selected upload preview" className="h-36 w-full object-cover" />
+          <Button type="button" variant="secondary" size="sm" className="absolute bottom-2 right-2 gap-1.5" onClick={() => onChange("")}> 
+            <Upload className="size-3.5" /> Replace
+          </Button>
+        </div>
+      ) : (
+        <div className="flex h-36 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/40 text-center">
+          <ImagePlus className="size-7 text-muted-foreground" />
+          <span className="text-xs text-muted-foreground">Choose an image from your computer</span>
+        </div>
+      )}
+      <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-border/70 bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent">
+        {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+        {uploading ? "Uploading..." : value ? "Choose another image" : "Upload image"}
+        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" disabled={uploading} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} />
+      </label>
+      {error ? <span className="text-xs text-destructive">{error}</span> : null}
+      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder="Or paste an image URL" />
+    </div>
+  );
+}
+
 /* ---------------- Generic CRUD dialog (create + edit) ---------------- */
 export function CrudDialog({
   open,
@@ -189,6 +240,16 @@ export function CrudDialog({
                     placeholder={f.placeholder}
                     rows={4}
                   />
+                </div>
+              );
+            }
+            if (f.name === "imageUrl") {
+              return (
+                <div key={f.name} className={`flex flex-col gap-1.5 ${colSpan}`}>
+                  <Label htmlFor={f.name} className="text-sm font-medium">
+                    {f.label} {f.required ? <span className="text-destructive">*</span> : null}
+                  </Label>
+                  <ImageField value={(val as string) ?? ""} onChange={(nextValue) => set(f.name, nextValue)} />
                 </div>
               );
             }

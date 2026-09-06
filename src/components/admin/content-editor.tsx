@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Check, Loader2, Save, Search } from "lucide-react";
+import { Check, Loader2, Plus, Save, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,57 @@ const GROUPS: { name: string; match: (key: string) => boolean }[] = [
 ];
 
 const JSON_KEYS = ["fields", "career_how_we_hire", "career_what_we_need", "schedule_topics"];
+
+const FRIENDLY_NAMES: Record<string, string> = {
+  hero_badge: "Hero badge",
+  hero_title: "Hero headline",
+  hero_subtitle: "Hero description",
+  hero_cta_primary: "Primary button label",
+  hero_cta_secondary: "Secondary button label",
+  nav_brand: "Brand name",
+  nav_tagline: "Brand tagline",
+  stats_label: "Stats introduction",
+};
+
+function friendlyName(key: string) {
+  if (FRIENDLY_NAMES[key]) return FRIENDLY_NAMES[key];
+  return key.replace(/^(nav|hero|about|products|career|gallery|review|reviews|awards|contact|schedule|footer)_/, "").replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function StructuredEditor({ id, value, onChange }: { id: string; value: string; onChange: (value: string) => void }) {
+  const parsed = React.useMemo(() => {
+    try { return JSON.parse(value) as unknown; } catch { return null; }
+  }, [value]);
+
+  if (id === "fields" && Array.isArray(parsed)) {
+    const rows = parsed as { icon?: string; title?: string; desc?: string }[];
+    return (
+      <div className="flex flex-col gap-3">
+        {rows.map((row, index) => (
+          <div key={index} className="grid gap-2 rounded-lg border border-border/60 bg-muted/30 p-3 sm:grid-cols-[7rem_1fr]">
+            <Input value={row.icon ?? ""} onChange={(e) => { const next = [...rows]; next[index] = { ...row, icon: e.target.value }; onChange(JSON.stringify(next)); }} placeholder="Icon name" aria-label={`Service ${index + 1} icon`} />
+            <Input value={row.title ?? ""} onChange={(e) => { const next = [...rows]; next[index] = { ...row, title: e.target.value }; onChange(JSON.stringify(next)); }} placeholder="Service title" aria-label={`Service ${index + 1} title`} />
+            <Textarea value={row.desc ?? ""} onChange={(e) => { const next = [...rows]; next[index] = { ...row, desc: e.target.value }; onChange(JSON.stringify(next)); }} placeholder="Short description" rows={2} className="sm:col-span-2" aria-label={`Service ${index + 1} description`} />
+            <Button type="button" variant="ghost" size="sm" className="w-fit gap-1 text-destructive hover:text-destructive" onClick={() => onChange(JSON.stringify(rows.filter((_, rowIndex) => rowIndex !== index)))}><Trash2 className="size-3.5" /> Remove</Button>
+          </div>
+        ))}
+        <Button type="button" variant="outline" size="sm" className="w-fit gap-1.5" onClick={() => onChange(JSON.stringify([...rows, { icon: "Code2", title: "New service", desc: "Describe this service." }]))}><Plus className="size-4" /> Add service</Button>
+      </div>
+    );
+  }
+
+  if ((id === "career_how_we_hire" && Array.isArray(parsed))) {
+    const rows = parsed as { title?: string; desc?: string }[];
+    return <div className="flex flex-col gap-3">{rows.map((row, index) => <div key={index} className="grid gap-2 rounded-lg border border-border/60 bg-muted/30 p-3 sm:grid-cols-2"><Input value={row.title ?? ""} onChange={(e) => { const next = [...rows]; next[index] = { ...row, title: e.target.value }; onChange(JSON.stringify(next)); }} placeholder="Step title" /><Textarea value={row.desc ?? ""} onChange={(e) => { const next = [...rows]; next[index] = { ...row, desc: e.target.value }; onChange(JSON.stringify(next)); }} placeholder="Step description" rows={2} /></div>)}<Button type="button" variant="outline" size="sm" className="w-fit gap-1.5" onClick={() => onChange(JSON.stringify([...rows, { title: "New step", desc: "Describe this step." }]))}><Plus className="size-4" /> Add step</Button></div>;
+  }
+
+  if ((id === "career_what_we_need" || id === "schedule_topics") && Array.isArray(parsed)) {
+    const rows = parsed.filter((row): row is string => typeof row === "string");
+    return <div className="flex flex-col gap-2">{rows.map((row, index) => <div key={index} className="flex gap-2"><Input value={row} onChange={(e) => { const next = [...rows]; next[index] = e.target.value; onChange(JSON.stringify(next)); }} placeholder={id === "schedule_topics" ? "Topic" : "Requirement"} /><Button type="button" variant="ghost" size="icon" className="shrink-0 text-destructive hover:text-destructive" onClick={() => onChange(JSON.stringify(rows.filter((_, rowIndex) => rowIndex !== index)))} aria-label="Remove item"><Trash2 className="size-4" /></Button></div>)}<Button type="button" variant="outline" size="sm" className="w-fit gap-1.5" onClick={() => onChange(JSON.stringify([...rows, id === "schedule_topics" ? "New topic" : "New requirement"]))}><Plus className="size-4" /> Add item</Button></div>;
+  }
+
+  return <Textarea value={value} onChange={(e) => onChange(e.target.value)} rows={5} placeholder="Add content" />;
+}
 
 function groupOf(key: string): string {
   for (const g of GROUPS) {
@@ -203,13 +254,11 @@ export function ContentEditor() {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <Label htmlFor={it.id} className="font-mono text-xs text-muted-foreground">
-                        {it.id}
+                      <Label htmlFor={it.id} className="text-sm font-semibold text-foreground">
+                        {friendlyName(it.id)}
                       </Label>
                       <div className="flex items-center gap-1.5">
-                        {isJson ? (
-                          <Badge variant="outline" className="text-[10px]">JSON</Badge>
-                        ) : null}
+                        {isJson ? <Badge variant="outline" className="text-[10px]">Editable list</Badge> : null}
                         {dirty ? (
                           <Badge className="bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">edited</Badge>
                         ) : (
@@ -217,13 +266,15 @@ export function ContentEditor() {
                         )}
                       </div>
                     </div>
-                    {long ? (
+                    {isJson ? (
+                      <StructuredEditor id={it.id} value={val} onChange={(nextValue) => setDraft((p) => ({ ...p, [it.id]: nextValue }))} />
+                    ) : long ? (
                       <Textarea
                         id={it.id}
                         value={val}
                         onChange={(e) => setDraft((p) => ({ ...p, [it.id]: e.target.value }))}
                         rows={isJson ? 6 : 3}
-                        className={`font-mono text-xs ${!valid ? "border-destructive" : ""}`}
+                        className={`${!valid ? "border-destructive" : ""}`}
                       />
                     ) : (
                       <Input
@@ -233,7 +284,7 @@ export function ContentEditor() {
                       />
                     )}
                     {isJson && !valid ? (
-                      <span className="text-xs text-destructive">Invalid JSON — fix before saving</span>
+                      <span className="text-xs text-destructive">This list could not be read. Ask a developer to restore it.</span>
                     ) : null}
                   </div>
                 );

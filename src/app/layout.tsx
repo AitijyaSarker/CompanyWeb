@@ -48,16 +48,34 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ULTRABULB IT",
+    description:
+      "Software development agency crafting custom software, cloud, AI and digital products.",
+    url: "https://ultrabulb.com",
+    logo: "/logo.svg",
+    sameAs: [],
+  };
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
+          storageKey="ultrabulb-theme"
+          disableTransitionOnChange={false}
         >
           {children}
           <SonnerToaster position="bottom-right" richColors closeButton />

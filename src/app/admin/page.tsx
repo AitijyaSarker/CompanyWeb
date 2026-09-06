@@ -11,7 +11,6 @@ import {
   FileText,
   Images,
   LayoutDashboard,
-  Lightbulb,
   Loader2,
   LogOut,
   Menu,
@@ -32,6 +31,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import type { Award as AwardRecord, GalleryImage, Product, Vacancy } from "@/hooks/use-site-data";
 
 import { CollectionPanel } from "@/components/admin/collection-panel";
 import { ContentEditor } from "@/components/admin/content-editor";
@@ -93,8 +93,8 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
       <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" />
-      <div className="pointer-events-none absolute -left-20 top-10 size-72 rounded-full bg-amber-400/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-16 bottom-10 size-80 rounded-full bg-violet-400/20 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 top-10 size-72 rounded-full bg-cyan-400/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-16 bottom-10 size-80 rounded-full bg-blue-900/10 blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -105,9 +105,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
         <Card className="border-border/60 shadow-xl">
           <CardContent className="flex flex-col gap-6 p-8">
             <div className="flex flex-col items-center gap-3 text-center">
-              <span className="gradient-amber flex size-14 items-center justify-center rounded-2xl text-primary-foreground shadow-md">
-                <Lightbulb className="size-7" />
-              </span>
+              <img src="/logo.svg" alt="ULTRABULB IT" className="size-20 object-contain" />
               <div>
                 <h1 className="text-xl font-bold text-foreground">ULTRABULB IT Admin</h1>
                 <p className="text-sm text-muted-foreground">Sign in to manage your website</p>
@@ -198,9 +196,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 border-b border-sidebar-border p-4">
-        <span className="gradient-amber flex size-9 items-center justify-center rounded-full text-primary-foreground">
-          <Lightbulb className="size-5" />
-        </span>
+        <img src="/logo.svg" alt="ULTRABULB IT" className="size-10 object-contain" />
         <div className="flex flex-col">
           <span className="text-sm font-bold text-sidebar-foreground">ULTRABULB IT</span>
           <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">Admin Panel</span>
@@ -290,7 +286,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             {tab === "overview" && <Overview onNavigate={setTab} />}
             {tab === "content" && <ContentEditor />}
             {tab === "products" && (
-              <CollectionPanel
+              <CollectionPanel<Product>
                 title="Products"
                 description="Showcase of projects you've built."
                 endpoint="/api/admin/products"
@@ -326,7 +322,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               />
             )}
             {tab === "vacancies" && (
-              <CollectionPanel
+              <CollectionPanel<Vacancy>
                 title="Vacancies"
                 description="Job openings with hiring status."
                 endpoint="/api/admin/vacancies"
@@ -359,11 +355,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               />
             )}
             {tab === "gallery" && (
-              <CollectionPanel
+              <CollectionPanel<GalleryImage>
                 title="Gallery"
                 description="Photos from your journey."
                 endpoint="/api/admin/gallery"
                 cardView
+                addLabel="Upload Image"
                 fields={[
                   { name: "title", label: "Title", required: true },
                   { name: "category", label: "Category", required: true },
@@ -385,7 +382,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               />
             )}
             {tab === "awards" && (
-              <CollectionPanel
+              <CollectionPanel<AwardRecord>
                 title="Awards"
                 description="Recognition and achievements."
                 endpoint="/api/admin/awards"
@@ -401,7 +398,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 renderRow={() => null}
                 renderCard={(a) => (
                   <CardContent className="p-0">
-                    <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
+                    <div className="aspect-4/3 w-full overflow-hidden bg-muted">
                       <img src={a.imageUrl} alt={a.title} className="size-full object-cover" />
                     </div>
                     <div className="p-3">
@@ -416,7 +413,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               />
             )}
             {tab === "time-slots" && (
-              <CollectionPanel
+              <CollectionPanel<{ id: string; label: string; value: string; active: boolean }>
                 title="Time Slots"
                 description="Available booking slots for the /schedule page."
                 endpoint="/api/admin/time-slots"

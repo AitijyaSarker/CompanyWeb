@@ -5,12 +5,10 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
-  ArrowLeft,
   ArrowRight,
   Check,
   Clock,
   Gift,
-  Lightbulb,
   Loader2,
   MessageSquare,
   ShieldCheck,
@@ -32,7 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ThemeToggle } from "@/components/site/theme-toggle";
 
 interface TimeSlot {
   id: string;
@@ -261,52 +258,15 @@ export default function SchedulePage() {
     titleWords.length > 1 ? titleWords[titleWords.length - 1] : titleWords[0];
   const titleMain = titleWords.length > 1 ? titleWords.slice(0, -1).join(" ") : "";
 
-  const navBrand = content.nav_brand || "ULTRABULB IT";
-  const navTagline = content.nav_tagline || "WE CODE YOUR IDEAS INTO LIGHT";
   const badgeText = content.schedule_badge || "Schedule a Call";
   const subtitle =
     content.schedule_subtitle ||
     "Pick a date and time that works for you. We'll send a calendar invite and a meeting link to your email.";
-  const footerCopyright =
-    content.footer_copyright || "ULTRABULB IT. All rights reserved.";
 
   return (
-    <div className="min-h-screen flex flex-col bg-background bg-grid">
-      {/* ===== Top bar (floating pill) ===== */}
-      <header className="mx-auto w-full max-w-6xl px-4 pt-4 z-30">
-        <div className="glass dark:glass-dark rounded-full border border-border/60 shadow-sm px-3 sm:px-4 py-2 flex items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="flex items-center gap-3 group min-w-0"
-            aria-label={`${navBrand} — back to home`}
-          >
-            <span className="size-9 rounded-xl gradient-amber flex items-center justify-center shadow-sm shrink-0">
-              <Lightbulb className="size-5 text-amber-950" />
-            </span>
-            <span className="flex flex-col leading-tight min-w-0">
-              <span className="text-sm font-bold tracking-tight truncate">
-                {navBrand}
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground truncate">
-                {navTagline}
-              </span>
-            </span>
-          </Link>
-          <div className="flex items-center gap-1.5">
-            <Button asChild variant="ghost" size="sm" className="rounded-full h-9">
-              <Link href="/">
-                <ArrowLeft className="size-4" />
-                <span className="hidden sm:inline">Back to Home</span>
-                <span className="sm:hidden">Home</span>
-              </Link>
-            </Button>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
+    <div className="bg-(--brand-bg-light)/50 dark:bg-background">
       {/* ===== Hero header ===== */}
-      <section className="px-4 pt-10 sm:pt-14 pb-6">
+      <section className="site-container px-4 pb-6 pt-24 sm:pt-28 sm:pb-6">
         <div className="mx-auto max-w-3xl text-center flex flex-col items-center gap-4">
           <motion.div
             custom={0}
@@ -316,7 +276,7 @@ export default function SchedulePage() {
           >
             <Badge
               variant="secondary"
-              className="gap-1.5 rounded-full px-3 py-1 text-xs border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300 dark:bg-amber-500/15"
+              className="gap-1.5 rounded-full border-(--brand-cyan)/30 bg-(--brand-cyan-pale) px-3 py-1 text-xs text-(--brand-navy-dark) dark:border-cyan-400/30 dark:bg-cyan-950/40 dark:text-cyan-200"
             >
               <Sparkles className="size-3.5" />
               {badgeText}
@@ -332,10 +292,10 @@ export default function SchedulePage() {
             {titleMain ? (
               <>
                 {titleMain}{" "}
-                <span className="gradient-text-amber">{titleAccent}</span>
+                <span className="gradient-text-brand">{titleAccent}</span>
               </>
             ) : (
-              <span className="gradient-text-amber">{titleAccent}</span>
+              <span className="gradient-text-brand">{titleAccent}</span>
             )}
           </motion.h1>
           <motion.p
@@ -351,7 +311,7 @@ export default function SchedulePage() {
       </section>
 
       {/* ===== Main booking card ===== */}
-      <main className="flex-1 px-4 pb-12 w-full">
+      <div className="site-container px-4 pb-12 w-full">
         <AnimatePresence mode="wait">
           {confirmed ? (
             <motion.div
@@ -363,7 +323,7 @@ export default function SchedulePage() {
               className="mx-auto max-w-2xl"
             >
               <Card className="border-emerald-300/50 dark:border-emerald-700/40 shadow-lg overflow-hidden">
-                <div className="h-1.5 w-full bg-gradient-to-r from-emerald-400 via-amber-400 to-violet-500" />
+                <div className="h-1.5 w-full bg-gradient-to-r from-(--brand-cyan) to-(--brand-navy)" />
                 <CardContent className="pt-8 pb-8 flex flex-col items-center text-center gap-5">
                   <motion.div
                     initial={{ scale: 0, rotate: -20 }}
@@ -429,7 +389,7 @@ export default function SchedulePage() {
                     </Button>
                     <Button
                       asChild
-                      className="rounded-full flex-1 h-10 gradient-amber text-amber-950 font-semibold"
+                      className="rounded-full flex-1 h-10 gradient-brand text-(--brand-navy-dark) font-semibold"
                     >
                       <Link href="/">
                         Back to Home
@@ -457,7 +417,7 @@ export default function SchedulePage() {
                   {/* ===== Left column: calendar ===== */}
                   <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-border/60 bg-muted/20 flex flex-col">
                     <div className="flex items-center gap-2.5 mb-4">
-                      <span className="size-7 rounded-full gradient-amber text-amber-950 text-xs font-bold flex items-center justify-center shadow-sm">
+                      <span className="size-7 rounded-full gradient-brand text-(--brand-navy-dark) text-xs font-bold flex items-center justify-center shadow-sm">
                         1
                       </span>
                       <h3 className="font-semibold">Pick a date</h3>
@@ -490,7 +450,7 @@ export default function SchedulePage() {
                           className="rounded-lg border bg-card p-3"
                         >
                           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Sparkles className="size-3.5 text-amber-500" />
+                            <Sparkles className="size-3.5 text-(--brand-cyan)" />
                             Selected date
                           </div>
                           <div className="font-medium mt-0.5">
@@ -515,7 +475,7 @@ export default function SchedulePage() {
                     {/* Time slots */}
                     <section>
                       <div className="flex items-center gap-2.5 mb-3">
-                        <span className="size-7 rounded-full gradient-amber text-amber-950 text-xs font-bold flex items-center justify-center shadow-sm">
+                        <span className="size-7 rounded-full gradient-brand text-(--brand-navy-dark) text-xs font-bold flex items-center justify-center shadow-sm">
                           2
                         </span>
                         <h3 className="font-semibold">Choose a time</h3>
@@ -552,7 +512,7 @@ export default function SchedulePage() {
                                   "h-10 rounded-md border text-xs sm:text-sm font-medium transition-all flex items-center justify-center px-2 " +
                                   (active
                                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                                    : "bg-card hover:border-amber-400/60 hover:bg-accent/50 text-foreground")
+                                    : "bg-card hover:border-(--brand-cyan)/60 hover:bg-accent/50 text-foreground")
                                 }
                               >
                                 {s.label}
@@ -577,7 +537,7 @@ export default function SchedulePage() {
                       noValidate
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="size-7 rounded-full gradient-amber text-amber-950 text-xs font-bold flex items-center justify-center shadow-sm">
+                        <span className="size-7 rounded-full gradient-brand text-(--brand-navy-dark) text-xs font-bold flex items-center justify-center shadow-sm">
                           3
                         </span>
                         <h3 className="font-semibold">Your details</h3>
@@ -709,7 +669,7 @@ export default function SchedulePage() {
                       <Button
                         type="submit"
                         disabled={!isFormValid || submitting}
-                        className="w-full h-11 rounded-md gradient-amber text-amber-950 font-semibold shadow-md hover:opacity-90 disabled:opacity-50"
+                        className="w-full h-11 rounded-md gradient-brand text-(--brand-navy-dark) font-semibold shadow-md hover:opacity-90 disabled:opacity-50"
                       >
                         {submitting ? (
                           <>
@@ -753,30 +713,7 @@ export default function SchedulePage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
-
-      {/* ===== Footer (sticky to bottom) ===== */}
-      <footer className="mt-auto bg-zinc-950 text-zinc-400">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="size-7 rounded-lg gradient-amber flex items-center justify-center">
-              <Lightbulb className="size-4 text-amber-950" />
-            </span>
-            <span className="text-sm font-semibold text-zinc-100">
-              {navBrand}
-            </span>
-          </div>
-          <p className="text-xs text-center">
-            &copy; {new Date().getFullYear()} {footerCopyright}
-          </p>
-          <Link
-            href="/"
-            className="text-xs hover:text-amber-400 transition-colors inline-flex items-center gap-1"
-          >
-            <ArrowLeft className="size-3" /> Back to home
-          </Link>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
@@ -792,7 +729,7 @@ function InfoCard({
 }) {
   return (
     <div className="rounded-xl border bg-card p-4 flex items-start gap-3 shadow-sm">
-      <span className="size-9 rounded-lg bg-amber-100 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+      <span className="size-9 rounded-lg bg-(--brand-cyan-pale) text-(--brand-navy-dark) dark:bg-cyan-950/40 dark:text-(--brand-cyan) flex items-center justify-center shrink-0">
         {icon}
       </span>
       <div>

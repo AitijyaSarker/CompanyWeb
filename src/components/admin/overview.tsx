@@ -35,12 +35,12 @@ interface Counts {
 }
 
 const STAT_CARDS: { key: keyof Counts; label: string; icon: typeof Award; color: string }[] = [
-  { key: "products", label: "Products", icon: Package, color: "text-amber-600 bg-amber-500/10" },
-  { key: "vacancies", label: "Vacancies", icon: Briefcase, color: "text-violet-600 bg-violet-500/10" },
+  { key: "products", label: "Products", icon: Package, color: "text-(--brand-navy) bg-(--brand-cyan-pale) dark:text-cyan-300 dark:bg-cyan-950/40" },
+  { key: "vacancies", label: "Vacancies", icon: Briefcase, color: "text-(--brand-navy-dark) bg-(--brand-cyan)/15 dark:text-cyan-300 dark:bg-cyan-950/40" },
   { key: "hiring", label: "Actively Hiring", icon: Briefcase, color: "text-emerald-600 bg-emerald-500/10" },
-  { key: "reviewsPending", label: "Pending Reviews", icon: Star, color: "text-amber-600 bg-amber-500/10" },
+  { key: "reviewsPending", label: "Pending Reviews", icon: Star, color: "text-(--brand-navy) bg-(--brand-cyan-pale) dark:text-cyan-300 dark:bg-cyan-950/40" },
   { key: "messagesUnread", label: "Unread Messages", icon: Mail, color: "text-red-600 bg-red-500/10" },
-  { key: "callsPending", label: "Pending Calls", icon: Calendar, color: "text-amber-600 bg-amber-500/10" },
+  { key: "callsPending", label: "Pending Calls", icon: Calendar, color: "text-(--brand-navy-dark) bg-(--brand-cyan)/15 dark:text-cyan-300 dark:bg-cyan-950/40" },
 ];
 
 export function Overview({ onNavigate }: { onNavigate: (tab: string) => void }) {
@@ -109,7 +109,7 @@ export function Overview({ onNavigate }: { onNavigate: (tab: string) => void }) 
           <Card className="h-full border-border/60 shadow-sm">
             <CardContent className="flex flex-col gap-3 p-5">
               <div className="flex items-center gap-2">
-                <Star className="size-5 text-amber-500" />
+                <Star className="size-5 text-(--brand-cyan)" />
                 <h3 className="text-sm font-semibold text-foreground">Reviews</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -125,7 +125,7 @@ export function Overview({ onNavigate }: { onNavigate: (tab: string) => void }) 
           <Card className="h-full border-border/60 shadow-sm">
             <CardContent className="flex flex-col gap-3 p-5">
               <div className="flex items-center gap-2">
-                <Calendar className="size-5 text-amber-500" />
+                <Calendar className="size-5 text-(--brand-cyan)" />
                 <h3 className="text-sm font-semibold text-foreground">Scheduled Calls</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -141,7 +141,7 @@ export function Overview({ onNavigate }: { onNavigate: (tab: string) => void }) 
           <Card className="h-full border-border/60 shadow-sm">
             <CardContent className="flex flex-col gap-3 p-5">
               <div className="flex items-center gap-2">
-                <MessageSquare className="size-5 text-amber-500" />
+                <MessageSquare className="size-5 text-(--brand-cyan)" />
                 <h3 className="text-sm font-semibold text-foreground">Messages</h3>
               </div>
               <p className="text-sm text-muted-foreground">

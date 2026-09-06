@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Loader2, Star } from "lucide-react";
+import { ArrowRight, Loader2, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,18 +14,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SectionHeading } from "@/components/site/section-heading";
+import { SPRING_BOUNCY, StaggerGrid, fadeUpSpring, staggerContainer } from "@/components/site/motion";
 import { getContent, useSiteData, type Award, type Review } from "@/hooks/use-site-data";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
-};
+const fadeUp = fadeUpSpring;
 
 /* ---------------- Reviews grid ---------------- */
 
@@ -51,7 +46,7 @@ function StarRating({ rating, interactive, onRate }: { rating: number; interacti
           <Star
             className={cn(
               "size-5",
-              n <= active ? "fill-amber-400 text-amber-400" : "fill-muted text-muted-foreground/40"
+              n <= active ? "fill-cyan-400 text-cyan-500" : "fill-muted text-muted-foreground/40"
             )}
           />
         </button>
@@ -68,13 +63,13 @@ function ReviewCard({ review }: { review: Review }) {
     .join("")
     .toUpperCase();
   return (
-    <motion.article variants={fadeUp} whileHover={{ y: -4 }}>
-      <Card className="h-full border-border/60 bg-card shadow-sm">
+    <motion.article variants={fadeUp} whileHover={{ y: -8, transition: SPRING_BOUNCY }}>
+      <Card className="h-full border-border/60 bg-card shadow-sm transition-shadow hover:shadow-lg">
         <CardContent className="flex flex-col gap-4 p-5 sm:p-6">
           <div className="flex items-center gap-3">
             <Avatar className="size-11 border border-border/60">
               {review.avatarUrl ? <AvatarImage src={review.avatarUrl} alt={review.name} /> : null}
-              <AvatarFallback className="gradient-amber text-sm font-bold text-primary-foreground">
+              <AvatarFallback className="gradient-brand text-sm font-bold text-white">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -96,7 +91,7 @@ function ReviewCard({ review }: { review: Review }) {
 
 /* ---------------- Review submission form ---------------- */
 
-function ReviewForm({ title, subtitle }: { title: string; subtitle: string }) {
+export function ReviewForm({ title, subtitle }: { title: string; subtitle: string }) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [role, setRole] = React.useState("");
@@ -197,13 +192,15 @@ function ReviewForm({ title, subtitle }: { title: string; subtitle: string }) {
 
 function AwardCard({ award }: { award: Award }) {
   return (
-    <motion.article variants={fadeUp} whileHover={{ y: -4 }}>
-      <Card className="group h-full overflow-hidden border-border/60 bg-card shadow-sm">
-        <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
-          <img
+    <motion.article variants={fadeUp} whileHover={{ y: -8, scale: 1.02, transition: SPRING_BOUNCY }}>
+      <Card className="group h-full overflow-hidden border-border/60 bg-card shadow-sm transition-shadow hover:shadow-lg">
+        <div className="aspect-4/3 w-full overflow-hidden bg-muted">
+          <Image
             src={award.imageUrl}
             alt={award.title}
             loading="lazy"
+            width={720}
+            height={540}
             className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
@@ -235,58 +232,52 @@ export function ReviewsAwards() {
     "reviews_subtitle",
     "Honest words from the people we've worked with, alongside the recognition we've earned."
   );
-  const formTitle = getContent(content, "review_form_title", "Submit Your Review");
-  const formSubtitle = getContent(
-    content,
-    "review_form_subtitle",
-    "Share your experience working with ULTRABULB IT. Reviews are published after approval."
-  );
   const awardsTitle = getContent(content, "awards_title", "Awards & Recognition");
 
   return (
     <section
       id="reviews"
       aria-labelledby="reviews-title"
-      className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24"
+      className="section-pad section-alt site-container w-full"
     >
       <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />
 
-      {/* Reviews grid */}
-      {reviews.length > 0 ? (
+      <div className="mt-6 flex justify-center">
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          transition={SPRING_BOUNCY}
         >
+          <Button
+            asChild
+            className="gap-2 rounded-full bg-primary px-5 text-primary-foreground shadow-sm hover:bg-primary/90"
+          >
+            <Link href="/review">
+              Submit Your Review
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </motion.div>
+      </div>
+
+      {reviews.length > 0 ? (
+        <StaggerGrid className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((r) => (
             <ReviewCard key={r.id} review={r} />
           ))}
-        </motion.div>
+        </StaggerGrid>
       ) : (
         <div className="mt-12 rounded-3xl border border-dashed border-border/60 bg-card/50 px-6 py-12 text-center">
           <p className="text-sm text-muted-foreground">No reviews yet. Be the first to share your experience below.</p>
         </div>
       )}
 
-      {/* Review form */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="mt-10"
-      >
-        <ReviewForm title={formTitle} subtitle={formSubtitle} />
-      </motion.div>
-
       {/* Awards */}
       {awards.length > 0 ? (
         <div className="mt-20">
           <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{awardsTitle}</h3>
           <motion.div
-            variants={container}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}

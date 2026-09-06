@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
-import { Lightbulb, Menu, Phone } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown, Menu, Phone } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,134 +16,247 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/site/theme-toggle";
+import { SiteLogo } from "@/components/site/site-logo";
+import { NavLinkMotion, SPRING_BOUNCY } from "@/components/site/motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
 
 const NAV_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Products", href: "#products" },
-  { label: "Career", href: "#career" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
-];
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+] as const;
+
+const COMPANY_LINKS = [
+  { label: "About Us", href: "/about" },
+  { label: "Our Process", href: "/process" },
+  { label: "Why Choose Us", href: "/why-choose-us" },
+  { label: "Reviews", href: "/review" },
+  { label: "Careers", href: "/careers" },
+] as const;
+
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function isCompanyActive(pathname: string) {
+  return COMPANY_LINKS.some((link) => isActive(pathname, link.href));
+}
+
+function NavItem({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) {
+  const pathname = usePathname();
+  const active = isActive(pathname, href);
+
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn("nav-link", active && "nav-link-active")}
+      aria-current={active ? "page" : undefined}
+    >
+      <NavLinkMotion active={active}>{children}</NavLinkMotion>
+    </Link>
+  );
+}
 
 export function SiteNavbar() {
   const { data } = useSiteData();
   const content = data?.content;
   const brand = getContent(content, "nav_brand", "ULTRABULB IT");
-  const tagline = getContent(content, "nav_tagline", "WE CODE YOUR IDEAS INTO LIGHT");
+  const tagline = getContent(content, "nav_tagline", "Software Development Agency");
+  const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  const isHome = pathname === "/";
+  const overlayHero = isHome && !scrolled;
+  const isDark = mounted && resolvedTheme === "dark";
+  const heroOverlayDark = overlayHero && isDark;
 
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  React.useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const companyActive = isCompanyActive(pathname);
+
   return (
     <motion.header
-      initial={{ y: -24, opacity: 0 }}
+      data-overlay={heroOverlayDark ? "true" : "false"}
+      initial={prefersReducedMotion ? false : { y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-50 mx-auto mt-4 w-full max-w-5xl px-4"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={cn(
+        "fixed top-0 z-50 w-full border-b transition-all duration-300",
+        overlayHero
+          ? "border-transparent bg-transparent"
+          : "border-border/80 bg-background/95 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-(--brand-navy-dark)/95"
+      )}
     >
       <nav
         aria-label="Primary"
-        className={cn(
-          "flex items-center justify-between gap-3 rounded-full border px-3 py-2 shadow-sm transition-all duration-300 sm:px-4",
-          "glass dark:glass-dark border-border/60",
-          scrolled ? "shadow-lg" : "shadow-sm"
-        )}
+        className="site-container flex h-[4.5rem] items-center justify-between gap-4 lg:h-20"
       >
-        {/* Brand */}
         <Link
-          href="#home"
-          className="flex items-center gap-2.5 rounded-full px-1.5 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          href="/"
+          className="flex shrink-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-4"
         >
-          <span className="gradient-amber flex size-9 items-center justify-center rounded-full text-primary-foreground shadow-sm">
-            <Lightbulb className="size-5" />
-          </span>
-          <span className="flex flex-col leading-tight">
-            <span className="text-sm font-bold tracking-tight text-foreground">{brand}</span>
-            <span className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">
+          <motion.div whileHover={{ scale: 1.05, rotate: -2 }} whileTap={{ scale: 0.97 }} transition={SPRING_BOUNCY}>
+            <SiteLogo alt={brand} priority className="size-11 sm:size-12" showWrapper wrapperClassName="size-12 sm:size-14" />
+          </motion.div>
+          <span className="hidden flex-col leading-tight sm:flex">
+            <span
+              className={cn(
+                "text-base font-bold tracking-tight",
+                heroOverlayDark ? "text-white" : "text-(--brand-navy) dark:text-white"
+              )}
+            >
+              {brand}
+            </span>
+            <span
+              className={cn(
+                "text-[11px] font-medium uppercase tracking-[0.14em]",
+                heroOverlayDark ? "text-white/60" : "text-muted-foreground"
+              )}
+            >
               {tagline}
             </span>
           </span>
         </Link>
 
-        {/* Desktop nav links */}
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-0.5 lg:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <Link
-                href={link.href}
-                className="group relative inline-flex items-center rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {link.label}
-                <span className="pointer-events-none absolute inset-x-3 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-primary transition-transform duration-300 group-hover:scale-x-100" />
-              </Link>
+              <NavItem href={link.href}>{link.label}</NavItem>
             </li>
           ))}
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn("nav-link group", companyActive && "nav-link-active")}
+                  aria-current={companyActive ? "true" : undefined}
+                >
+                  Company
+                  <ChevronDown className="size-3.5 transition-transform group-data-[state=open]:rotate-180" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="min-w-52 rounded-xl border-border/70 p-2 shadow-xl">
+                <DropdownMenuLabel className="px-3 py-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  Company
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {COMPANY_LINKS.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild className="rounded-lg px-3 py-2.5">
+                    <Link href={item.href} className={cn(isActive(pathname, item.href) && "font-semibold text-(--brand-cyan)")}>
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
         </ul>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-1.5">
-          <ThemeToggle />
-          <Button
-            asChild
-            size="sm"
-            className="hidden rounded-full bg-primary px-4 text-primary-foreground shadow-sm hover:bg-primary/90 sm:inline-flex"
-          >
-            <Link href="/schedule" className="gap-1.5">
-              <Phone className="size-3.5" />
-              Schedule a Call
-            </Link>
-          </Button>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <ThemeToggle overlay={heroOverlayDark} />
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} transition={SPRING_BOUNCY}>
+            <Button
+              asChild
+              size="sm"
+              className="hidden rounded-full bg-(--brand-cyan) px-4 font-semibold text-(--brand-navy-dark) shadow-sm hover:bg-(--brand-cyan)/90 md:inline-flex"
+            >
+              <Link href="/schedule" className="gap-1.5">
+                <Phone className="size-3.5" />
+                Schedule a Call
+              </Link>
+            </Button>
+          </motion.div>
 
-          {/* Mobile hamburger */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 aria-label="Open menu"
-                className="size-9 rounded-full border border-border/60 bg-background/60 lg:hidden"
+                className={cn(
+                  "size-9 rounded-lg lg:hidden",
+                  heroOverlayDark
+                    ? "border-white/20 bg-white/5 text-white"
+                    : "border-border/60 bg-background text-foreground"
+                )}
               >
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[320px]">
-              <SheetHeader className="px-6 pt-6">
-                <SheetTitle className="flex items-center gap-2">
-                  <span className="gradient-amber flex size-8 items-center justify-center rounded-full text-primary-foreground">
-                    <Lightbulb className="size-4" />
-                  </span>
-                  <span className="text-base">{brand}</span>
+            <SheetContent side="right" className="flex w-72 flex-col sm:w-80">
+              <SheetHeader className="border-b pb-4">
+                <SheetTitle className="flex items-center gap-3">
+                  <SiteLogo alt={brand} className="size-12" showWrapper wrapperClassName="size-14" />
+                  <span className="text-left text-base font-bold">{brand}</span>
                 </SheetTitle>
               </SheetHeader>
-              <nav className="mt-2 flex flex-col gap-1 px-4">
+              <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto py-4">
                 {NAV_LINKS.map((link) => (
                   <SheetClose asChild key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                      className={cn(
+                        "rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent",
+                        isActive(pathname, link.href) && "bg-accent font-semibold text-(--brand-cyan)"
+                      )}
                     >
                       {link.label}
                     </Link>
                   </SheetClose>
                 ))}
+                <div className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Company
+                </div>
+                {COMPANY_LINKS.map((item) => (
+                  <SheetClose asChild key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent",
+                        isActive(pathname, item.href) && "bg-accent font-semibold text-(--brand-cyan)"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </SheetClose>
+                ))}
               </nav>
-              <div className="mt-auto px-4 pb-6">
+              <div className="border-t pt-4">
                 <SheetClose asChild>
-                  <Button
-                    asChild
-                    className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-                  >
+                  <Button asChild className="w-full rounded-full bg-(--brand-cyan) text-(--brand-navy-dark) hover:bg-(--brand-cyan)/90">
                     <Link href="/schedule" className="gap-2">
                       <Phone className="size-4" />
                       Schedule a Call
