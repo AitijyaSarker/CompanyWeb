@@ -133,7 +133,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
       .split(",")
       .map((tag: string) => tag.trim())
       .filter(Boolean);
-  }, [project?.tags]);
+  }, [project.tags]);
 
   return (
     <motion.div
@@ -151,7 +151,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
       <TiltCard className="h-full" intensity={5}>
         <div className="relative h-full overflow-hidden rounded-2xl border border-border/60 bg-card/50 shadow-sm transition-[border-color,box-shadow] duration-500 group-hover:border-(--brand-cyan)/40 group-hover:shadow-2xl group-hover:shadow-(--brand-cyan)/10 dark:border-white/10 dark:bg-white/5">
         {/* Image container */}
-        {project.image && (
+        {project.imageUrl && (
           <div className="relative h-48 sm:h-56 overflow-hidden bg-muted">
             <motion.div
               className="absolute inset-0"
@@ -160,7 +160,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               transition={{ duration: 0.8, ease: EASE_OUT }}
             >
               <Image
-                src={project.image}
+                src={project.imageUrl}
                 alt={project.title || "Project"}
                 fill
                 className="object-cover"
@@ -226,22 +226,18 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           )}
 
           {/* Footer with link */}
-          {(project.link || project.externalLink) && (
             <motion.div
               whileHover={{ x: 4 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <Link
-                href={project.link || project.externalLink || "/projects"}
-                target={project.link || project.externalLink ? "_blank" : undefined}
-                rel={project.link || project.externalLink ? "noopener noreferrer" : undefined}
+                href={`/projects/${project.id}`}
                 className="inline-flex items-center gap-2 text-(--brand-cyan) font-medium text-sm hover:gap-3 transition-all duration-300"
               >
                 View Project
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
             </motion.div>
-          )}
         </motion.div>
         </div>
       </TiltCard>

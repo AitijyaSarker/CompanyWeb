@@ -1,44 +1,82 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import { TECH_CATEGORIES } from "@/data/technologies";
 
-const ALL_TECHS = TECH_CATEGORIES.flatMap((c) => c.items);
+const ALL_TECHS = Array.from(new Set(TECH_CATEGORIES.flatMap((category) => category.items)));
 
-export function TechMarquee() {
-  const reduced = useReducedMotion();
-  const items = [...ALL_TECHS, ...ALL_TECHS];
+const ICON_SLUGS: Record<string, string> = {
+  React: "react",
+  "Next.js": "nextdotjs",
+  TypeScript: "typescript",
+  "Tailwind CSS": "tailwindcss",
+  "Framer Motion": "framer",
+  "Node.js": "nodedotjs",
+  Python: "python",
+  GraphQL: "graphql",
+  Prisma: "prisma",
+  "React Native": "react",
+  Flutter: "flutter",
+  PostgreSQL: "postgresql",
+  SQLite: "sqlite",
+  MongoDB: "mongodb",
+  Redis: "redis",
+  AWS: "amazonaws",
+  Azure: "microsoftazure",
+  Docker: "docker",
+  Vercel: "vercel",
+  OpenAI: "openai",
+  TensorFlow: "tensorflow",
+  LangChain: "langchain",
+  Kubernetes: "kubernetes",
+  "GitHub Actions": "githubactions",
+};
 
-  if (reduced) {
-    return (
-      <div className="mt-10 flex flex-wrap justify-center gap-2">
-        {ALL_TECHS.map((t) => (
-          <span key={t} className="rounded-full border border-border/60 px-3 py-1 text-xs font-medium text-muted-foreground">
-            {t}
-          </span>
-        ))}
-      </div>
-    );
-  }
+const ICON_COLORS: Record<string, string> = {
+  React: "#61DAFB", "Next.js": "#ffffff", TypeScript: "#3178C6", "Tailwind CSS": "#06B6D4", "Framer Motion": "#0055FF",
+  "Node.js": "#83CD29", Python: "#3776AB", GraphQL: "#E10098", Prisma: "#5A67D8", "React Native": "#61DAFB", Flutter: "#54C5F8",
+  PostgreSQL: "#4169E1", SQLite: "#44A8D8", MongoDB: "#47A248", Redis: "#DC382D", AWS: "#FF9900", Azure: "#0078D4", Docker: "#2496ED",
+  Vercel: "#ffffff", OpenAI: "#10A37F", TensorFlow: "#FF6F00", LangChain: "#1C3C3C", Kubernetes: "#326CE5", "GitHub Actions": "#2088FF",
+};
+
+function TechMark({ name }: { name: string }) {
+  const slug = ICON_SLUGS[name];
+  if (!slug) return <span className="tech-marquee-wordmark">{name}</span>;
 
   return (
-    <div className="relative mt-10 overflow-hidden py-2">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-(--brand-bg-light) to-transparent dark:from-[oklch(0.17_0.04_245)]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-(--brand-bg-light) to-transparent dark:from-[oklch(0.17_0.04_245)]" />
-      <motion.div
-        className="flex w-max gap-3"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-      >
-        {items.map((tech, i) => (
-          <span
-            key={`${tech}-${i}`}
-            className="shrink-0 rounded-full border border-(--brand-cyan)/20 bg-white px-4 py-2 text-sm font-medium text-(--brand-navy) shadow-sm dark:bg-white/5 dark:text-white"
-          >
-            {tech}
-          </span>
-        ))}
-      </motion.div>
-    </div>
+    <span className="tech-marquee-mark" title={name}>
+      <span
+        aria-hidden="true"
+        className="tech-marquee-mark-icon"
+        style={{
+          backgroundColor: ICON_COLORS[name] ?? "#ffffff",
+          maskImage: `url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg)`,
+          WebkitMaskImage: `url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg)`,
+        }}
+      />
+      <span>{name}</span>
+    </span>
+  );
+}
+
+export function TechMarquee() {
+  const track = [...ALL_TECHS, ...ALL_TECHS];
+
+  return (
+    <section aria-label="Technology we use" className="tech-marquee-section">
+      <div className="tech-marquee-heading" aria-hidden="true">
+        <span>Technology</span>
+        <span>We Use</span>
+      </div>
+      <div className="tech-marquee-viewport">
+        <div className="tech-marquee-track">
+          {track.map((technology, index) => (
+            <div className="tech-marquee-item" key={`${technology}-${index}`}>
+              <TechMark name={technology} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="tech-marquee-caption">A considered toolkit for building resilient digital products.</p>
+    </section>
   );
 }

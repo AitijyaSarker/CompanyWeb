@@ -95,7 +95,7 @@ export function ConfirmDelete({
 }
 
 /* ---------------- Field config for generic CRUD ---------------- */
-export type FieldType = "text" | "textarea" | "number" | "switch" | "url";
+export type FieldType = "text" | "textarea" | "number" | "switch" | "url" | "select";
 
 export interface FieldConfig {
   name: string;
@@ -104,6 +104,8 @@ export interface FieldConfig {
   required?: boolean;
   placeholder?: string;
   full?: boolean; // span full width in grid
+  options?: { label: string; value: string }[];
+  optionsEndpoint?: string;
 }
 
 function ImageField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -175,6 +177,7 @@ export function CrudDialog({
 }) {
   const [values, setValues] = React.useState<Record<string, unknown>>({});
   const [saving, setSaving] = React.useState(false);
+  const [dynamicOptions, setDynamicOptions] = React.useState<Record<string, { label: string; value: string }[]>>({});
 
   React.useEffect(() => {
     if (open) {
@@ -185,6 +188,18 @@ export function CrudDialog({
       setValues(init);
     }
   }, [open, initial, fields]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const fieldsWithEndpoints = fields.filter((field) => field.optionsEndpoint);
+    if (fieldsWithEndpoints.length === 0) return;
+    Promise.all(fieldsWithEndpoints.map(async (field) => {
+      const response = await fetch(field.optionsEndpoint!, { credentials: "same-origin" });
+      if (!response.ok) return [field.name, []] as const;
+      const data = await response.json();
+      return [field.name, Array.isArray(data) ? data.map((item: { id: string; name: string }) => ({ label: item.name, value: item.id })) : []] as const;
+    })).then((entries) => setDynamicOptions(Object.fromEntries(entries))).catch(() => setDynamicOptions({}));
+  }, [open, fields]);
 
   function set(name: string, v: unknown) {
     setValues((prev) => ({ ...prev, [name]: v }));
@@ -240,6 +255,17 @@ export function CrudDialog({
                     placeholder={f.placeholder}
                     rows={4}
                   />
+                </div>
+              );
+            }
+            if (f.type === "select") {
+              return (
+                <div key={f.name} className={`flex flex-col gap-1.5 ${colSpan}`}>
+                  <Label htmlFor={f.name} className="text-sm font-medium">{f.label} {f.required ? <span className="text-destructive">*</span> : null}</Label>
+                  <select id={f.name} value={(val as string) ?? ""} onChange={(e) => set(f.name, e.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm">
+                    <option value="">Select {f.label}</option>
+                    {(dynamicOptions[f.name] ?? f.options ?? []).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                  </select>
                 </div>
               );
             }

@@ -29,7 +29,14 @@ export async function POST(req: Request) {
     title,
     description,
     imageUrl,
+    galleryUrls,
     category,
+    categoryId,
+    techStack,
+    review,
+    awards,
+    accessFeatures,
+    serviceOwners,
     link,
     tags,
     featured,
@@ -38,14 +45,21 @@ export async function POST(req: Request) {
     title?: string;
     description?: string;
     imageUrl?: string;
+    galleryUrls?: string | null;
     category?: string;
+    categoryId?: string | null;
+    techStack?: string | null;
+    review?: string | null;
+    awards?: string | null;
+    accessFeatures?: string | null;
+    serviceOwners?: string | null;
     link?: string | null;
     tags?: string | null;
     featured?: boolean;
     order?: number;
   };
 
-  if (!title || !description || !imageUrl || !category) {
+  if (!title || !description || !imageUrl || (!category && !categoryId)) {
     return NextResponse.json(
       { error: "Missing required fields: title, description, imageUrl, category" },
       { status: 400 }
@@ -57,7 +71,14 @@ export async function POST(req: Request) {
       title,
       description,
       imageUrl,
-      category,
+      galleryUrls: galleryUrls || null,
+          category: category || (categoryId ? (await db.serviceCategory.findUnique({ where: { id: categoryId } }))?.name : "") || "General",
+      categoryId: categoryId || null,
+      techStack: techStack || null,
+      review: review || null,
+      awards: awards || null,
+      accessFeatures: accessFeatures || null,
+      serviceOwners: serviceOwners || null,
       link: link ?? null,
       tags: tags ?? null,
       featured: featured ?? false,

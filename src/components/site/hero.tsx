@@ -56,18 +56,12 @@ export function Hero() {
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-(--brand-bg-light) text-(--brand-navy) dark:bg-(--brand-navy-dark) dark:text-white"
+      className="relative overflow-hidden bg-(--brand-surface) text-(--brand-navy) dark:bg-(--brand-navy-dark) dark:text-white"
     >
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-40 dark:bg-grid-dark dark:opacity-30" />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(circle at 70% 30%, rgba(33,187,205,0.12), transparent 45%), radial-gradient(circle at 20% 80%, rgba(15,46,80,0.8), transparent 50%)",
-        }}
-      />
+      <div className="hero-ambient pointer-events-none absolute inset-0" />
 
-      <div className="site-container relative grid items-center gap-10 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:grid-cols-2 lg:gap-14 lg:pb-24 lg:pt-32">
+      <div className="site-container relative grid items-center gap-10 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:grid-cols-2 lg:gap-16 lg:pb-24 lg:pt-32">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -92,7 +86,7 @@ export function Hero() {
           <motion.h1
             id="hero-title"
             variants={fadeUpSpring}
-            className="max-w-xl text-balance text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-[2.75rem] lg:leading-[1.12]"
+            className="max-w-xl text-balance text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-[1.08]"
           >
             {titleBefore ? <><TextReveal text={titleBefore} as="span" />{" "}</> : null}
             <motion.span
@@ -172,10 +166,30 @@ function HeroVisual({ prefersReducedMotion }: { prefersReducedMotion: boolean })
       initial={prefersReducedMotion ? false : { opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ ...SPRING_SMOOTH, delay: 0.15 }}
-      className="relative mx-auto aspect-square w-full max-w-md"
+      className="relative mx-auto aspect-square w-full max-w-lg"
     >
-      <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm" />
-      <div className="absolute inset-4 rounded-2xl border border-(--brand-cyan)/20 bg-(--brand-navy)/60" />
+      <div className="absolute inset-0 rounded-3xl border border-(--brand-navy)/10 bg-white/55 shadow-[0_24px_70px_rgb(15_46_80/0.12)] backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:shadow-none" />
+      <div className="absolute inset-4 rounded-2xl border border-(--brand-cyan)/20 bg-white/45 dark:bg-(--brand-navy)/60" />
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.88, clipPath: "inset(100% 0 0 0 round 1.5rem)" }}
+        animate={prefersReducedMotion ? undefined : { opacity: [0, 1, 1], scale: [0.88, 1.04, 1], clipPath: ["inset(100% 0 0 0 round 1.5rem)", "inset(0 0 0 0 round 1.5rem)", "inset(0 0 0 0 round 1.5rem)"] }}
+        transition={prefersReducedMotion ? undefined : { duration: 2.4, times: [0, 0.7, 1], ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-3xl"
+      >
+        <motion.div
+          animate={prefersReducedMotion ? undefined : { y: [0, -3, 0] }}
+          transition={prefersReducedMotion ? undefined : { delay: 2.7, duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="relative rounded-3xl p-3"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : { opacity: [0, 0.8, 0], scale: [0.85, 1.15, 1.2] }}
+            transition={prefersReducedMotion ? undefined : { duration: 1.6, delay: 1.05, ease: "easeOut" }}
+            className="pointer-events-none absolute inset-0 rounded-full bg-(--brand-cyan)/25 blur-2xl"
+          />
+          <img src="/UltrabulbLogo.svg" alt="Ultrabulb IT" className="relative size-44 object-contain drop-shadow-[0_8px_18px_rgb(0_0_0/0.16)] sm:size-52" />
+        </motion.div>
+      </motion.div>
       {panels.map((p) => (
         <motion.div
           key={p.label}
@@ -187,17 +201,17 @@ function HeroVisual({ prefersReducedMotion }: { prefersReducedMotion: boolean })
             y: prefersReducedMotion ? undefined : { delay: p.delay + 0.5, duration: 3, repeat: Infinity, ease: "easeInOut" },
           }}
           style={{ left: p.x, top: p.y }}
-          className="absolute flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 backdrop-blur-md"
+          className="absolute flex items-center gap-2 rounded-xl border border-(--brand-navy)/10 bg-white/70 px-3 py-2 text-(--brand-navy) shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/10 dark:text-white"
         >
           <p.icon className="size-4 text-(--brand-cyan)" />
-          <span className="text-xs font-medium text-white/80">{p.label}</span>
+          <span className="text-xs font-medium text-(--brand-navy)/80 dark:text-white/80">{p.label}</span>
         </motion.div>
       ))}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-(--brand-cyan)/30 bg-(--brand-cyan)/10 px-4 py-2"
+            className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-(--brand-cyan)/30 bg-(--brand-cyan)/10 px-4 py-2"
       >
         <span className="size-2 animate-pulse rounded-full bg-(--brand-cyan)" />
         <span className="text-xs font-medium text-(--brand-cyan)">Live ecosystem</span>

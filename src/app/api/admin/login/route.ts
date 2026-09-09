@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { ensureDefaultAdmin, verifyPassword, createSessionToken, setSessionCookie } from "@/lib/auth";
+import { verifyPassword, createSessionToken, setSessionCookie } from "@/lib/auth";
 
 // POST /api/admin/login — admin login with email + password
 export async function POST(req: Request) {
-  await ensureDefaultAdmin();
   let body: Record<string, unknown>;
   try {
     body = await req.json();

@@ -21,7 +21,7 @@ export function SiteLogo({
 }: SiteLogoProps) {
   const img = (
     <Image
-      src="/logo.svg"
+      src="/UltrabulbLogo.svg"
       alt={alt}
       className={cn("object-contain", className)}
       width={64}

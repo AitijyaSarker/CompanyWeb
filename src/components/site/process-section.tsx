@@ -100,7 +100,7 @@ export function ProcessSection() {
               index={index}
               isLast={index === PROCESS_STEPS.length - 1}
               inView={inView}
-              prefersReducedMotion={prefersReducedMotion}
+              prefersReducedMotion={!!prefersReducedMotion}
             />
           ))}
         </div>

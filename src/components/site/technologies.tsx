@@ -50,8 +50,8 @@ export function Technologies() {
             </motion.div>
           ))}
         </motion.div>
-        <TechMarquee />
       </div>
+      <TechMarquee />
     </section>
   );
 }

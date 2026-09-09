@@ -74,8 +74,9 @@ function NavItem({ href, children, onClick }: { href: string; children: React.Re
 export function SiteNavbar() {
   const { data } = useSiteData();
   const content = data?.content;
+  const serviceCategories = data?.serviceCategories ?? [];
+  const products = data?.products ?? [];
   const brand = getContent(content, "nav_brand", "ULTRABULB IT");
-  const tagline = getContent(content, "nav_tagline", "Software Development Agency");
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -85,7 +86,7 @@ export function SiteNavbar() {
   const prefersReducedMotion = useReducedMotion();
 
   const isHome = pathname === "/";
-  const overlayHero = isHome && !scrolled;
+  const overlayHero = false;
   const isDark = mounted && resolvedTheme === "dark";
   const heroOverlayDark = overlayHero && isDark;
 
@@ -105,6 +106,8 @@ export function SiteNavbar() {
   }, [pathname]);
 
   const companyActive = isCompanyActive(pathname);
+  const servicesActive = isActive(pathname, "/services") || pathname.startsWith("/projects/");
+  const projectsActive = pathname.startsWith("/projects/") || pathname === "/projects";
 
   return (
     <motion.header
@@ -121,39 +124,64 @@ export function SiteNavbar() {
     >
       <nav
         aria-label="Primary"
-        className="site-container flex h-[4.5rem] items-center justify-between gap-4 lg:h-20"
+        className="navbar-container flex h-[5.5rem] items-center justify-between gap-4 lg:h-[7.25rem]"
       >
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-4"
+          className="flex shrink-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-5"
         >
           <motion.div whileHover={{ scale: 1.05, rotate: -2 }} whileTap={{ scale: 0.97 }} transition={SPRING_BOUNCY}>
-            <SiteLogo alt={brand} priority className="size-11 sm:size-12" showWrapper wrapperClassName="size-12 sm:size-14" />
+            <SiteLogo alt={brand} priority className="size-14 sm:size-16" showWrapper wrapperClassName="size-16 sm:size-[4.5rem]" />
           </motion.div>
-          <span className="hidden flex-col leading-tight sm:flex">
+          <span className="hidden sm:flex">
             <span
               className={cn(
-                "text-base font-bold tracking-tight",
+                "text-xl font-semibold tracking-[0.28em]",
                 heroOverlayDark ? "text-white" : "text-(--brand-navy) dark:text-white"
               )}
             >
               {brand}
             </span>
-            <span
-              className={cn(
-                "text-[11px] font-medium uppercase tracking-[0.14em]",
-                heroOverlayDark ? "text-white/60" : "text-muted-foreground"
-              )}
-            >
-              {tagline}
-            </span>
           </span>
         </Link>
 
-        <ul className="hidden items-center gap-0.5 lg:flex">
+        <ul className="hidden items-center gap-4 lg:flex xl:gap-7">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <NavItem href={link.href}>{link.label}</NavItem>
+              {link.label === "Services" ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button type="button" className={cn("nav-link group text-[15px] font-semibold", servicesActive && "nav-link-active")}>
+                      Services
+                      <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="min-w-60 rounded-xl border-border/70 p-2 shadow-xl">
+                    {serviceCategories.map((category) => {
+                      const product = products.find((item) => item.categoryId === category.id);
+                      return (
+                        <DropdownMenuItem key={category.id} asChild className="rounded-lg px-3 py-2.5">
+                          <Link href={product ? `/projects/${product.id}` : `/projects?category=${category.slug}`}>{category.name}</Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                    {serviceCategories.length === 0 && <DropdownMenuItem disabled>No service categories yet</DropdownMenuItem>}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : link.label === "Projects" ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button type="button" className={cn("nav-link group text-[15px] font-semibold", projectsActive && "nav-link-active")}>
+                      Projects
+                      <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="min-w-60 rounded-xl border-border/70 p-2 shadow-xl">
+                    {products.map((product) => <DropdownMenuItem key={product.id} asChild className="rounded-lg px-3 py-2.5"><Link href={`/projects/${product.id}`}>{product.title}</Link></DropdownMenuItem>)}
+                    {products.length === 0 && <DropdownMenuItem disabled>No projects yet</DropdownMenuItem>}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : <NavItem href={link.href}>{link.label}</NavItem>}
             </li>
           ))}
           <li>
@@ -161,11 +189,11 @@ export function SiteNavbar() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className={cn("nav-link group", companyActive && "nav-link-active")}
+                  className={cn("nav-link group text-[15px] font-semibold", companyActive && "nav-link-active")}
                   aria-current={companyActive ? "true" : undefined}
                 >
                   Company
-                  <ChevronDown className="size-3.5 transition-transform group-data-[state=open]:rotate-180" />
+                  <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="min-w-52 rounded-xl border-border/70 p-2 shadow-xl">
@@ -175,9 +203,7 @@ export function SiteNavbar() {
                 <DropdownMenuSeparator />
                 {COMPANY_LINKS.map((item) => (
                   <DropdownMenuItem key={item.href} asChild className="rounded-lg px-3 py-2.5">
-                    <Link href={item.href} className={cn(isActive(pathname, item.href) && "font-semibold text-(--brand-cyan)")}>
-                      {item.label}
-                    </Link>
+                    <Link href={item.href} className={cn(isActive(pathname, item.href) && "font-semibold text-(--brand-cyan)")}>{item.label}</Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -191,7 +217,7 @@ export function SiteNavbar() {
             <Button
               asChild
               size="sm"
-              className="hidden rounded-full bg-(--brand-cyan) px-4 font-semibold text-(--brand-navy-dark) shadow-sm hover:bg-(--brand-cyan)/90 md:inline-flex"
+              className="hidden h-14 rounded-full bg-(--brand-navy) px-7 text-base font-semibold text-white shadow-sm hover:bg-(--brand-navy-dark) md:inline-flex"
             >
               <Link href="/schedule" className="gap-1.5">
                 <Phone className="size-3.5" />
@@ -237,6 +263,13 @@ export function SiteNavbar() {
                     </Link>
                   </SheetClose>
                 ))}
+                <div className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Services</div>
+                {serviceCategories.map((category) => {
+                  const product = products.find((item) => item.categoryId === category.id);
+                  return <SheetClose asChild key={category.id}><Link href={product ? `/projects/${product.id}` : `/projects?category=${category.slug}`} className="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent">{category.name}</Link></SheetClose>;
+                })}
+                <div className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Projects</div>
+                {products.map((product) => <SheetClose asChild key={product.id}><Link href={`/projects/${product.id}`} className="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent">{product.title}</Link></SheetClose>)}
                 <div className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Company
                 </div>

@@ -13,9 +13,12 @@ const staticSrc = join(root, ".next", "static");
 const staticDest = join(standalone, ".next", "static");
 const publicSrc = join(root, "public");
 const publicDest = join(standalone, "public");
+const dbSrc = join(root, "db");
+const dbDest = join(standalone, "db");
 
 mkdirSync(join(standalone, ".next"), { recursive: true });
 cpSync(staticSrc, staticDest, { recursive: true });
 cpSync(publicSrc, publicDest, { recursive: true });
+if (existsSync(dbSrc)) cpSync(dbSrc, dbDest, { recursive: true });
 
 console.log("Copied static assets into .next/standalone");

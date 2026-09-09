@@ -12,10 +12,27 @@ export interface Product {
   title: string;
   description: string;
   imageUrl: string;
+  galleryUrls?: string | null;
   category: string;
+  categoryId?: string | null;
+  serviceCategory?: ServiceCategory | null;
+  techStack?: string | null;
+  review?: string | null;
+  awards?: string | null;
+  accessFeatures?: string | null;
+  serviceOwners?: string | null;
   link?: string | null;
   tags?: string | null;
   featured: boolean;
+  order: number;
+}
+
+export interface ServiceCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  active: boolean;
   order: number;
 }
 
@@ -64,6 +81,7 @@ export interface Award {
 export interface SiteData {
   content: SiteContent;
   products: Product[];
+  serviceCategories: ServiceCategory[];
   vacancies: Vacancy[];
   gallery: GalleryImage[];
   reviews: Review[];
@@ -83,6 +101,7 @@ let inflight: Promise<SiteData> | null = null;
 const EMPTY_DATA: SiteData = {
   content: {},
   products: [],
+  serviceCategories: [],
   vacancies: [],
   gallery: [],
   reviews: [],
@@ -93,20 +112,22 @@ async function fetchAll(): Promise<SiteData> {
   const endpoints = [
     "/api/content",
     "/api/products",
+    "/api/service-categories",
     "/api/vacancies",
     "/api/gallery",
     "/api/reviews",
     "/api/awards",
   ] as const;
 
-  const [contentRes, productsRes, vacanciesRes, galleryRes, reviewsRes, awardsRes] =
+  const [contentRes, productsRes, categoriesRes, vacanciesRes, galleryRes, reviewsRes, awardsRes] =
     await Promise.all(endpoints.map((url) => fetch(url)));
 
   if (!contentRes.ok) throw new Error("Failed to load site content");
 
-  const [content, products, vacancies, gallery, reviews, awards] = await Promise.all([
+  const [content, products, serviceCategories, vacancies, gallery, reviews, awards] = await Promise.all([
     contentRes.json(),
     productsRes.ok ? productsRes.json() : [],
+    categoriesRes.ok ? categoriesRes.json() : [],
     vacanciesRes.ok ? vacanciesRes.json() : [],
     galleryRes.ok ? galleryRes.json() : [],
     reviewsRes.ok ? reviewsRes.json() : [],
@@ -116,6 +137,7 @@ async function fetchAll(): Promise<SiteData> {
   return {
     content: (content ?? {}) as SiteContent,
     products: (products ?? []) as Product[],
+    serviceCategories: (serviceCategories ?? []) as ServiceCategory[],
     vacancies: (vacancies ?? []) as Vacancy[],
     gallery: (gallery ?? []) as GalleryImage[],
     reviews: (reviews ?? []) as Review[],

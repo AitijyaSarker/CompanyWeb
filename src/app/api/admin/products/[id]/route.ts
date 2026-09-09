@@ -23,7 +23,14 @@ export async function PUT(
     title,
     description,
     imageUrl,
+    galleryUrls,
     category,
+    categoryId,
+    techStack,
+    review,
+    awards,
+    accessFeatures,
+    serviceOwners,
     link,
     tags,
     featured,
@@ -32,7 +39,14 @@ export async function PUT(
     title?: string;
     description?: string;
     imageUrl?: string;
+    galleryUrls?: string | null;
     category?: string;
+    categoryId?: string | null;
+    techStack?: string | null;
+    review?: string | null;
+    awards?: string | null;
+    accessFeatures?: string | null;
+    serviceOwners?: string | null;
     link?: string | null;
     tags?: string | null;
     featured?: boolean;
@@ -49,7 +63,14 @@ export async function PUT(
       ...(title !== undefined && { title }),
       ...(description !== undefined && { description }),
       ...(imageUrl !== undefined && { imageUrl }),
+      ...(galleryUrls !== undefined && { galleryUrls: galleryUrls || null }),
       ...(category !== undefined && { category }),
+      ...(categoryId !== undefined && { categoryId: categoryId || null }),
+      ...(techStack !== undefined && { techStack: techStack || null }),
+      ...(review !== undefined && { review: review || null }),
+      ...(awards !== undefined && { awards: awards || null }),
+      ...(accessFeatures !== undefined && { accessFeatures: accessFeatures || null }),
+      ...(serviceOwners !== undefined && { serviceOwners: serviceOwners || null }),
       ...(link !== undefined && { link }),
       ...(tags !== undefined && { tags }),
       ...(featured !== undefined && { featured }),

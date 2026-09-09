@@ -8,8 +8,12 @@ import {
   createHmac,
 } from "crypto";
 
-const SESSION_SECRET =
-  process.env.SESSION_SECRET || "ultrabulb-it-dev-secret-change-in-production-9f2k4";
+const SESSION_SECRET = process.env.SESSION_SECRET || (process.env.NODE_ENV === "production" ? "" : "ultrabulb-it-dev-secret");
+
+function getSessionSecret() {
+  if (!SESSION_SECRET) throw new Error("SESSION_SECRET must be configured in production");
+  return SESSION_SECRET;
+}
 
 export function hashPassword(password: string): string {
   const salt = randomBytes(16).toString("hex");
@@ -29,7 +33,7 @@ export function verifyPassword(password: string, stored: string): boolean {
 // ---- Simple signed token: base64(payload).hmac ----
 function sign(payload: string): string {
   const b64 = Buffer.from(payload).toString("base64url");
-  const sig = createHmac("sha256", SESSION_SECRET)
+  const sig = createHmac("sha256", getSessionSecret())
     .update(b64)
     .digest("base64url");
   return `${b64}.${sig}`;
@@ -38,7 +42,7 @@ function sign(payload: string): string {
 function verify(token: string): string | null {
   const [b64, sig] = token.split(".");
   if (!b64 || !sig) return null;
-  const expected = createHmac("sha256", SESSION_SECRET)
+  const expected = createHmac("sha256", getSessionSecret())
     .update(b64)
     .digest("base64url");
   try {

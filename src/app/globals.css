@@ -54,6 +54,8 @@
   --brand-cyan-pale: #E7F7FA;
   --brand-bg-light: #F4FBFC;
   --brand-surface: #FDFDFD;
+  --tech-marquee-bg: #F4FBFC;
+  --tech-marquee-foreground: #0F2E50;
   /* ULTRABULB IT — deep navy and electric cyan */
   --background: oklch(0.985 0.008 220);
   --foreground: oklch(0.2 0.04 245);
@@ -121,6 +123,8 @@
   --sidebar-accent-foreground: oklch(0.94 0.04 210);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.75 0.16 205);
+  --tech-marquee-bg: #062141;
+  --tech-marquee-foreground: #ffffff;
 }
 
 @layer base {
@@ -183,6 +187,12 @@
       linear-gradient(to bottom, oklch(0.75 0.16 205 / 0.08) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+  .hero-ambient {
+    background: radial-gradient(circle at 70% 30%, rgb(33 187 205 / 0.1), transparent 45%), radial-gradient(circle at 20% 80%, rgb(115 130 145 / 0.12), transparent 48%);
+  }
+  .dark .hero-ambient {
+    background: radial-gradient(circle at 70% 30%, rgb(33 187 205 / 0.14), transparent 45%), radial-gradient(circle at 20% 80%, rgb(6 33 65 / 0.8), transparent 50%);
+  }
   .glass {
     backdrop-filter: blur(16px) saturate(180%);
     background: oklch(1 0 0 / 0.6);
@@ -219,6 +229,9 @@
   .site-container {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+  .navbar-container {
+    @apply mx-auto w-full max-w-[1920px] px-5 sm:px-10 lg:px-20;
+  }
   .section-pad {
     @apply py-16 sm:py-20 lg:py-24;
   }
@@ -239,10 +252,56 @@
       radial-gradient(circle at 10% 80%, rgba(26, 188, 207, 0.05), transparent 40%);
   }
   .nav-link {
-    @apply inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand-cyan);
+    @apply inline-flex items-center gap-2 rounded-md px-2 py-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand-cyan);
   }
   .nav-link-active {
     @apply font-semibold text-(--brand-cyan);
+  }
+
+  .tech-marquee-section {
+    @apply relative mt-16 w-full overflow-hidden py-16 sm:mt-20 sm:py-20 lg:mt-24 lg:py-24;
+    background: var(--tech-marquee-bg);
+    color: var(--tech-marquee-foreground);
+  }
+  .tech-marquee-section::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 opacity-30;
+    background-image: linear-gradient(to right, rgb(33 187 205 / 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgb(33 187 205 / 0.08) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+  .tech-marquee-heading {
+    @apply pointer-events-none absolute inset-x-0 top-1/2 z-0 flex -translate-y-1/2 flex-col items-center text-center text-[clamp(4rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.03em];
+    color: var(--tech-marquee-foreground);
+    opacity: 0.06;
+  }
+  .tech-marquee-viewport {
+    @apply relative z-10 overflow-hidden py-5;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .tech-marquee-track {
+    @apply flex w-max items-center gap-12;
+    animation: tech-marquee-scroll 38s linear infinite;
+  }
+  .tech-marquee-viewport:hover .tech-marquee-track { animation-play-state: paused; }
+  .tech-marquee-item {
+    @apply flex h-20 min-w-36 items-center justify-center px-3 transition-all duration-300 hover:scale-[1.07] hover:drop-shadow-[0_0_18px_rgb(33_187_205/.45)];
+    color: var(--tech-marquee-foreground);
+    opacity: 0.52;
+    filter: none;
+  }
+  .tech-marquee-item:hover { filter: saturate(1); }
+  .tech-marquee-mark { @apply flex items-center gap-3 whitespace-nowrap text-sm font-semibold tracking-wide; }
+  .tech-marquee-item:hover { opacity: 1; }
+  .tech-marquee-mark-icon { @apply size-10 shrink-0 bg-current transition-opacity duration-300; mask-position: center; mask-repeat: no-repeat; mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain; }
+  .tech-marquee-wordmark { @apply whitespace-nowrap text-lg font-semibold tracking-wide; }
+  .tech-marquee-caption { @apply relative z-10 mt-7 text-center text-xs uppercase tracking-[0.24em]; color: var(--tech-marquee-foreground); opacity: 0.48; }
+  @keyframes tech-marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tech-marquee-track { animation: none; transform: translate3d(0, 0, 0); }
   }
   header[data-overlay="true"] .nav-link {
     @apply text-white/75 hover:text-white;

@@ -33,13 +33,33 @@ model Product {
   title       String
   description String
   imageUrl    String
+  galleryUrls String?
   category    String
+  categoryId  String?
+  serviceCategory ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  techStack   String?
+  review      String?
+  awards      String?
+  accessFeatures String?
+  serviceOwners String?
   link        String?
   tags        String?
   featured    Boolean  @default(false)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 // ---- Career vacancies with hiring / no-hiring status ----

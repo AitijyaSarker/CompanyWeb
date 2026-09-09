@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import {
   Award,
+  Bell,
   Box,
   Briefcase,
   Calendar,
@@ -18,6 +19,7 @@ import {
   Moon,
   Star,
   Sun,
+  Tags,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -31,7 +33,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { Award as AwardRecord, GalleryImage, Product, Vacancy } from "@/hooks/use-site-data";
+import type { Award as AwardRecord, GalleryImage, Product, ServiceCategory, Vacancy } from "@/hooks/use-site-data";
 
 import { CollectionPanel } from "@/components/admin/collection-panel";
 import { ContentEditor } from "@/components/admin/content-editor";
@@ -155,6 +157,63 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
   );
 }
 
+type AdminNotification = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+};
+
+function Notifications({ onOpenMessages }: { onOpenMessages: () => void }) {
+  const [open, setOpen] = React.useState(false);
+  const [items, setItems] = React.useState<AdminNotification[]>([]);
+
+  React.useEffect(() => {
+    const refresh = () => {
+      void fetch("/api/admin/messages", { credentials: "same-origin" })
+        .then((response) => (response.ok ? response.json() : []))
+        .then((messages: AdminNotification[]) => setItems(messages));
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 30000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const unread = items.filter((item) => !item.read).length;
+
+  return (
+    <div className="relative">
+      <Button variant="ghost" size="icon" className="relative size-9" aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`} onClick={() => setOpen((value) => !value)}>
+        <Bell className="size-4" />
+        {unread > 0 ? <span className="absolute right-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-(--brand-cyan) text-[10px] font-bold text-(--brand-navy-dark)">{unread > 9 ? "9+" : unread}</span> : null}
+      </Button>
+      {open ? (
+        <div className="absolute right-0 top-11 z-50 w-80 rounded-xl border border-border/70 bg-popover p-3 text-popover-foreground shadow-xl">
+          <div className="mb-2 flex items-center justify-between px-1">
+            <span className="text-sm font-semibold">Notifications</span>
+            <span className="text-xs text-muted-foreground">{unread} unread</span>
+          </div>
+          <div className="max-h-72 space-y-1 overflow-y-auto">
+            {items.slice(0, 5).map((item) => (
+              <button key={item.id} type="button" className="w-full rounded-lg p-2 text-left transition-colors hover:bg-accent" onClick={() => { setOpen(false); onOpenMessages(); }}>
+                <div className="flex items-start gap-2">
+                  {!item.read ? <span className="mt-1.5 size-2 shrink-0 rounded-full bg-(--brand-cyan)" /> : <span className="mt-1.5 size-2 shrink-0" />}
+                  <span className="min-w-0"><span className="block truncate text-sm font-medium">{item.subject}</span><span className="block truncate text-xs text-muted-foreground">{item.name} · {new Date(item.createdAt).toLocaleDateString()}</span></span>
+                </div>
+              </button>
+            ))}
+            {items.length === 0 ? <p className="px-2 py-6 text-center text-xs text-muted-foreground">No notifications yet.</p> : null}
+          </div>
+          <Button variant="outline" size="sm" className="mt-2 w-full" onClick={() => { setOpen(false); onOpenMessages(); }}>View all messages</Button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 /* ---------------- Sidebar config ---------------- */
 interface NavItem {
   id: string;
@@ -167,6 +226,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, group: "Main" },
   { id: "content", label: "Site Content", icon: FileText, group: "Main" },
   { id: "products", label: "Products", icon: Box, group: "Collections" },
+    { id: "service-categories", label: "Service Categories", icon: Tags, group: "Collections" },
   { id: "vacancies", label: "Vacancies", icon: Briefcase, group: "Collections" },
   { id: "gallery", label: "Gallery", icon: Images, group: "Collections" },
   { id: "awards", label: "Awards", icon: Award, group: "Collections" },
@@ -268,12 +328,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       </Sheet>
 
       <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setMobileNav(true)} aria-label="Open menu">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur">
+          <Button variant="ghost" size="icon" onClick={() => setMobileNav(true)} aria-label="Open menu" className="md:hidden">
             <Menu className="size-5" />
           </Button>
           <span className="text-sm font-bold">ULTRABULB IT Admin</span>
-          <ThemeToggle />
+          <div className="flex items-center gap-1"><Notifications onOpenMessages={() => { setTab("messages"); setMobileNav(false); }} /><ThemeToggle /></div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
@@ -292,9 +352,15 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 endpoint="/api/admin/products"
                 fields={[
                   { name: "title", label: "Title", required: true },
-                  { name: "category", label: "Category", required: true },
+                                    { name: "categoryId", label: "Service Category", type: "select", optionsEndpoint: "/api/admin/service-categories", required: true },
                   { name: "imageUrl", label: "Image URL", type: "url", required: true, full: true },
+                  { name: "galleryUrls", label: "Additional Picture URLs (one per line)", type: "textarea", full: true },
                   { name: "description", label: "Description", type: "textarea", required: true, full: true },
+                  { name: "techStack", label: "Tech Stack (comma-separated)", full: true },
+                  { name: "review", label: "Client Review", type: "textarea", full: true },
+                  { name: "awards", label: "Awards & Recognition", type: "textarea", full: true },
+                  { name: "accessFeatures", label: "Access Features (one per line)", type: "textarea", full: true },
+                  { name: "serviceOwners", label: "Service Owners", type: "textarea", full: true, placeholder: "Name - Role (one per line)" },
                   { name: "tags", label: "Tags (comma-separated)", full: true },
                   { name: "link", label: "Project Link", type: "url", full: true },
                   { name: "order", label: "Order", type: "number" },
@@ -317,6 +383,27 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                     <TableCell>
                       {p.featured ? <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-300">Featured</Badge> : <span className="text-xs text-muted-foreground">—</span>}
                     </TableCell>
+                  </>
+                )}
+              />
+            )}
+            {tab === "service-categories" && (
+              <CollectionPanel<ServiceCategory>
+                title="Service Categories"
+                description="Categories shown in the Services navbar menu and assigned to projects."
+                endpoint="/api/admin/service-categories"
+                fields={[
+                  { name: "name", label: "Name", required: true },
+                  { name: "slug", label: "Slug", required: true },
+                  { name: "description", label: "Description", type: "textarea", full: true },
+                  { name: "order", label: "Order", type: "number" },
+                  { name: "active", label: "Visible in navbar", type: "switch" },
+                ]}
+                renderRow={(category) => (
+                  <>
+                    <TableCell className="text-sm font-medium">{category.name}</TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground">{category.slug}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground">{category.active ? "Visible" : "Hidden"}</TableCell>
                   </>
                 )}
               />

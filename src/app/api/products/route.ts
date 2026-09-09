@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 export async function GET() {
   const products = await db.product.findMany({
     orderBy: { order: "asc" },
+    include: { serviceCategory: true },
   });
   return NextResponse.json(products);
 }

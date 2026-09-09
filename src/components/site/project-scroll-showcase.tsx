@@ -29,6 +29,12 @@ export function ProjectScrollShowcase({ products }: ProjectScrollShowcaseProps) 
     offset: ["start start", "end end"],
   });
 
+  function focusProject(index: number) {
+    if (!containerRef.current) return;
+    const top = containerRef.current.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + index * window.innerHeight * 0.85 - 80, behavior: "smooth" });
+  }
+
   if (reduced || products.length <= 1) {
     return (
       <div className="mt-12 flex flex-col gap-8 lg:gap-10">
@@ -53,6 +59,7 @@ export function ProjectScrollShowcase({ products }: ProjectScrollShowcaseProps) 
             index={index}
             total={products.length}
             scrollYProgress={scrollYProgress}
+            onFocus={() => focusProject(index)}
           />
         ))}
       </div>
@@ -76,9 +83,10 @@ interface ScrollProjectLayerProps {
   index: number;
   total: number;
   scrollYProgress: MotionValue<number>;
+  onFocus: () => void;
 }
 
-function ScrollProjectLayer({ product, index, total, scrollYProgress }: ScrollProjectLayerProps) {
+function ScrollProjectLayer({ product, index, total, scrollYProgress, onFocus }: ScrollProjectLayerProps) {
   const segment = 1 / total;
   const start = index * segment;
   const end = start + segment;
@@ -101,7 +109,7 @@ function ScrollProjectLayer({ product, index, total, scrollYProgress }: ScrollPr
       }}
       className="absolute inset-x-0 mx-auto w-full max-w-5xl px-4"
     >
-      <ScrollProjectCard product={product} index={index} featured />
+      <ScrollProjectCard product={product} index={index} featured onFocus={onFocus} />
     </motion.div>
   );
 }
@@ -110,9 +118,10 @@ interface ScrollProjectCardProps {
   product: Product;
   index: number;
   featured?: boolean;
+  onFocus?: () => void;
 }
 
-function ScrollProjectCard({ product, index, featured }: ScrollProjectCardProps) {
+function ScrollProjectCard({ product, index, featured, onFocus }: ScrollProjectCardProps) {
   const tiltRef = useTilt3D(3);
   const magneticRef = useMagnetic(0.2);
   const [light, setLight] = React.useState({ x: 50, y: 50 });
@@ -128,7 +137,22 @@ function ScrollProjectCard({ product, index, featured }: ScrollProjectCardProps)
   };
 
   return (
-    <article data-cursor="view" className="group relative">
+    <article
+      data-cursor="view"
+      className={`group relative ${onFocus ? "cursor-pointer" : ""}`}
+      onClick={(event) => {
+        if (onFocus && !(event.target as HTMLElement).closest("a,button")) onFocus();
+      }}
+      onKeyDown={(event) => {
+        if (onFocus && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onFocus();
+        }
+      }}
+      role={onFocus ? "button" : undefined}
+      tabIndex={onFocus ? 0 : undefined}
+      aria-label={onFocus ? `Focus ${product.title}` : undefined}
+    >
       <div
         ref={tiltRef}
         onMouseMove={onMove}
@@ -143,7 +167,7 @@ function ScrollProjectCard({ product, index, featured }: ScrollProjectCardProps)
         />
 
         <div className={`relative overflow-hidden ${featured ? "lg:order-2" : ""}`}>
-          <div className={`w-full overflow-hidden bg-muted ${featured ? "aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[320px]" : "aspect-[16/10]"}`}>
+          <div className={`w-full overflow-hidden bg-muted ${featured ? "aspect-16/10 lg:aspect-auto lg:h-full lg:min-h-80" : "aspect-16/10"}`}>
             <motion.img
               src={product.imageUrl}
               alt={product.title}
@@ -173,19 +197,20 @@ function ScrollProjectCard({ product, index, featured }: ScrollProjectCardProps)
               ))}
             </div>
           )}
-          {product.link && (
+          <>
             <div ref={magneticRef} className="mt-2 inline-block transition-transform duration-200">
               <Button
                 asChild
                 className="rounded-full bg-(--brand-navy) px-6 text-white hover:bg-(--brand-navy-dark)"
               >
-                <Link href={product.link} target="_blank" rel="noopener noreferrer" className="gap-2">
+                <Link href={`/projects/${product.id}`} className="gap-2">
                   View Project
                   <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
               </Button>
             </div>
-          )}
+            {product.link ? <Link href={product.link} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground">Visit live project</Link> : null}
+          </>
         </div>
       </div>
     </article>
