@@ -18,7 +18,6 @@ export default defineConfig({
       { find: "react", replacement: path.resolve(__dirname, "node_modules/react") },
       { find: "react-dom", replacement: path.resolve(__dirname, "node_modules/react-dom") },
       { find: "tailwindcss", replacement: path.resolve(__dirname, "node_modules/tailwindcss/index.css") },
-      { find: "tw-animate-css", replacement: path.resolve(__dirname, "node_modules/tw-animate-css/dist/tw-animate.css") },
       ...clientDependencies,
       { find: "next/link", replacement: path.resolve(__dirname, "src/compat/link.jsx") },
       { find: "next/image", replacement: path.resolve(__dirname, "src/compat/image.jsx") },
