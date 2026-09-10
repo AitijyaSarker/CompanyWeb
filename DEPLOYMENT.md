@@ -9,9 +9,12 @@ This repository includes `render.yaml` for a single Render Web Service. Create a
 ```text
 MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>/<database>?retryWrites=true&w=majority
 CLIENT_ORIGIN=https://<your-render-service>.onrender.com
+CLOUDINARY_CLOUD_NAME=<cloud-name>
+CLOUDINARY_API_KEY=<api-key>
+CLOUDINARY_API_SECRET=<api-secret>
 ```
 
-Render generates `JWT_SECRET` automatically. The service builds `frontend/`, starts `backend/`, exposes `/api/health`, and stores uploads on a persistent disk. Add the Render outbound IP policy required by your Atlas plan, or temporarily allow access during the first migration and then restrict it.
+Render generates `JWT_SECRET` automatically. The service builds `frontend/`, starts `backend/`, exposes `/api/health`, and sends new admin uploads to Cloudinary. Add the Render outbound IP policy required by your Atlas plan, or temporarily allow access during the first migration and then restrict it.
 
 After the first deploy, migrate the existing SQLite data from a machine that has `db/custom.db`:
 
@@ -37,7 +40,7 @@ cp .env.example .env
 npm start
 ```
 
-Run the backend from `backend/`; it serves `frontend/dist` and listens on port `4000`. Put Caddy or Nginx in front of `localhost:4000` and configure HTTPS. Keep MongoDB persistent and back up `backend/uploads/`.
+Run the backend from `backend/`; it serves `frontend/dist` and listens on port `4000`. Put Caddy or Nginx in front of `localhost:4000` and configure HTTPS. MongoDB stores application data and Cloudinary stores uploaded images.
 
 ## Updates
 

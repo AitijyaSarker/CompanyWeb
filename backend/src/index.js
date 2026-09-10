@@ -1,10 +1,12 @@
 import "dotenv/config";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
+import { Readable } from "node:stream";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
@@ -19,6 +21,14 @@ if (!jwtSecret && process.env.NODE_ENV === "production") throw new Error("JWT_SE
 const secret = jwtSecret || "ultrabulb-local-secret";
 const uploadDirectory = path.resolve(process.env.UPLOAD_DIR || "uploads");
 const clientDirectory = path.resolve(process.env.CLIENT_DIR || "../frontend/dist");
+const cloudinaryEnabled = Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+if (cloudinaryEnabled) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+}
 const serialize = (record) => {
   if (!record) return record;
   const { _id, __v, ...rest } = record;
@@ -141,8 +151,23 @@ app.get("/api/admin/calls", requireAdmin, asyncRoute(async (_req, res) => res.js
 app.patch("/api/admin/calls/:id", requireAdmin, asyncRoute(async (req, res) => res.json(serialize(await ScheduledCall.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true }).lean()))));
 app.delete("/api/admin/calls/:id", requireAdmin, asyncRoute(async (req, res) => { await ScheduledCall.findByIdAndDelete(req.params.id); res.json({ ok: true }); }));
 
-const upload = multer({ dest: uploadDirectory, limits: { fileSize: 8 * 1024 * 1024 } });
-app.post("/api/admin/upload", requireAdmin, upload.single("file"), (req, res) => res.status(201).json({ url: `/uploads/${req.file.filename}` }));
+const upload = multer({
+  storage: cloudinaryEnabled ? multer.memoryStorage() : multer.diskStorage({ destination: uploadDirectory }),
+  limits: { fileSize: 8 * 1024 * 1024 },
+  fileFilter: (_req, file, callback) => callback(null, /^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)),
+});
+const uploadToCloudinary = (buffer) => new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream({ folder: "ultrabulb" }, (error, result) => error ? reject(error) : resolve(result));
+  Readable.from(buffer).pipe(stream);
+});
+app.post("/api/admin/upload", requireAdmin, upload.single("file"), asyncRoute(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: "An image file is required" });
+  if (cloudinaryEnabled) {
+    const result = await uploadToCloudinary(req.file.buffer);
+    return res.status(201).json({ url: result.secure_url });
+  }
+  res.status(201).json({ url: `/uploads/${req.file.filename}` });
+}));
 app.use(express.static(clientDirectory));
 app.get("/{*splat}", (req, res, next) => req.path.startsWith("/api/") ? next() : res.sendFile(path.join(clientDirectory, "index.html")));
 app.use((error, _req, res, _next) => { console.error(error); res.status(500).json({ error: "Internal server error" }); });

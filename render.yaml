@@ -17,7 +17,9 @@ services:
         sync: false
       - key: UPLOAD_DIR
         value: uploads
-    disk:
-      name: ultrabulb-uploads
-      mountPath: /opt/render/project/src/backend/uploads
-      sizeGB: 1
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
