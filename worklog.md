@@ -191,3 +191,122 @@ Work Log:
 Stage Summary:
 - ALL core flows verified end-to-end in the browser: public browsing, contact form, schedule booking, review submission, admin login, content editing (edit+save+persist), review moderation (approve→publish), and viewing client submissions (messages, calls, pending reviews).
 - The website is fully interactive and runnable. No console errors, no runtime errors, no hydration issues.
+
+---
+Task ID: 7
+Agent: main
+Task: Make MERN client portable for split deployment
+
+Work Log:
+- Added mern/client/src/compat/api.js, a Vite-side fetch adapter that prefixes `/api` requests with `VITE_API_URL` when configured and includes cookies for admin sessions.
+- Loaded the adapter before the React app in mern/client/src/main.jsx so reused site/admin components transparently use the Express API in both local proxy and separately hosted deployments.
+- Updated mern/server/src/index.js to reuse the configured client origin and set secure SameSite cookie attributes for production cross-site deployments while retaining usable localhost cookies.
+- Verified `npm run build` in mern/client and `node --check` for the updated client/server JavaScript.
+
+---
+Task ID: 8
+Agent: main
+Task: Make SQLite-to-Mongo migration repeatable
+
+Work Log:
+- Added sparse unique `legacyId` fields to Mongo schemas so imported SQLite identities are retained instead of being discarded by Mongoose strict mode.
+- Reworked `mern/server/src/migrate-sqlite.js` to upsert imported rows by legacy ID, while preserving service-category slug matching and product category references.
+- Updated deployment documentation to describe repeatable imports and verification expectations.
+- Verified both updated server files with `node --check`.
+
+---
+Task ID: 9
+Agent: main
+Task: Normalize MERN API identifiers for React parity
+
+Work Log:
+- Added a server response serializer that converts Mongo `_id` values to the `id` fields expected by the migrated React pages.
+- Normalized populated product categories to a string `categoryId` plus `serviceCategory`, matching the existing site data contract.
+- Applied the serializer to public collections and admin collection/submission responses.
+- Verified the Express server with `node --check`; live API testing remains blocked because MongoDB is not installed or running locally.
+
+---
+Task ID: 10
+Agent: main
+Task: Install and isolate MERN dependencies
+
+Work Log:
+- Installed the MERN server dependencies successfully; npm reported 7 existing audit findings in the server tree.
+- Installed the MERN client UI/runtime dependencies and added client-local PostCSS/Tailwind configuration.
+- Updated Vite aliases so shared components resolve React, Tailwind, animation CSS, and client-installed packages from `mern/client` instead of the legacy root app.
+- Verified `npm run build` in `mern/client` succeeds with 3,173 modules transformed.
+- Root dependency installation remains blocked by malformed optional native-package entries in the existing root lockfile; the MERN projects are independently installed and buildable.
+
+---
+Task ID: 11
+Agent: main
+Task: Complete deployable MERN conversion
+
+Work Log:
+- Completed the standalone React/Vite client dependency installation, including the shared Radix UI component packages and Tailwind runtime.
+- Added client-local PostCSS configuration and Vite aliases for React, Tailwind, animation CSS, and all client dependencies.
+- Confirmed the client contains no `next/*` framework imports; `next-themes` is retained as a framework-independent React theme provider.
+- Verified the final client production build succeeds with 3,173 modules transformed.
+- Verified Express, Mongo models, and SQLite migration scripts with `node --check`.
+- The original root Next source remains in the repository as legacy source, but the deployable application runs through the MERN Express API and Vite React client.
+
+---
+Task ID: 12
+Agent: main
+Task: Install and run the local MERN stack
+
+Work Log:
+- Installed MongoDB Server 8.3.7 through Windows Package Manager and confirmed the MongoDB service is running automatically.
+- Confirmed MERN client and server dependencies are installed.
+- Started Vite at http://localhost:5173 and Express at http://localhost:4000.
+- Imported the existing SQLite database into MongoDB: site content, 3 products, 4 reviews, 6 time slots, and related records are available through the API.
+- Verified `/api/health` reports `database: connected`.
+- Added scrypt verification compatibility so the migrated Next.js admin hash works in the MERN login route; verified login and authenticated session with `admin@ultrabulb.com` / `admin123`.
+
+---
+Task ID: 13
+Agent: main
+Task: Fix and run local MERN app
+
+Work Log:
+- Fixed Vite startup binding by making `mern/client` use `vite --host 127.0.0.1` and setting an explicit Vite root.
+- Started the client at http://127.0.0.1:5173 and confirmed HTTP 200 with the React root document.
+- Confirmed the Express API remains available at http://localhost:4000 with MongoDB connected.
+- Rebuilt the client successfully after the startup fix.
+
+---
+Task ID: 14
+Agent: main
+Task: Fix MERN local image serving
+
+Work Log:
+- Configured Vite to serve the repository `asset/` directory so `UltrabulbLogo.svg` and other local brand assets load from the MERN client.
+- Added `/uploads` proxying from Vite to Express and changed the Express default upload directory to the existing `public/uploads` directory.
+- Standardized the admin logo reference to `UltrabulbLogo.svg`.
+- Verified the logo returns `image/svg+xml` and a migrated project image returns `image/jpeg` through `http://127.0.0.1:5173`.
+- Verified the production client build succeeds after the image fix.
+
+---
+Task ID: 15
+Agent: main
+Task: Fix admin logo and site content editor
+
+Work Log:
+- Replaced the remaining admin `/logo.svg` reference with the served `UltrabulbLogo.svg` asset.
+- Added the missing authenticated `GET /api/admin/content` Express route used by the admin Content Editor.
+- Verified the live admin login, content endpoint, and all 66 migrated site-content records.
+- Verified the logo responds with HTTP 200 and `image/svg+xml`.
+- Verified the MERN client production build succeeds.
+
+---
+Task ID: 16
+Agent: main
+Task: Audit admin workflows and prepare deployment database
+
+Work Log:
+- Replaced the footer Twitter link/icon with Instagram and added the editable `footer_social_instagram` content key while preserving existing migrated values.
+- Audited admin login/session, content read/write, all collection reads, create/delete CRUD cycles for products, service categories, vacancies, gallery, awards, and time slots.
+- Audited public review/contact/schedule submissions plus admin review approval/delete, call status update/delete, message read/delete, and authenticated image upload.
+- Fixed admin uploads to preserve file extensions; verified uploaded PNGs return `image/png`.
+- Verified all public API endpoints return 200 and the client production build succeeds.
+- Final MongoDB counts: 1 admin, 67 site-content fields, 3 products, 4 vacancies, 8 gallery images, 5 reviews, 3 awards, 1 scheduled call, 6 time slots, and the Instagram content key present.

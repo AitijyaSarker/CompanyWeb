@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ultrabulb-it
+    runtime: node
+    buildCommand: npm --prefix frontend ci && npm --prefix frontend run build && npm --prefix backend ci
+    startCommand: npm --prefix backend start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: UPLOAD_DIR
+        value: uploads
+    disk:
+      name: ultrabulb-uploads
+      mountPath: /opt/render/project/src/backend/uploads
+      sizeGB: 1
