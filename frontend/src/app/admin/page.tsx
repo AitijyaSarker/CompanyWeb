@@ -81,6 +81,9 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
+        if (res.status === 429) {
+          throw new Error("Too many login attempts. Wait 15 minutes or restart the Render service, then try again.");
+        }
         throw new Error(err.error || "Invalid credentials");
       }
       toast.success("Welcome back!");
