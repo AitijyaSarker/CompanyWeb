@@ -19,7 +19,7 @@ interface SiteLogoProps {
 export function SiteLogo({
   alt = "ULTRABULB IT",
   className,
-  lightSrc = "/UltrabulbLogo.svg",
+  lightSrc = "/UltrabulbLogoLight.png",
   darkSrc = "/UltrabulbLogoDark.png",
   wrapperClassName,
   showWrapper = false,
