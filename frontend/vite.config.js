@@ -12,6 +12,10 @@ export default defineConfig({
   root: __dirname,
   publicDir: path.resolve(__dirname, "../asset"),
   plugins: [react()],
+  build: {
+    outDir: path.resolve(__dirname, "../backend/dist"),
+    emptyOutDir: true,
+  },
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "src") },

@@ -22,7 +22,7 @@ const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret && process.env.NODE_ENV === "production") throw new Error("JWT_SECRET is required in production");
 const secret = jwtSecret || "ultrabulb-local-secret";
 const uploadDirectory = path.resolve(process.env.UPLOAD_DIR || "uploads");
-const defaultClientDirectory = path.resolve(__dirname, "../../frontend/dist");
+const defaultClientDirectory = path.resolve(__dirname, "../dist");
 const clientDirectory = process.env.CLIENT_DIR && path.isAbsolute(process.env.CLIENT_DIR)
   ? path.resolve(process.env.CLIENT_DIR)
   : defaultClientDirectory;
