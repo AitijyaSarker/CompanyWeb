@@ -14,6 +14,7 @@ import mongoose from "mongoose";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { assetDirectory, clientDirectory, validateClientBuild } from "./client-build.js";
 import { AdminUser, Award, ContactMessage, GalleryImage, Product, Review, ScheduledCall, ServiceCategory, SiteContent, TimeSlot, Vacancy } from "./models.js";
+import { sendBookingNotification, sendContactNotification } from "./mailer.js";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -184,6 +185,7 @@ app.post("/api/contact", publicWriteLimiter, asyncRoute(async (req, res) => {
   const cleanedMessage = text(message, MAX_TEXT_LENGTH);
   if (!cleanedName || !isEmail(cleanedEmail) || !cleanedSubject || !cleanedMessage) return res.status(400).json({ error: "Name, valid email, subject, and message are required" });
   await ContactMessage.create({ name: cleanedName, email: cleanedEmail, subject: cleanedSubject, message: cleanedMessage, phone: text(phone, 50) || null });
+  sendContactNotification({ name: cleanedName, email: cleanedEmail, subject: cleanedSubject, message: cleanedMessage, phone: text(phone, 50) || null }).catch((err) => console.error("[Mailer] Contact notification error:", err));
   res.json({ ok: true });
 }));
 app.post("/api/projects/:id/access", publicWriteLimiter, asyncRoute(async (req, res) => {
@@ -193,7 +195,9 @@ app.post("/api/projects/:id/access", publicWriteLimiter, asyncRoute(async (req, 
   const cleanedName = text(name, 120);
   const cleanedEmail = text(email, 254).toLowerCase();
   if (!cleanedName || !isEmail(cleanedEmail)) return res.status(400).json({ error: "Name and valid email are required" });
-  await ContactMessage.create({ name: cleanedName, email: cleanedEmail, phone: text(phone, 50) || null, subject: `Project access: ${project.title}`, message: [company && `Company: ${text(company, 120)}`, text(message, MAX_TEXT_LENGTH)].filter(Boolean).join("\n\n") || "Project access requested." });
+  const fullMessage = [company && `Company: ${text(company, 120)}`, text(message, MAX_TEXT_LENGTH)].filter(Boolean).join("\n\n") || "Project access requested.";
+  await ContactMessage.create({ name: cleanedName, email: cleanedEmail, phone: text(phone, 50) || null, subject: `Project access: ${project.title}`, message: fullMessage });
+  sendContactNotification({ name: cleanedName, email: cleanedEmail, subject: `Project Access: ${project.title}`, message: fullMessage, phone: text(phone, 50) || null }).catch((err) => console.error("[Mailer] Project access notification error:", err));
   res.json({ ok: true });
 }));
 app.post("/api/schedule", publicWriteLimiter, asyncRoute(async (req, res) => {
@@ -206,6 +210,7 @@ app.post("/api/schedule", publicWriteLimiter, asyncRoute(async (req, res) => {
   const slot = await TimeSlot.findOne({ value: cleanedTimeSlot, active: true });
   if (!slot) return res.status(400).json({ error: "That time slot is unavailable" });
   const call = await ScheduledCall.create({ name: cleanedName, email: cleanedEmail, phone: text(phone, 50), topic: text(topic, 180), date: cleanedDate, timeSlot: cleanedTimeSlot, company: text(company, 120) || null, message: text(message, MAX_TEXT_LENGTH) || null });
+  sendBookingNotification({ name: cleanedName, email: cleanedEmail, phone: text(phone, 50), topic: text(topic, 180), date: cleanedDate, timeSlot: cleanedTimeSlot, company: text(company, 120) || null, message: text(message, MAX_TEXT_LENGTH) || null }).catch((err) => console.error("[Mailer] Booking notification error:", err));
   res.json({ ok: true, id: call.id });
 }));
 
