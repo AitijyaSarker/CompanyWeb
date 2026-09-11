@@ -6,6 +6,7 @@ import { FeaturedProjects } from "@/components/site/featured-projects";
 import { ProcessSection } from "@/components/site/process-section";
 import { WhyChooseUsSection } from "@/components/site/why-choose-us-section";
 import { Technologies } from "@/components/site/technologies";
+import { CostEstimator } from "@/components/site/cost-estimator";
 import { Gallery } from "@/components/site/gallery";
 import { ReviewsAwards } from "@/components/site/reviews-awards";
 import { FinalCTA } from "@/components/site/final-cta";
@@ -19,6 +20,7 @@ export default function HomePage() {
       <ProcessSection />
       <WhyChooseUsSection />
       <Technologies />
+      <CostEstimator />
       <Gallery />
       <ReviewsAwards />
       <FinalCTA />

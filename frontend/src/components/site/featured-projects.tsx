@@ -3,34 +3,88 @@
 import * as React from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Code2, ExternalLink, Sparkles, Layers, CheckCircle } from "lucide-react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useSiteData, getContent } from "@/hooks/use-site-data";
-import { EASE_OUT, SPRING_SMOOTH, TiltCard } from "@/components/site/motion";
+import { useSiteData } from "@/hooks/use-site-data";
+import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
-    },
-  },
-};
+function ProjectCard({ project, index }: { project: any; index: number }) {
+  const imageUrl = project.imageUrl || project.image || "/UltrabulbLogo.svg";
+  const tags = Array.isArray(project.tags)
+    ? project.tags
+    : typeof project.tags === "string"
+    ? project.tags.split(",").map((t: string) => t.trim())
+    : ["Full-Stack", "Cloud", "UI/UX"];
 
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
+  return (
+    <motion.div
+      variants={fadeUpSpring}
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-cyan-500/50 hover:shadow-[0_25px_60px_rgba(6,182,212,0.18)] dark:border-white/10 dark:bg-slate-900/70"
+    >
+      {/* Project Image Preview Container */}
+      <div className="relative aspect-16/10 w-full overflow-hidden bg-slate-950/40">
+        <Image
+          src={imageUrl}
+          alt={project.title}
+          width={600}
+          height={380}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="rounded-full border border-white/20 bg-slate-950/70 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
+            {project.category || "Case Study"}
+          </span>
+        </div>
+
+        {/* Live Action Trigger on Hover */}
+        <div className="absolute top-4 right-4 z-10 flex size-9 items-center justify-center rounded-full bg-cyan-500 text-slate-950 shadow-lg opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 scale-75">
+          <ArrowUpRight className="size-4" />
+        </div>
+      </div>
+
+      {/* Project Content Body */}
+      <div className="flex flex-1 flex-col justify-between p-6 sm:p-7">
+        <div>
+          <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+            {project.title}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400 line-clamp-2">
+            {project.description || project.subtitle || "Enterprise software architecture engineered for maximum performance, security and scalability."}
+          </p>
+        </div>
+
+        {/* Tags & Action Link */}
+        <div className="mt-6 pt-5 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between">
+          <div className="flex flex-wrap gap-1.5 max-w-[70%]">
+            {tags.slice(0, 3).map((tag: string) => (
+              <span
+                key={tag}
+                className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-white/5 dark:text-slate-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <Link
+            href={`/projects/${project.id}`}
+            className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300 transition-colors"
+          >
+            <span>Details</span>
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function FeaturedProjects() {
   const { data } = useSiteData();
@@ -38,209 +92,63 @@ export function FeaturedProjects() {
   const prefersReducedMotion = useReducedMotion();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const featuredProjects = products.filter((p: any) => p.featured).slice(0, 3);
   const displayProjects = featuredProjects.length > 0 ? featuredProjects : products.slice(0, 3);
 
-  if (!displayProjects || displayProjects.length === 0) {
-    return null;
-  }
-
   return (
     <section
       ref={ref}
-      className="overflow-hidden py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-(--brand-cyan)/5 to-transparent dark:from-(--brand-cyan)/5 dark:to-transparent relative"
+      id="projects"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/50 dark:bg-slate-950/40 text-foreground"
     >
       <div className="site-container relative">
-        {/* Section header */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: EASE_OUT }}
-          className="mb-14 max-w-2xl"
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Featured Projects
-          </h2>
-          <p className="text-base sm:text-lg text-muted-foreground dark:text-white/70 max-w-xl">
-            Our recent work demonstrates expertise across diverse industries and technologies. Each project reflects our commitment to excellence.
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="max-w-2xl">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+              <Code2 className="mr-1.5 size-3.5" />
+              Proven Track Record
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-slate-900 dark:text-white">
+              Featured Case Studies & <br />
+              <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-sky-300">
+                Production Deployments
+              </span>
+            </h2>
+          </div>
+          <p className="max-w-md text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+            Explore how we engineered high-concurrency systems, AI automation engines, and custom platforms that transformed businesses.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Projects grid */}
+        {/* Projects Grid */}
         <motion.div
-          variants={prefersReducedMotion ? {} : container}
+          variants={staggerContainer}
           initial="hidden"
           animate={inView ? "show" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {displayProjects.map((project: any, index: number) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-            />
+            <ProjectCard key={project.id || index} project={project} index={index} />
           ))}
         </motion.div>
 
-        {/* CTA */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-        >
+        {/* Bottom Hub Actions */}
+        <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-(--brand-cyan) text-(--brand-navy-dark) hover:bg-(--brand-cyan)/90 font-semibold"
+            className="rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 hover:from-cyan-400 hover:to-cyan-300 font-bold px-8 shadow-lg"
           >
             <Link href="/projects" className="gap-2">
-              View All Projects
-              <ArrowUpRight className="w-4 h-4" />
+              <span>View Full Case Study Portfolio</span>
+              <ArrowRight className="size-4" />
             </Link>
           </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="rounded-full border-border/60 hover:border-(--brand-cyan)/50 hover:bg-(--brand-cyan)/5 dark:border-white/10 dark:hover:border-(--brand-cyan)/50"
-          >
-            <Link href="/schedule">Start Your Project</Link>
-          </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
-  );
-}
-
-interface ProjectCardProps {
-  project: any;
-  index: number;
-}
-
-function ProjectCard({ project, index }: ProjectCardProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const tags = React.useMemo(() => {
-    if (!project?.tags) return [];
-
-    if (Array.isArray(project.tags)) {
-      return project.tags.filter(Boolean).map((tag: string) => String(tag).trim()).filter(Boolean);
-    }
-
-    return String(project.tags)
-      .split(",")
-      .map((tag: string) => tag.trim())
-      .filter(Boolean);
-  }, [project.tags]);
-
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-        },
-      }}
-      transition={SPRING_SMOOTH}
-      className="group"
-    >
-      <TiltCard className="h-full" intensity={5}>
-        <div className="relative h-full overflow-hidden rounded-2xl border border-border/60 bg-card/50 shadow-sm transition-[border-color,box-shadow] duration-500 group-hover:border-(--brand-cyan)/40 group-hover:shadow-2xl group-hover:shadow-(--brand-cyan)/10 dark:border-white/10 dark:bg-white/5">
-        {/* Image container */}
-        {project.imageUrl && (
-          <div className="relative h-48 sm:h-56 overflow-hidden bg-muted">
-            <motion.div
-              className="absolute inset-0"
-              initial={false}
-              whileHover={prefersReducedMotion ? undefined : { scale: 1.08 }}
-              transition={{ duration: 0.8, ease: EASE_OUT }}
-            >
-              <Image
-                src={project.imageUrl}
-                alt={project.title || "Project"}
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-(--brand-navy)/65 via-(--brand-navy)/10 to-transparent"
-              initial={{ opacity: 0.35 }}
-              whileHover={prefersReducedMotion ? undefined : { opacity: 0.8 }}
-              transition={{ duration: 0.45, ease: EASE_OUT }}
-            />
-            <motion.span
-              initial={{ opacity: 0, y: 8 }}
-              whileHover={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: EASE_OUT }}
-              className="absolute bottom-4 left-5 text-xs font-semibold uppercase tracking-[0.18em] text-white/90"
-            >
-              Explore project
-            </motion.span>
-          </div>
-        )}
-
-        {/* Content */}
-        <motion.div className="p-5 sm:p-6" layout>
-          {/* Category badge */}
-          {project.category && (
-            <Badge
-              variant="secondary"
-              className="mb-3 bg-(--brand-cyan)/10 text-(--brand-cyan) border-(--brand-cyan)/20 hover:bg-(--brand-cyan)/20"
-            >
-              {project.category}
-            </Badge>
-          )}
-
-          {/* Title */}
-          <h3 className="text-lg font-bold mb-2 text-foreground dark:text-white group-hover:text-(--brand-cyan) transition-colors line-clamp-2">
-            {project.title}
-          </h3>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground dark:text-white/70 mb-4 line-clamp-2">
-            {project.description}
-          </p>
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {tags.slice(0, 2).map((tag: string) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="bg-white/30 dark:bg-white/10 border-border/60 text-xs"
-                >
-                  {tag}
-                </Badge>
-              ))}
-              {tags.length > 2 && (
-                <Badge variant="outline" className="bg-white/30 dark:bg-white/10 border-border/60 text-xs">
-                  +{tags.length - 2}
-                </Badge>
-              )}
-            </div>
-          )}
-
-          {/* Footer with link */}
-            <motion.div
-              whileHover={{ x: 4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <Link
-                href={`/projects/${project.id}`}
-                className="inline-flex items-center gap-2 text-(--brand-cyan) font-medium text-sm hover:gap-3 transition-all duration-300"
-              >
-                View Project
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-        </motion.div>
-        </div>
-      </TiltCard>
-    </motion.div>
   );
 }

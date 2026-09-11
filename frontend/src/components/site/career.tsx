@@ -2,43 +2,50 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, CheckCircle2, Eye, Mail, MapPin, Target } from "lucide-react";
+import {
+  Briefcase,
+  CheckCircle2,
+  MapPin,
+  Sparkles,
+  ArrowRight,
+  Heart,
+  Laptop,
+  GraduationCap,
+  Clock,
+  DollarSign,
+  Coffee,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SectionHeading } from "@/components/site/section-heading";
-import {
-  SPRING_BOUNCY,
-  fadeUpSpring,
-  staggerContainer,
-} from "@/components/site/motion";
+import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 import { getContent, parseContentJson, useSiteData, type Vacancy } from "@/hooks/use-site-data";
 
-const container = staggerContainer;
-const fadeUp = fadeUpSpring;
-
-interface HireStep {
-  title: string;
-  desc: string;
-}
+const PERKS = [
+  { icon: Laptop, title: "High-End M-Series Tech", desc: "Top-of-the-line Apple Silicon hardware & dual 4K monitors." },
+  { icon: Clock, title: "Flexible & Remote-First", desc: "Work from anywhere with core async collaboration hours." },
+  { icon: GraduationCap, title: "Learning & Conference Budget", desc: "$2,000/yr stipend for books, courses, and global tech conferences." },
+  { icon: DollarSign, title: "Competitive Salary & Equity", desc: "Top 10% market compensation with annual performance reviews." },
+  { icon: Heart, title: "Comprehensive Healthcare", desc: "Full medical coverage for you and your immediate dependents." },
+  { icon: Coffee, title: "Wellness & Subscriptions", desc: "Gym allowances, mental health resources, and workspace setup grants." },
+];
 
 function HiringBadge({ hiring }: { hiring: boolean }) {
   if (hiring) {
     return (
-      <Badge className="gap-1.5 rounded-full border-emerald-500/30 bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+      <Badge className="gap-1.5 rounded-full border-emerald-500/30 bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-300">
         <span className="relative flex size-2">
           <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
         </span>
-        We're Hiring
+        Actively Hiring
       </Badge>
     );
   }
   return (
-    <Badge className="gap-1.5 rounded-full border-border/60 bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-      Position Filled / No Active Hiring
+    <Badge className="rounded-full border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500 dark:border-white/10 dark:bg-white/5">
+      Position Filled
     </Badge>
   );
 }
@@ -51,57 +58,61 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
 
   return (
     <motion.article
-      variants={fadeUp}
-      whileHover={{ y: -8, transition: SPRING_BOUNCY }}
-      className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-sm transition-shadow hover:shadow-lg sm:p-6"
+      variants={fadeUpSpring}
+      className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/80 p-6 sm:p-8 shadow-sm backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.12)] dark:border-white/10 dark:bg-slate-900/70"
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-2">
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <HiringBadge hiring={vacancy.hiring} />
-            <Badge variant="outline" className="rounded-full bg-background/60 text-foreground">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
               {vacancy.department}
-            </Badge>
-            <Badge variant="outline" className="rounded-full bg-background/60 text-foreground">
+            </span>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
               {vacancy.type}
-            </Badge>
+            </span>
           </div>
-          <h3 className="text-lg font-bold text-foreground sm:text-xl">{vacancy.title}</h3>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <MapPin className="size-3.5" />
-            {vacancy.location}
+          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <MapPin className="size-3.5 text-cyan-500" />
+            <span>{vacancy.location}</span>
           </div>
         </div>
-        <Briefcase className="hidden size-6 text-muted-foreground/50 sm:block" />
+
+        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+          {vacancy.title}
+        </h3>
+
+        <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+          {vacancy.description}
+        </p>
+
+        {requirements.length > 0 && (
+          <div className="mt-6 space-y-2">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
+              Candidate Qualifications
+            </span>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+              {requirements.map((req, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <CheckCircle2 className="size-3.5 text-cyan-500 shrink-0 mt-0.5" />
+                  <span>{req}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
-      <p className="text-sm leading-relaxed text-muted-foreground">{vacancy.description}</p>
-
-      {requirements.length > 0 ? (
-        <ul className="grid grid-cols-1 gap-1.5 text-xs text-muted-foreground sm:grid-cols-2 sm:text-sm">
-          {requirements.map((req, i) => (
-            <li key={i} className="flex items-start gap-1.5">
-              <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
-              <span>{req}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
-      <div className="mt-auto pt-2">
+      <div className="mt-8 pt-5 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between">
+        <span className="text-xs text-slate-500 font-mono">ID: ULTRABULB-ROLE-{vacancy.id}</span>
         <Button
           asChild
           size="sm"
-          className={
-            vacancy.hiring
-              ? "rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-              : "rounded-full bg-muted text-muted-foreground hover:bg-muted/80"
-          }
-          disabled={!vacancy.hiring}
+          className="rounded-full bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-bold px-5"
         >
-          <Link href="/contact" className="gap-1.5">
-            <Mail className="size-3.5" />
-            Apply Now
+          <Link href={`/contact?subject=Application: ${vacancy.title}`}>
+            <span>Apply Now</span>
+            <ArrowRight className="size-3.5 ml-1.5" />
           </Link>
         </Button>
       </div>
@@ -111,175 +122,90 @@ function VacancyCard({ vacancy }: { vacancy: Vacancy }) {
 
 export function Career({ hideHeading = false }: { hideHeading?: boolean }) {
   const { data } = useSiteData();
+  const vacancies = data?.vacancies || [];
   const content = data?.content;
-  const vacancies = data?.vacancies ?? [];
 
-  const badge = getContent(content, "career_badge", "Careers");
-  const title = getContent(content, "career_title", "Build Your Career at ULTRABULB IT");
+  const badge = getContent(content, "career_badge", "Careers at ULTRABULB");
+  const title = getContent(content, "career_title", "Build the Future of Enterprise Tech");
   const subtitle = getContent(
     content,
     "career_subtitle",
-    "We hire for curiosity, craftsmanship and character."
-  );
-
-  const howWeHire: HireStep[] = parseContentJson<HireStep[]>(content, "career_how_we_hire", []);
-  const whatWeNeed: string[] = parseContentJson<string[]>(content, "career_what_we_need", []);
-  const careerVision = getContent(
-    content,
-    "career_vision_text",
-    "We believe great software is built by people who feel trusted and well-rested."
-  );
-  const careerMission = getContent(
-    content,
-    "career_mission_text",
-    "To create meaningful engineering careers by giving people hard problems and real autonomy."
+    "Join our world-class engineering collective. We solve hard distributed problems, push AI boundaries, and engineer software that matters."
   );
 
   return (
-    <section
-      id="career"
-      aria-labelledby="career-title"
-      className="section-pad site-container w-full"
-    >
-      {!hideHeading && <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />}
-
-      {/* How We Hire — stepper */}
-      <div className="mt-12">
-        <h3 className="text-xl font-bold text-foreground sm:text-2xl">How We Hire</h3>
-        <motion.ol
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="relative mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
-        >
-          {howWeHire.map((step, i) => (
-            <motion.li
-              key={`${step.title}-${i}`}
-              variants={fadeUp}
-              whileHover={{ y: -8, scale: 1.02, transition: SPRING_BOUNCY }}
-              className="relative flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-4 shadow-sm transition-shadow hover:border-(--brand-cyan)/30 hover:shadow-md"
-            >
-              <div className="flex items-center gap-2">
-                <motion.span
-                  className="gradient-brand flex size-8 items-center justify-center rounded-full text-sm font-bold text-white"
-                  whileHover={{ scale: 1.15, rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {i + 1}
-                </motion.span>
-                <span className="text-sm font-semibold text-foreground">{step.title}</span>
-              </div>
-              <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                {step.desc}
-              </p>
-            </motion.li>
-          ))}
-        </motion.ol>
-      </div>
-
-      {/* What We Need + Vision/Mission */}
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="lg:col-span-2"
-        >
-          <motion.div variants={fadeUp}>
-            <h3 className="text-xl font-bold text-foreground sm:text-2xl">What We Need</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              The qualities we look for in every candidate, regardless of role.
+    <section id="career" className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/50 dark:bg-slate-950/40 text-foreground">
+      <div className="site-container relative">
+        {/* Section Header */}
+        {!hideHeading && (
+          <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+              <Briefcase className="mr-1.5 size-3.5" />
+              {badge}
+            </Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-slate-900 dark:text-white">
+              {title}
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
+              {subtitle}
             </p>
-          </motion.div>
-          <motion.ul
-            variants={fadeUp}
-            className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"
-          >
-            {whatWeNeed.map((item, i) => (
-              <motion.li
-                key={i}
-                variants={fadeUp}
-                whileHover={{ x: 4, transition: SPRING_BOUNCY }}
-                className="flex items-start gap-2 rounded-xl border border-border/60 bg-card p-3 text-sm text-foreground shadow-sm"
-              >
-                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
-                <span>{item}</span>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </motion.div>
+          </div>
+        )}
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="flex flex-col gap-4"
-        >
-          <motion.div variants={fadeUp} whileHover={{ y: -4 }}>
-            <Card className="h-full border-border/60 bg-card shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2.5">
-                  <span className="flex size-9 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-                    <Eye className="size-4" />
-                  </span>
-                  <CardTitle className="text-base text-foreground">Vision</CardTitle>
+        {/* Culture & Perks Grid */}
+        <div className="mb-20">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
+              Engineering Culture & Benefits
+            </span>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">Why Engineers Thrive Here</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {PERKS.map((perk, i) => {
+              const Icon = perk.icon;
+              return (
+                <div
+                  key={i}
+                  className="rounded-3xl border border-slate-200/80 bg-white/70 p-6 backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60"
+                >
+                  <div className="flex size-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400 mb-4">
+                    <Icon className="size-5" />
+                  </div>
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">{perk.title}</h4>
+                  <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{perk.desc}</p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                  {careerVision}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div variants={fadeUp} whileHover={{ y: -4 }}>
-            <Card className="h-full border-border/60 bg-card shadow-sm">
-              <CardHeader>
-                <div className="flex items-center gap-2.5">
-                  <span className="flex size-9 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-                    <Target className="size-4" />
-                  </span>
-                  <CardTitle className="text-base text-foreground">Mission</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                  {careerMission}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Open positions */}
-      <div className="mt-16">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold text-foreground sm:text-2xl">Open Positions</h3>
-          <Badge variant="outline" className="rounded-full bg-background/60 text-foreground">
-            {vacancies.length} {vacancies.length === 1 ? "role" : "roles"}
-          </Badge>
+              );
+            })}
+          </div>
         </div>
 
+        {/* Open Vacancies Header */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200/80 dark:border-white/10">
+          <div>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Open Roles</h3>
+            <p className="text-xs sm:text-sm text-slate-500">Explore active positions across our engineering hubs.</p>
+          </div>
+          <span className="rounded-full bg-cyan-500/10 px-3.5 py-1 text-xs font-bold text-cyan-600 dark:text-cyan-400">
+            {vacancies.length} Active {vacancies.length === 1 ? "Role" : "Roles"}
+          </span>
+        </div>
+
+        {/* Vacancies List */}
         {vacancies.length === 0 ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-border/60 bg-card/50 px-6 py-12 text-center">
-            <p className="text-sm text-muted-foreground">
-              No open positions right now — but we're always happy to hear from great people.
-            </p>
+          <div className="rounded-3xl border border-dashed border-slate-300 p-12 text-center text-slate-500 dark:border-white/10">
+            <p className="text-base font-medium">No open roles currently posted.</p>
+            <p className="text-xs text-slate-400 mt-1">We are always scouting exceptional engineering talent. Send your GitHub/portfolio to careers@ultrabulb.com.</p>
           </div>
         ) : (
           <motion.div
-            variants={container}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
-            className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8"
           >
-            {vacancies.map((v) => (
-              <VacancyCard key={v.id} vacancy={v} />
+            {vacancies.map((vacancy) => (
+              <VacancyCard key={vacancy.id} vacancy={vacancy} />
             ))}
           </motion.div>
         )}

@@ -3,132 +3,196 @@
 import * as React from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Code2,
+  Cpu,
+  Layers,
+  Smartphone,
+  Shield,
+  Database,
+  Cloud,
+  Palette,
+  Sparkles,
+  Zap,
+  CheckCircle2,
+} from "lucide-react";
 
 import { SERVICES } from "@/data/services";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
+const EXTENDED_SERVICES = [
+  {
+    id: "web",
+    title: "Web Platforms & Next.js SaaS",
+    subtitle: "Enterprise-grade web engineering with React, Next.js, and modern TypeScript architectures.",
+    tags: ["Next.js", "React 19", "TypeScript", "Tailwind CSS", "GraphQL"],
+    metrics: "Sub-second load times & 99.9% Lighthouse scores",
+    icon: Code2,
+    gradient: "from-cyan-500/20 to-blue-500/10",
   },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+  {
+    id: "ai",
+    title: "Enterprise AI & Autonomous Agents",
+    subtitle: "Custom LLM integrations, RAG vector retrieval systems, and predictive automation pipelines.",
+    tags: ["OpenAI", "LangChain", "PyTorch", "Vector DBs", "Fine-Tuning"],
+    metrics: "10x workflow velocity & automated operational pipelines",
+    icon: Cpu,
+    gradient: "from-blue-500/20 to-indigo-500/10",
   },
-};
+  {
+    id: "mobile",
+    title: "Mobile Apps (iOS & Android)",
+    subtitle: "High-performance native and cross-platform applications with offline-first synchronization.",
+    tags: ["React Native", "Flutter", "iOS Swift", "Android Kotlin"],
+    metrics: "60 FPS fluid rendering & seamless cross-platform parity",
+    icon: Smartphone,
+    gradient: "from-indigo-500/20 to-cyan-500/10",
+  },
+  {
+    id: "cloud",
+    title: "Cloud Infrastructure & DevOps",
+    subtitle: "Cloud-native architectures, automated CI/CD pipelines, Kubernetes, and zero-downtime scaling.",
+    tags: ["AWS", "Docker", "Kubernetes", "Terraform", "CI/CD"],
+    metrics: "Zero-downtime blue/green deployments with auto-healing",
+    icon: Cloud,
+    gradient: "from-sky-500/20 to-teal-500/10",
+  },
+  {
+    id: "database",
+    title: "High-Throughput Data Systems",
+    subtitle: "Distributed database architecture, caching layers, and high-concurrency transaction processing.",
+    tags: ["PostgreSQL", "Redis", "MongoDB", "Prisma", "ElasticSearch"],
+    metrics: "<1ms query execution under peak enterprise loads",
+    icon: Database,
+    gradient: "from-teal-500/20 to-cyan-500/10",
+  },
+  {
+    id: "design",
+    title: "UI/UX & Product Design Systems",
+    subtitle: "Human-centered interfaces, accessible design tokens, micro-interactions, and conversion engineering.",
+    tags: ["Figma", "Design Systems", "Prototyping", "Design Tokens"],
+    metrics: "+45% user engagement & intuitive user experience",
+    icon: Palette,
+    gradient: "from-cyan-500/20 to-sky-500/10",
+  },
+];
 
 export function ServicesShowcase() {
   const ref = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section ref={ref} className="overflow-hidden py-16 sm:py-20 lg:py-24 bg-background relative">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-grid opacity-35 dark:bg-grid-dark dark:opacity-20" aria-hidden="true" />
-        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-(--brand-cyan)/35 to-transparent" aria-hidden="true" />
-      </div>
+    <section
+      ref={ref}
+      id="services"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-900/50 dark:bg-slate-950/70 text-foreground"
+    >
+      {/* Background Decorative Grids */}
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20" />
+      <div className="pointer-events-none absolute top-1/2 left-0 size-96 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-[130px]" />
 
       <div className="site-container relative">
-        {/* Section header */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-14 max-w-2xl"
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            What We Build
-          </h2>
-          <p className="text-base sm:text-lg text-muted-foreground dark:text-white/70 max-w-xl">
-            We offer a comprehensive suite of technology services designed to transform your business into a competitive digital powerhouse.
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="max-w-2xl">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+              <Layers className="mr-1.5 size-3.5" />
+              Core Capabilities
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-slate-900 dark:text-white">
+              End-to-End Technology <br />
+              <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-sky-300">
+                Engineered for Scale
+              </span>
+            </h2>
+          </div>
+          <p className="max-w-md text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+            From strategic technical architecture to production-grade implementation, we build resilient software that gives your enterprise an unfair advantage.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Services grid */}
+        {/* Services Capability Grid */}
         <motion.div
-          variants={prefersReducedMotion ? {} : container}
+          variants={staggerContainer}
           initial="hidden"
           animate={inView ? "show" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7"
         >
-          {SERVICES.map((service, i) => (
-            <motion.div
-              key={service.title}
-              variants={item}
-              className="group relative"
-            >
-              <div className="absolute inset-0 rounded-2xl border border-(--brand-cyan)/0 opacity-0 transition-opacity duration-300 group-hover:border-(--brand-cyan)/20 group-hover:opacity-100" />
-              
-              <div className={cn(
-                "relative h-full p-6 sm:p-7 rounded-2xl border transition-all duration-300",
-                "technical-border border-border/60 bg-card/70 hover:bg-card hover:border-(--brand-cyan)/30",
-                "dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10",
-                "group-hover:shadow-lg group-hover:-translate-y-1"
-              )}>
-                {/* Icon */}
-                <div className="mb-4 inline-flex p-3 rounded-xl bg-(--brand-cyan)/10 group-hover:bg-(--brand-cyan)/20 transition-colors">
-                  <service.icon className="w-6 h-6 text-(--brand-cyan)" />
+          {EXTENDED_SERVICES.map((service) => {
+            const Icon = service.icon;
+            return (
+              <motion.div
+                key={service.id}
+                variants={fadeUpSpring}
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/70 p-6 sm:p-7 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900/90"
+              >
+                {/* Ambient Top Corner Gradient */}
+                <div
+                  className={`pointer-events-none absolute -top-10 -right-10 size-40 rounded-full bg-gradient-to-br ${service.gradient} blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+
+                <div>
+                  {/* Icon & Category */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="size-6" />
+                    </div>
+                    <ArrowUpRight className="size-5 text-slate-400 group-hover:text-cyan-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                  </div>
+
+                  {/* Title & Description */}
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="mt-2.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {service.subtitle}
+                  </p>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-lg sm:text-xl font-bold mb-2 text-foreground dark:text-white group-hover:text-(--brand-cyan) transition-colors">
-                  {service.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-sm text-muted-foreground dark:text-white/70 leading-relaxed mb-4">
-                  {service.description}
-                </p>
-
-                {/* Hover indicator */}
-                <div className="flex items-center text-(--brand-cyan) text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-1">
-                  <span>Learn more</span>
-                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                {/* Tech Tags & Impact Metric */}
+                <div className="mt-6 pt-5 border-t border-slate-200/60 dark:border-white/10">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {service.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:bg-white/5 dark:text-slate-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    <Zap className="size-3.5 shrink-0" />
+                    <span>{service.metrics}</span>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
-        {/* CTA */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-        >
+        {/* Bottom Explorer Action */}
+        <div className="mt-14 flex flex-col sm:flex-row items-center justify-between rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-6 backdrop-blur-md gap-4">
+          <div className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
+            <Sparkles className="size-5 text-cyan-500 shrink-0" />
+            <span>Need a custom architecture or technical audit for an existing codebase?</span>
+          </div>
           <Button
             asChild
-            size="lg"
-            className="rounded-full bg-(--brand-cyan) text-(--brand-navy-dark) hover:bg-(--brand-cyan)/90 font-semibold"
+            className="rounded-full bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-semibold px-6 shadow-md"
           >
-            <Link href="/services" className="gap-2">
-              Explore All Services
-              <ArrowUpRight className="w-4 h-4" />
+            <Link href="/schedule" className="gap-2">
+              <span>Book Architecture Call</span>
+              <ArrowRight className="size-4" />
             </Link>
           </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="rounded-full border-border/60 hover:border-(--brand-cyan)/50 hover:bg-(--brand-cyan)/5 dark:border-white/10 dark:hover:border-(--brand-cyan)/50"
-          >
-            <Link href="/schedule">Schedule a Consultation</Link>
-          </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

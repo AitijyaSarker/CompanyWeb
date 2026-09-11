@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { ChevronRight, Sparkles } from "lucide-react";
 
 interface PageHeroProps {
   badge?: string;
@@ -17,49 +18,54 @@ export function PageHero({ badge, title, subtitle, className, dark = false }: Pa
   return (
     <section
       className={cn(
-        "relative overflow-hidden border-b border-border/60 pt-24 pb-12 sm:pt-28 sm:pb-16",
-        dark
-          ? "bg-(--brand-navy-dark) text-white"
-          : "bg-(--brand-bg-light) text-(--brand-navy) dark:bg-(--brand-navy) dark:text-white",
+        "relative overflow-hidden border-b border-slate-200/80 pt-32 pb-16 sm:pt-36 sm:pb-20 bg-slate-950 text-white dark:border-white/10",
         className
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-40 dark:bg-grid-dark dark:opacity-30" />
+      {/* Ambient background glow */}
+      <div className="pointer-events-none absolute inset-0 bg-grid-dark opacity-35" />
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 size-96 rounded-full bg-cyan-500/15 blur-[120px]" />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="site-container relative text-center"
       >
+        {/* Breadcrumb hint */}
+        <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 mb-4">
+          <Link href="/" className="hover:text-cyan-400 transition-colors">Home</Link>
+          <ChevronRight className="size-3 text-slate-600" />
+          <span className="text-cyan-400 font-medium">{badge || "Explore"}</span>
+        </div>
+
         {badge ? (
           <Badge
-            className={cn(
-              "mb-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider",
-              dark
-                ? "border-(--brand-cyan)/40 bg-(--brand-cyan)/15 text-(--brand-cyan)"
-                : "border-(--brand-cyan)/30 bg-(--brand-cyan-pale) text-(--brand-navy-dark) dark:border-cyan-400/30 dark:bg-cyan-950/40 dark:text-cyan-200"
-            )}
+            className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
           >
+            <Sparkles className="mr-1.5 size-3" />
             {badge}
           </Badge>
         ) : null}
-        <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{title}</h1>
+
+        <h1 className="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-white">
+          {title}
+        </h1>
+
         {subtitle ? (
           <p
-            className={cn(
-              "mx-auto mt-4 max-w-2xl text-balance text-base leading-relaxed sm:text-lg",
-              dark ? "text-white/70" : "text-muted-foreground"
-            )}
+            className="mx-auto mt-4 max-w-2xl text-balance text-base leading-relaxed sm:text-lg text-slate-300"
           >
             {subtitle}
           </p>
         ) : null}
+
         <motion.span
           aria-hidden
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 block h-1 w-12 origin-center rounded-full bg-(--brand-cyan)"
+          className="mx-auto mt-6 block h-1 w-16 origin-center rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.6)]"
         />
       </motion.div>
     </section>

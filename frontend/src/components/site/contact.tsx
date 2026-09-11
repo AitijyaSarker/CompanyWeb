@@ -2,82 +2,47 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Loader2, Mail, MapPin, Phone, Send } from "lucide-react";
+import {
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  Calendar,
+  MessageSquare,
+  Clock,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import { toast } from "sonner";
+import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/site/section-heading";
 import {
-  SPRING_BOUNCY,
-  SPRING_SMOOTH,
   fadeUpSpring,
-  slideFromLeft,
-  slideFromRight,
   staggerContainer,
 } from "@/components/site/motion";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
-
-interface InfoCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  href?: string;
-}
-
-function InfoCard({ icon, label, value, href }: InfoCardProps) {
-  const content = (
-    <CardContent className="flex items-start gap-4 p-5">
-      <motion.span
-        className="gradient-brand flex size-11 shrink-0 items-center justify-center rounded-xl text-white shadow-sm"
-        whileHover={{ scale: 1.08, rotate: 5 }}
-        transition={SPRING_BOUNCY}
-      >
-        {icon}
-      </motion.span>
-      <div className="flex flex-col gap-0.5">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
-        <span className="text-sm font-medium text-foreground">{value}</span>
-      </div>
-    </CardContent>
-  );
-  if (href) {
-    return (
-      <motion.a variants={fadeUpSpring} whileHover={{ y: -6, transition: SPRING_BOUNCY }} href={href} className="block">
-        <Card className="h-full border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">{content}</Card>
-      </motion.a>
-    );
-  }
-  return (
-    <motion.div variants={fadeUpSpring} whileHover={{ y: -6, transition: SPRING_BOUNCY }}>
-      <Card className="h-full border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">{content}</Card>
-    </motion.div>
-  );
-}
-
-const formFieldVariants = {
-  hidden: { opacity: 0, x: 20 },
-  show: { opacity: 1, x: 0, transition: SPRING_SMOOTH },
-};
 
 export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
   const { data } = useSiteData();
   const content = data?.content;
 
-  const badge = getContent(content, "contact_badge", "Contact");
-  const title = getContent(content, "contact_title", "Let's Build Something Bright Together");
+  const badge = getContent(content, "contact_badge", "Contact Engineering Hub");
+  const title = getContent(content, "contact_title", "Start Your Technical Transformation");
   const subtitle = getContent(
     content,
     "contact_subtitle",
-    "Have a project in mind or a question? We usually reply within one business day."
+    "Have a project blueprint or architectural question? Our engineering leadership responds within 24 business hours."
   );
   const email = getContent(content, "contact_email", "hello@ultrabulb.com");
   const phone = getContent(content, "contact_phone", "+880 1700-000000");
   const address = getContent(content, "contact_address", "Dhaka, Bangladesh");
-  const mapEmbed = getContent(content, "contact_map_embed", "");
 
   const [name, setName] = React.useState("");
   const [emailField, setEmailField] = React.useState("");
@@ -85,151 +50,220 @@ export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
-  const [sent, setSent] = React.useState(false);
-  const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-  function validate() {
-    const e: Record<string, string> = {};
-    if (!name.trim()) e.name = "Name is required";
-    if (!emailField.trim()) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField)) e.email = "Enter a valid email";
-    if (!subject.trim()) e.subject = "Subject is required";
-    if (!message.trim()) e.message = "Message is required";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !emailField.trim() || !message.trim()) {
+      toast.error("Please fill in your name, work email, and project message.");
+      return;
+    }
 
-  async function onSubmit(ev: React.FormEvent) {
-    ev.preventDefault();
-    if (!validate()) return;
     setSubmitting(true);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email: emailField, phone: phoneField, subject, message }),
+        body: JSON.stringify({
+          name,
+          email: emailField,
+          phone: phoneField,
+          subject: subject || "Enterprise Project Inquiry",
+          message,
+        }),
       });
-      if (!res.ok) throw new Error("Failed to send");
-      setSent(true);
-      toast.success("Message sent!", {
-        description: "We'll get back to you within one business day.",
-      });
+
+      if (!res.ok) throw new Error("Failed to send message");
+
+      toast.success("Inquiry received! Our Lead Architect will reach out shortly.");
       setName("");
       setEmailField("");
       setPhoneField("");
       setSubject("");
       setMessage("");
-      setErrors({});
-      setTimeout(() => setSent(false), 2000);
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Failed to send inquiry. Please email hello@ultrabulb.com directly.");
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="section-pad section-alt w-full">
-      <div className="site-container">
-        {!hideHeading && <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />}
+    <section id="contact" aria-labelledby="contact-title" className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/50 dark:bg-slate-950/40 text-foreground">
+      <div className="site-container relative">
+        {/* Header */}
+        {!hideHeading && (
+          <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+              <MessageSquare className="mr-1.5 size-3.5" />
+              {badge}
+            </Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-slate-900 dark:text-white">
+              {title}
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
+              {subtitle}
+            </p>
+          </div>
+        )}
 
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
-            className="flex flex-col gap-4"
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <InfoCard icon={<Mail className="size-5" />} label="Email" value={email} href={`mailto:${email}`} />
-              <InfoCard icon={<Phone className="size-5" />} label="Phone" value={phone} href={`tel:${phone}`} />
-              <InfoCard icon={<MapPin className="size-5" />} label="Address" value={address} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left Column: Direct Channels & Fast Action (5 cols) */}
+          <div className="space-y-6 lg:col-span-5">
+            {/* Quick Consultation Booking Card */}
+            <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/40 to-slate-950 p-6 sm:p-8 backdrop-blur-xl shadow-lg text-white">
+              <div className="flex items-center gap-2 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                <Calendar className="size-4" />
+                <span>Fastest Option</span>
+              </div>
+              <h3 className="text-xl font-bold">Schedule an Architecture Call</h3>
+              <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+                Book a direct 30-minute technical roadmap & scoping session with our Engineering Director.
+              </p>
+              <Button
+                asChild
+                className="mt-6 w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold py-6 shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+              >
+                <Link href="/schedule" className="gap-2 justify-center">
+                  <span>Open Calendar Selector</span>
+                </Link>
+              </Button>
             </div>
 
-            {mapEmbed ? (
-              <motion.div variants={slideFromLeft} className="overflow-hidden rounded-2xl border border-border/60 shadow-sm">
-                <iframe
-                  title="ULTRABULB IT location"
-                  src={mapEmbed}
-                  className="h-64 w-full"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </motion.div>
-            ) : null}
-          </motion.div>
+            {/* Direct Contact Items */}
+            <div className="space-y-3">
+              <a
+                href={`mailto:${email}`}
+                className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-xl transition-all hover:border-cyan-500/40 hover:bg-white dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900"
+              >
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
+                  <Mail className="size-5" />
+                </div>
+                <div>
+                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Email Us</span>
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">{email}</div>
+                </div>
+              </a>
 
-          <motion.div
-            variants={slideFromRight}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-80px" }}
-          >
-            <motion.div animate={sent ? { scale: [1, 1.02, 1] } : {}} transition={SPRING_BOUNCY}>
-              <Card className="border-border/60 bg-card shadow-sm">
-                <CardContent className="p-5 sm:p-6">
-                  <motion.form
-                    onSubmit={onSubmit}
-                    className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-                    noValidate
-                    variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true }}
-                  >
-                    {[
-                      { id: "c-name", label: "Name", required: true, value: name, onChange: setName, error: errors.name, placeholder: "Your name" },
-                      { id: "c-email", label: "Email", required: true, value: emailField, onChange: setEmailField, error: errors.email, placeholder: "you@example.com", type: "email" },
-                      { id: "c-phone", label: "Phone", required: false, value: phoneField, onChange: setPhoneField, error: undefined, placeholder: "+880 1XXX-XXXXXX" },
-                      { id: "c-subject", label: "Subject", required: true, value: subject, onChange: setSubject, error: errors.subject, placeholder: "How can we help?" },
-                    ].map((field) => (
-                      <motion.div key={field.id} variants={formFieldVariants} className="flex flex-col gap-1.5">
-                        <Label htmlFor={field.id}>
-                          {field.label} {field.required ? <span className="text-destructive">*</span> : null}
-                        </Label>
-                        <Input
-                          id={field.id}
-                          type={field.type ?? "text"}
-                          value={field.value}
-                          onChange={(e) => field.onChange(e.target.value)}
-                          placeholder={field.placeholder}
-                          aria-invalid={!!field.error}
-                        />
-                        {field.error ? <span className="text-xs text-destructive">{field.error}</span> : null}
-                      </motion.div>
-                    ))}
-                    <motion.div variants={formFieldVariants} className="flex flex-col gap-1.5 sm:col-span-2">
-                      <Label htmlFor="c-message">
-                        Message <span className="text-destructive">*</span>
-                      </Label>
-                      <Textarea
-                        id="c-message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        rows={5}
-                        placeholder="Tell us about your project..."
-                        aria-invalid={!!errors.message}
-                      />
-                      {errors.message ? <span className="text-xs text-destructive">{errors.message}</span> : null}
-                    </motion.div>
-                    <motion.div variants={formFieldVariants} className="sm:col-span-2">
-                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={SPRING_BOUNCY}>
-                        <Button
-                          type="submit"
-                          disabled={submitting}
-                          className="w-full gap-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
-                        >
-                          {submitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                          {submitting ? "Sending..." : "Send Message"}
-                        </Button>
-                      </motion.div>
-                    </motion.div>
-                  </motion.form>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
+              <a
+                href={`tel:${phone}`}
+                className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-xl transition-all hover:border-cyan-500/40 hover:bg-white dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900"
+              >
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
+                  <Phone className="size-5" />
+                </div>
+                <div>
+                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Direct Line</span>
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">{phone}</div>
+                </div>
+              </a>
+
+              <div className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
+                  <MapPin className="size-5" />
+                </div>
+                <div>
+                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">HQ Headquarters</span>
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">{address}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* NDA badge */}
+            <div className="flex items-center gap-2 text-xs text-slate-500 px-2">
+              <ShieldCheck className="size-4 text-cyan-500" />
+              <span>We sign standard mutual NDAs prior to technical disclosure.</span>
+            </div>
+          </div>
+
+          {/* Right Column: Interactive Proposal & Message Form (7 cols) */}
+          <div className="rounded-3xl border border-slate-200/80 bg-white/90 p-6 sm:p-10 shadow-xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/80 lg:col-span-7">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Send Direct RFP / Project Specs</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 mb-8">
+              Tell us about your technical requirements, desired timeline, and key product deliverables.
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="contact-name" className="text-xs font-semibold">Your Name *</Label>
+                  <Input
+                    id="contact-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Alex Vance"
+                    required
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="contact-email" className="text-xs font-semibold">Work Email *</Label>
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    value={emailField}
+                    onChange={(e) => setEmailField(e.target.value)}
+                    placeholder="alex@company.com"
+                    required
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="contact-phone" className="text-xs font-semibold">Phone / WhatsApp</Label>
+                  <Input
+                    id="contact-phone"
+                    value={phoneField}
+                    onChange={(e) => setPhoneField(e.target.value)}
+                    placeholder="+1 (555) 000-0000"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="contact-sub" className="text-xs font-semibold">Subject / Project Domain</Label>
+                  <Input
+                    id="contact-sub"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="e.g. Next.js SaaS & AI Agent Build"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="contact-msg" className="text-xs font-semibold">Project Details & Architecture Scope *</Label>
+                <Textarea
+                  id="contact-msg"
+                  rows={5}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Outline your target features, current tech stack, deadlines, or challenges..."
+                  required
+                  className="mt-1"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold py-6 text-base shadow-[0_0_25px_rgba(6,182,212,0.35)] hover:from-cyan-400 hover:to-cyan-300 transition-all"
+              >
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="size-5 animate-spin" />
+                    <span>Transmitting Specifications...</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Send className="size-4" />
+                    <span>Submit Project Scope for Review</span>
+                  </span>
+                )}
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,8 @@
 "use client";
 
 import { PageHero } from "@/components/site/page-hero";
-import { Process } from "@/components/site/process";
+import { ProcessSection } from "@/components/site/process-section";
+import { FinalCTA } from "@/components/site/final-cta";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
 
 export default function ProcessPage() {
@@ -11,15 +12,16 @@ export default function ProcessPage() {
   return (
     <>
       <PageHero
-        badge={getContent(content, "process_badge", "How We Work")}
-        title={getContent(content, "process_title", "Our Development Process")}
+        badge={getContent(content, "process_badge", "Methodology & Execution")}
+        title={getContent(content, "process_title", "Our 5-Stage Engineering Lifecycle")}
         subtitle={getContent(
           content,
           "process_subtitle",
-          "A proven workflow that turns ideas into production-ready products."
+          "A battle-tested software delivery engine designed to eliminate project risk, maximize velocity, and guarantee enterprise-grade resilience."
         )}
       />
-      <Process hideHeading />
+      <ProcessSection />
+      <FinalCTA />
     </>
   );
 }

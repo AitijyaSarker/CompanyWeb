@@ -11,16 +11,16 @@ import {
   Rocket,
   ShieldCheck,
   Target,
+  Users,
+  Award,
+  Zap,
+  CheckCircle2,
   type LucideIcon,
 } from "lucide-react";
 
-import { BrandPathLine } from "@/components/site/brand-path-line";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SectionHeading } from "@/components/site/section-heading";
+import { Badge } from "@/components/ui/badge";
 import {
-  SPRING_BOUNCY,
-  slideFromLeft,
-  slideFromRight,
   staggerContainer,
   fadeUpSpring,
 } from "@/components/site/motion";
@@ -45,121 +45,137 @@ export function About({ hideHeading = false }: { hideHeading?: boolean }) {
   const { data } = useSiteData();
   const content = data?.content;
 
-  const badge = getContent(content, "about_badge", "About Us");
-  const title = getContent(content, "about_title", "What is ULTRABULB IT?");
+  const badge = getContent(content, "about_badge", "About ULTRABULB");
+  const title = getContent(content, "about_title", "Engineering Digital Excellence");
   const description = getContent(
     content,
     "about_description",
-    "ULTRABULB IT is a software development agency founded with one belief — every great idea deserves to be engineered into a product people love."
+    "ULTRABULB IT is an elite software engineering agency founded with one immutable principle — every breakthrough idea deserves to be architected into a resilient, scalable digital product."
   );
   const visionTitle = getContent(content, "about_vision_title", "Our Vision");
   const visionText = getContent(
     content,
     "about_vision_text",
-    "To become the most trusted technology partner for ambitious teams worldwide."
+    "To be the global benchmark for enterprise engineering velocity, high-concurrency cloud architecture, and autonomous AI innovation."
   );
   const missionTitle = getContent(content, "about_mission_title", "Our Mission");
   const missionText = getContent(
     content,
     "about_mission_text",
-    "To deliver reliable, scalable and beautiful software that solves real problems."
+    "To empower ambitious global companies with zero-debt software engineering, bank-grade security, and transformative digital experiences."
   );
-  const fieldTitle = getContent(content, "about_field_title", "Our Field of Work");
+  const fieldTitle = getContent(content, "about_field_title", "Our Engineering Domains");
   const fieldText = getContent(
     content,
     "about_field_text",
-    "We operate across the full software lifecycle — product strategy, design, engineering, cloud, AI, QA and maintenance."
+    "We operate across the entire software lifecycle — product blueprinting, UI/UX design systems, cloud-native microservices, custom AI agents, and 24/7 automated monitoring."
   );
   const fields: FieldItem[] = parseContentJson<FieldItem[]>(content, "fields", []);
 
   return (
-    <section id="about" aria-labelledby="about-title" className="section-pad site-container relative w-full">
-      <BrandPathLine />
-      {!hideHeading && <SectionHeading badge={badge} title={title} subtitle={description} align="center" />}
+    <section id="about" aria-labelledby="about-title" className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/50 dark:bg-slate-950/40 text-foreground">
+      <div className="site-container relative">
+        {/* Heading */}
+        {!hideHeading && (
+          <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+              <Users className="mr-1.5 size-3.5" />
+              {badge}
+            </Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-slate-900 dark:text-white">
+              {title}
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
+              {description}
+            </p>
+          </div>
+        )}
 
-      <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
+        {/* Vision & Mission Bento */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="flex flex-col gap-6"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 mb-12"
         >
-          <motion.div variants={slideFromLeft} whileHover={{ y: -6, transition: SPRING_BOUNCY }}>
-            <Card className="h-full border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <motion.span
-                    className="gradient-brand flex size-10 items-center justify-center rounded-xl text-white shadow-sm"
-                    whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-                  >
-                    <Eye className="size-5" />
-                  </motion.span>
-                  <CardTitle className="text-xl text-foreground">{visionTitle}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{visionText}</p>
-              </CardContent>
-            </Card>
+          {/* Vision Card */}
+          <motion.div
+            variants={fadeUpSpring}
+            className="rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70"
+          >
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
+                <Eye className="size-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{visionTitle}</h3>
+            </div>
+            <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              {visionText}
+            </p>
           </motion.div>
 
-          <motion.div variants={slideFromLeft} whileHover={{ y: -6, transition: SPRING_BOUNCY }}>
-            <Card className="h-full border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <motion.span
-                    className="gradient-brand flex size-10 items-center justify-center rounded-xl text-white shadow-sm"
-                    whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-                  >
-                    <Target className="size-5" />
-                  </motion.span>
-                  <CardTitle className="text-xl text-foreground">{missionTitle}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{missionText}</p>
-              </CardContent>
-            </Card>
+          {/* Mission Card */}
+          <motion.div
+            variants={fadeUpSpring}
+            className="rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70"
+          >
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                <Target className="size-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{missionTitle}</h3>
+            </div>
+            <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              {missionText}
+            </p>
           </motion.div>
         </motion.div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
-          className="flex flex-col gap-5"
-        >
-          <motion.div variants={slideFromRight}>
-            <h3 className="text-xl font-bold text-foreground sm:text-2xl">{fieldTitle}</h3>
-            <p className="mt-2 text-sm text-muted-foreground sm:text-base">{fieldText}</p>
-          </motion.div>
+        {/* Engineering Domains Strip */}
+        <div className="rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white/90 to-slate-100/90 p-8 sm:p-12 shadow-sm backdrop-blur-xl dark:border-white/10 dark:from-slate-900/80 dark:to-slate-950/90">
+          <div className="max-w-3xl mb-8">
+            <span className="text-xs font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
+              Cross-Functional Mastery
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
+              {fieldTitle}
+            </h3>
+            <p className="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400">
+              {fieldText}
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {fields.map((field, i) => {
-              const Icon = ICON_MAP[field.icon] ?? Code2;
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {(fields.length > 0
+              ? fields
+              : [
+                  { icon: "Code2", title: "Enterprise Web Platforms", desc: "Next.js & React 19 scalable frontends" },
+                  { icon: "Cloud", title: "Cloud & Microservices", desc: "AWS, Kubernetes, Docker & Serverless" },
+                  { icon: "BrainCircuit", title: "Autonomous AI Agents", desc: "RAG vector retrieval & custom fine-tuning" },
+                  { icon: "Palette", title: "Design Systems & UI/UX", desc: "Precision Figma prototypes & accessible tokens" },
+                  { icon: "ShieldCheck", title: "SecOps & Compliance", desc: "Automated vulnerability & penetration audits" },
+                  { icon: "Rocket", title: "High-Throughput Mobile", desc: "Native iOS & Android cross-platform apps" },
+                ]
+            ).map((field, i) => {
+              const Icon = ICON_MAP[field.icon] || Code2;
               return (
-                <motion.div
-                  key={`${field.title}-${i}`}
-                  variants={fadeUpSpring}
-                  whileHover={{ y: -6, scale: 1.02, transition: SPRING_BOUNCY }}
-                  className="group flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-4 shadow-sm transition-shadow hover:border-(--brand-cyan)/30 hover:shadow-md"
+                <div
+                  key={i}
+                  className="flex items-start gap-4 rounded-2xl border border-slate-200/60 bg-white/70 p-4 dark:border-white/5 dark:bg-white/5"
                 >
-                  <motion.span
-                    className="flex size-10 items-center justify-center rounded-xl bg-accent text-accent-foreground"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={SPRING_BOUNCY}
-                  >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
                     <Icon className="size-5" />
-                  </motion.span>
-                  <div className="text-sm font-semibold text-foreground">{field.title}</div>
-                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">{field.desc}</p>
-                </motion.div>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{field.title}</h4>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{field.desc}</p>
+                  </div>
+                </div>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

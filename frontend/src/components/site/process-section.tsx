@@ -2,187 +2,168 @@
 
 import * as React from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Check, Zap, Lightbulb, Palette, Code2, Rocket, LineChart, Shield } from "lucide-react";
+import {
+  Sparkles,
+  Compass,
+  Palette,
+  Code2,
+  ShieldCheck,
+  Rocket,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const PROCESS_STEPS = [
   {
-    number: 1,
-    title: "Discover",
-    description: "Understanding your vision, goals, challenges, and the business opportunity.",
-    icon: Lightbulb,
-    color: "from-blue-500 to-cyan-500",
+    step: "01",
+    title: "Discovery & System Architecture",
+    desc: "We analyze business domain requirements, design schema models, select optimal tech stacks, and create immutable API contracts.",
+    deliverables: ["Architecture Blueprint", "Data Schema", "Security Threat Model"],
+    icon: Compass,
   },
   {
-    number: 2,
-    title: "Plan",
-    description: "Defining strategy, scope, timeline, resources, and technical architecture.",
-    icon: Zap,
-    color: "from-cyan-500 to-teal-500",
-  },
-  {
-    number: 3,
-    title: "Design",
-    description: "Creating user-centered interfaces and experiences that align with your brand.",
+    step: "02",
+    title: "High-Fidelity Prototyping",
+    desc: "Interactive UI/UX design in Figma with complete design systems, micro-interaction states, and stakeholder approval milestones.",
+    deliverables: ["Clickable Prototype", "Design System Tokens", "User Journey Flow"],
     icon: Palette,
-    color: "from-teal-500 to-green-500",
   },
   {
-    number: 4,
-    title: "Develop",
-    description: "Building robust, scalable, and maintainable software with modern technologies.",
+    step: "03",
+    title: "Agile Engineering & Sprints",
+    desc: "Clean modular TypeScript development with 2-week continuous delivery cycles, automated test coverage, and weekly demo syncs.",
+    deliverables: ["Production Codebase", "API Documentation", "Unit/Integration Tests"],
     icon: Code2,
-    color: "from-green-500 to-emerald-500",
   },
   {
-    number: 5,
-    title: "Test",
-    description: "Rigorous testing for quality, performance, security, and user experience.",
-    icon: Shield,
-    color: "from-emerald-500 to-blue-500",
+    step: "04",
+    title: "Rigorous QA & SecOps Hardening",
+    desc: "End-to-end load testing, OWASP security scanning, cross-browser audits, accessibility (WCAG AA), and performance tuning.",
+    deliverables: ["Security Audit Report", "Performance Benchmarks", "Zero-Defect Signoff"],
+    icon: ShieldCheck,
   },
   {
-    number: 6,
-    title: "Launch",
-    description: "Deploying to production with monitoring and support infrastructure in place.",
+    step: "05",
+    title: "Cloud Rollout & Scale Monitoring",
+    desc: "Containerized deployment via Docker/Kubernetes with zero-downtime blue/green switches, APM monitoring, and automated alerting.",
+    deliverables: ["Live Production Cluster", "CI/CD Pipeline", "24/7 SLA Telemetry"],
     icon: Rocket,
-    color: "from-blue-500 to-purple-500",
-  },
-  {
-    number: 7,
-    title: "Scale",
-    description: "Optimizing performance, adding features, and evolving based on user feedback.",
-    icon: LineChart,
-    color: "from-purple-500 to-pink-500",
   },
 ];
 
 export function ProcessSection() {
   const ref = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   const prefersReducedMotion = useReducedMotion();
 
   return (
     <section
       ref={ref}
       id="process"
-      className="overflow-hidden py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-background via-(--brand-cyan)/5 to-background relative"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-950 text-white"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-1/3 left-0 w-96 h-96 bg-(--brand-navy) rounded-full blur-3xl opacity-5 dark:opacity-10"
-          aria-hidden="true"
-        />
-      </div>
+      {/* Background Cyber Mesh */}
+      <div className="pointer-events-none absolute inset-0 bg-grid-dark opacity-30" />
+      <div className="pointer-events-none absolute top-1/3 right-0 size-96 rounded-full bg-cyan-500/10 blur-[140px]" />
 
       <div className="site-container relative">
-        {/* Section header */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16 max-w-2xl"
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Our Proven Process
+        {/* Section Header */}
+        <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
+          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300">
+            <Sparkles className="mr-1.5 size-3.5" />
+            Methodology & Execution
+          </Badge>
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-white">
+            Our 5-Stage Engineering Lifecycle
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground dark:text-white/70 max-w-xl">
-            We follow a structured, collaborative approach to deliver exceptional results every time. From discovery through scaling, we're with you at every step.
+          <p className="mt-4 text-base sm:text-lg text-slate-400">
+            A battle-tested software delivery engine designed to eliminate project risk, maximize velocity, and guarantee enterprise-grade resilience.
           </p>
-        </motion.div>
-
-        {/* Process steps */}
-        <div className="space-y-8 lg:space-y-12">
-          {PROCESS_STEPS.map((step, index) => (
-            <ProcessStep
-              key={step.number}
-              step={step}
-              index={index}
-              isLast={index === PROCESS_STEPS.length - 1}
-              inView={inView}
-              prefersReducedMotion={!!prefersReducedMotion}
-            />
-          ))}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Process Steps Timeline Flow */}
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 p-8 rounded-2xl border border-(--brand-cyan)/30 bg-(--brand-cyan)/5 dark:bg-(--brand-cyan)/10 text-center"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={inView ? "show" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
-          <h3 className="text-xl sm:text-2xl font-bold mb-2">Ready to start your project?</h3>
-          <p className="text-muted-foreground dark:text-white/70 mb-6 max-w-lg mx-auto">
-            Let's discuss how our proven process can help bring your vision to life.
-          </p>
+          {PROCESS_STEPS.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <motion.div
+                key={step.step}
+                variants={fadeUpSpring}
+                className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-slate-900/70 p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:bg-slate-900/95 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)]"
+              >
+                <div>
+                  {/* Step Number & Icon */}
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-mono text-3xl sm:text-4xl font-black text-cyan-500/30 group-hover:text-cyan-400 transition-colors">
+                      {step.step}
+                    </span>
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all duration-300">
+                      <Icon className="size-6" />
+                    </div>
+                  </div>
+
+                  {/* Title & Description */}
+                  <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                    {step.desc}
+                  </p>
+                </div>
+
+                {/* Deliverables Checklist */}
+                <div className="mt-6 pt-5 border-t border-white/10 space-y-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                    Key Deliverables
+                  </span>
+                  {step.deliverables.map((del) => (
+                    <div key={del} className="flex items-center gap-2 text-xs text-slate-300">
+                      <CheckCircle2 className="size-3.5 text-cyan-400 shrink-0" />
+                      <span>{del}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
+
+          {/* 6th Card: Call to Action */}
+          <motion.div
+            variants={fadeUpSpring}
+            className="flex flex-col justify-between rounded-3xl border border-cyan-500/40 bg-gradient-to-br from-cyan-950/60 to-slate-950 p-6 sm:p-8 backdrop-blur-xl"
+          >
+            <div>
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500 text-slate-950 mb-6">
+                <Rocket className="size-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Ready to start Sprint 0?</h3>
+              <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                Schedule a 30-minute technical roadmap discovery session with our Lead Software Architect.
+              </p>
+            </div>
+            <div className="pt-6">
+              <Button
+                asChild
+                className="w-full rounded-2xl bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 font-bold py-6 shadow-[0_0_25px_rgba(6,182,212,0.35)]"
+              >
+                <Link href="/schedule" className="gap-2 justify-center">
+                  <span>Schedule Discovery Call</span>
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
-  );
-}
-
-interface ProcessStepProps {
-  step: (typeof PROCESS_STEPS)[0];
-  index: number;
-  isLast: boolean;
-  inView: boolean;
-  prefersReducedMotion: boolean;
-}
-
-function ProcessStep({ step, index, isLast, inView, prefersReducedMotion }: ProcessStepProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const stepInView = useInView(ref, { once: true, margin: "-50px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={prefersReducedMotion ? false : { opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-      animate={stepInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.05 }}
-      className="relative"
-    >
-      {/* Connector line */}
-      {!isLast && (
-        <motion.div
-          initial={prefersReducedMotion ? false : { scaleY: 0 }}
-          animate={stepInView ? { scaleY: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="absolute left-8 top-24 w-0.5 h-32 bg-gradient-to-b from-(--brand-cyan)/60 to-(--brand-cyan)/0 origin-top"
-        />
-      )}
-
-      {/* Step content */}
-      <div className="flex gap-6 lg:gap-10">
-        {/* Icon circle */}
-        <motion.div
-          whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
-          className="relative flex-shrink-0"
-        >
-          <div className={`w-16 lg:w-20 h-16 lg:h-20 rounded-full bg-gradient-to-br ${step.color} p-0.5`}>
-            <div className="w-full h-full rounded-full bg-background dark:bg-(--brand-navy-dark) flex items-center justify-center">
-              <step.icon className="w-8 h-8 lg:w-10 lg:h-10 text-(--brand-cyan)" />
-            </div>
-          </div>
-          <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-(--brand-cyan) flex items-center justify-center text-(--brand-navy-dark) font-bold text-sm">
-            {step.number}
-          </div>
-        </motion.div>
-
-        {/* Content */}
-        <motion.div
-          whileHover={prefersReducedMotion ? {} : { x: 8 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          className="flex-1 pt-3 lg:pt-5"
-        >
-          <h3 className="text-2xl lg:text-3xl font-bold text-foreground dark:text-white mb-2">
-            {step.title}
-          </h3>
-          <p className="text-base lg:text-lg text-muted-foreground dark:text-white/70 max-w-lg">
-            {step.description}
-          </p>
-        </motion.div>
-      </div>
-    </motion.div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { PageHero } from "@/components/site/page-hero";
-import { Services } from "@/components/site/services";
+import { ServicesShowcase } from "@/components/site/services-showcase";
+import { CostEstimator } from "@/components/site/cost-estimator";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
 
 export default function ServicesPage() {
@@ -11,16 +12,17 @@ export default function ServicesPage() {
   return (
     <>
       <PageHero
-        badge={getContent(content, "services_badge", "What We Do")}
-        title={getContent(content, "services_title", "Services Built for Scale")}
+        badge={getContent(content, "services_badge", "Capabilities & Architecture")}
+        title={getContent(content, "services_title", "Services Engineered for Scale")}
         subtitle={getContent(
           content,
           "services_subtitle",
-          "End-to-end technology services — from strategy and design to engineering, deployment and long-term support."
+          "From cloud-native systems and custom AI agents to high-concurrency web platforms — our engineering teams deliver mission-critical software."
         )}
         dark
       />
-      <Services hideHeading />
+      <ServicesShowcase />
+      <CostEstimator />
     </>
   );
 }
