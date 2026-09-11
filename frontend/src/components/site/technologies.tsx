@@ -17,6 +17,8 @@ import {
   Terminal,
   Activity,
   ArrowRight,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
@@ -31,6 +33,8 @@ export function Technologies() {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("All");
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [activeTab, setActiveTab] = React.useState<"grid" | "architecture">("grid");
+  const [showAllTechs, setShowAllTechs] = React.useState(false);
+  const initialTechCount = useInitialTechCount();
 
   const badge = getContent(content, "tech_badge", "Technology Stack");
   const title = getContent(content, "tech_title", "Modern Engineering Stack");
@@ -57,6 +61,13 @@ export function Technologies() {
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
+
+  React.useEffect(() => {
+    setShowAllTechs(false);
+  }, [selectedCategory, searchQuery]);
+
+  const visibleTechs = showAllTechs ? filteredTechs : filteredTechs.slice(0, initialTechCount);
+  const hiddenTechCount = Math.max(filteredTechs.length - visibleTechs.length, 0);
 
   return (
     <section
@@ -196,7 +207,7 @@ export function Technologies() {
                 className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
                 <AnimatePresence>
-                  {filteredTechs.map((tech) => (
+                  {visibleTechs.map((tech) => (
                     <motion.div
                       layout
                       key={tech.name}
@@ -253,6 +264,24 @@ export function Technologies() {
                   ))}
                 </AnimatePresence>
               </motion.div>
+            )}
+
+            {filteredTechs.length > initialTechCount && (
+              <div className="mt-10 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setShowAllTechs((current) => !current)}
+                  className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-white px-5 py-2.5 text-xs font-bold text-slate-900 shadow-sm transition-all hover:border-cyan-500 hover:bg-cyan-500 hover:text-slate-950 hover:shadow-[0_10px_25px_rgba(6,182,212,0.18)] dark:bg-slate-900 dark:text-white dark:hover:text-slate-950"
+                  aria-expanded={showAllTechs}
+                >
+                  <span>{showAllTechs ? "Show less" : `See more (${hiddenTechCount})`}</span>
+                  {showAllTechs ? (
+                    <ChevronUp className="size-4" />
+                  ) : (
+                    <ChevronDown className="size-4" />
+                  )}
+                </button>
+              </div>
             )}
           </div>
         ) : (
@@ -444,4 +473,32 @@ export function Technologies() {
       </div>
     </section>
   );
+}
+
+function useInitialTechCount() {
+  const [count, setCount] = React.useState(12);
+
+  React.useEffect(() => {
+    const queries = [
+      { query: "(min-width: 1280px)", count: 12 },
+      { query: "(min-width: 1024px)", count: 9 },
+      { query: "(min-width: 640px)", count: 6 },
+    ];
+
+    const updateCount = () => {
+      const match = queries.find(({ query }) => window.matchMedia(query).matches);
+      setCount(match?.count ?? 3);
+    };
+
+    updateCount();
+
+    const mediaQueries = queries.map(({ query }) => window.matchMedia(query));
+    mediaQueries.forEach((mediaQuery) => mediaQuery.addEventListener("change", updateCount));
+
+    return () => {
+      mediaQueries.forEach((mediaQuery) => mediaQuery.removeEventListener("change", updateCount));
+    };
+  }, []);
+
+  return count;
 }

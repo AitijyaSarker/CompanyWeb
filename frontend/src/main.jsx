@@ -13,6 +13,9 @@ import ReviewPage from "./app/(site)/review/page.tsx";
 import SchedulePage from "./app/(site)/schedule/page.tsx";
 import ServicesPage from "./app/(site)/services/page.tsx";
 import WhyChooseUsPage from "./app/(site)/why-choose-us/page.tsx";
+import PrivacyPage from "./app/(site)/privacy/page.tsx";
+import SecurityPage from "./app/(site)/security/page.tsx";
+import TermsPage from "./app/(site)/terms/page.tsx";
 import AdminPage from "./app/admin/page.tsx";
 import { SiteShell } from "./components/site/site-shell.tsx";
 import { ProjectDetail } from "./components/site/project-detail.tsx";
@@ -29,9 +32,12 @@ function App() {
     <Route path="/process" element={site(<ProcessPage />)} />
     <Route path="/projects" element={site(<ProjectsPage />)} />
     <Route path="/projects/:id" element={site(<ProjectDetailRoute />)} />
+    <Route path="/privacy" element={site(<PrivacyPage />)} />
     <Route path="/review" element={site(<ReviewPage />)} />
     <Route path="/schedule" element={site(<SchedulePage />)} />
+    <Route path="/security" element={site(<SecurityPage />)} />
     <Route path="/services" element={site(<ServicesPage />)} />
+    <Route path="/terms" element={site(<TermsPage />)} />
     <Route path="/why-choose-us" element={site(<WhyChooseUsPage />)} />
   </Routes></BrowserRouter></ThemeProvider>;
 }

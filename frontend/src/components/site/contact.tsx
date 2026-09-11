@@ -41,7 +41,7 @@ export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
     "Have a project blueprint or architectural question? Our engineering leadership responds within 24 business hours."
   );
   const email = getContent(content, "contact_email", "contact@ultrabulbit.com");
-  const address = getContent(content, "contact_address", "Dhaka, Bangladesh");
+  const address = getContent(content, "contact_address", "Sylhet, Bangladesh");
 
   const [name, setName] = React.useState("");
   const [emailField, setEmailField] = React.useState("");

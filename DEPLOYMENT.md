@@ -34,7 +34,7 @@ cd frontend
 npm ci
 npm run build
 cd ../backend
-npm ci
+npm ci --omit=dev
 cp .env.example .env
 # edit .env with production values
 npm start
@@ -50,7 +50,7 @@ cd frontend
 npm ci
 npm run build
 cd ../backend
-npm ci
+npm ci --omit=dev
 npm start
 ```
 

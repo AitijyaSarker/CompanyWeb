@@ -229,7 +229,7 @@ export default function SchedulePage() {
         topic: form.topic,
         email: form.email.trim(),
       });
-      toast.success("Booking confirmed! Check your email for the invite.");
+      toast.success("Request received! We'll follow up with meeting details.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -261,7 +261,7 @@ export default function SchedulePage() {
   const badgeText = content.schedule_badge || "Schedule a Call";
   const subtitle =
     content.schedule_subtitle ||
-    "Pick a date and time that works for you. We'll send a calendar invite and a meeting link to your email.";
+    "Pick a date and time that works for you. We'll review the request and follow up with meeting details.";
 
   return (
     <div className="bg-(--brand-bg-light)/50 dark:bg-background">
@@ -346,11 +346,11 @@ export default function SchedulePage() {
                       Booking Confirmed!
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base max-w-md">
-                      We&apos;ll email a calendar invite to{" "}
+                      Our team will contact{" "}
                       <span className="font-semibold text-foreground">
                         {confirmed.email}
                       </span>{" "}
-                      shortly with the meeting link.
+                      shortly with the meeting details.
                     </p>
                   </div>
                   <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3 mt-1 text-left">

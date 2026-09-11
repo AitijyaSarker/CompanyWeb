@@ -54,7 +54,7 @@ export function SiteFooter() {
     "Catalyst for bright ideas."
   );
   const email = getContent(content, "footer_email", "contact@ultrabulbit.com");
-  const address = getContent(content, "footer_address", "Dhaka, Bangladesh");
+  const address = getContent(content, "footer_address", "Sylhet, Bangladesh");
   const copyright = getContent(content, "footer_copyright", "ULTRABULB IT. All rights reserved.");
 
   const socials = [
