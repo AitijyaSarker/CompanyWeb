@@ -36,16 +36,9 @@ export function ServicesShowcase() {
 
   return (
     <section ref={ref} className="overflow-hidden py-16 sm:py-20 lg:py-24 bg-background relative">
-      {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-20 right-0 w-96 h-96 bg-(--brand-cyan) rounded-full blur-3xl opacity-5"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-0 left-0 w-96 h-96 bg-(--brand-navy) rounded-full blur-3xl opacity-5 dark:opacity-10"
-          aria-hidden="true"
-        />
+        <div className="absolute inset-0 bg-grid opacity-35 dark:bg-grid-dark dark:opacity-20" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-(--brand-cyan)/35 to-transparent" aria-hidden="true" />
       </div>
 
       <div className="site-container relative">
@@ -77,11 +70,11 @@ export function ServicesShowcase() {
               variants={item}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-(--brand-cyan)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+              <div className="absolute inset-0 rounded-2xl border border-(--brand-cyan)/0 opacity-0 transition-opacity duration-300 group-hover:border-(--brand-cyan)/20 group-hover:opacity-100" />
               
               <div className={cn(
                 "relative h-full p-6 sm:p-7 rounded-2xl border transition-all duration-300",
-                "border-border/60 bg-card/50 hover:bg-card/80 hover:border-(--brand-cyan)/30",
+                "technical-border border-border/60 bg-card/70 hover:bg-card hover:border-(--brand-cyan)/30",
                 "dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10",
                 "group-hover:shadow-lg group-hover:-translate-y-1"
               )}>

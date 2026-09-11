@@ -98,8 +98,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
       <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" />
-      <div className="pointer-events-none absolute -left-20 top-10 size-72 rounded-full bg-cyan-400/15 blur-3xl" />
-      <div className="pointer-events-none absolute -right-16 bottom-10 size-80 rounded-full bg-blue-900/10 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-(--brand-cyan)/50 to-transparent" />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -107,7 +106,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        <Card className="border-border/60 shadow-xl">
+        <Card className="technical-border border-border/60 shadow-xl">
           <CardContent className="flex flex-col gap-6 p-8">
             <div className="flex flex-col items-center gap-3 text-center">
               <img src="/UltrabulbLogo.svg" alt="ULTRABULB IT" className="size-20 object-contain" />

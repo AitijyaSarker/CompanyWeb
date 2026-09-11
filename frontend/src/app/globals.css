@@ -54,6 +54,14 @@
   --brand-cyan-pale: #E7F7FA;
   --brand-bg-light: #F4FBFC;
   --brand-surface: #FDFDFD;
+  --surface-muted: #F4F8FB;
+  --surface-elevated: #FFFFFF;
+  --border-strong: oklch(0.78 0.035 220);
+  --shadow-soft: 0 18px 50px rgb(15 46 80 / 0.08);
+  --shadow-panel: 0 24px 70px rgb(15 46 80 / 0.12);
+  --motion-fast: 160ms;
+  --motion-base: 240ms;
+  --motion-slow: 420ms;
   --tech-marquee-bg: #F4FBFC;
   --tech-marquee-foreground: #0F2E50;
   /* ULTRABULB IT — deep navy and electric cyan */
@@ -125,6 +133,11 @@
   --sidebar-ring: oklch(0.75 0.16 205);
   --tech-marquee-bg: #062141;
   --tech-marquee-foreground: #ffffff;
+  --surface-muted: #0B1626;
+  --surface-elevated: #101C2D;
+  --border-strong: oklch(1 0 0 / 18%);
+  --shadow-soft: 0 18px 50px rgb(0 0 0 / 0.22);
+  --shadow-panel: 0 28px 80px rgb(0 0 0 / 0.3);
 }
 
 @layer base {
@@ -134,6 +147,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     cursor: default;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
   }
   a,
   button,
@@ -188,10 +203,14 @@
     background-size: 48px 48px;
   }
   .hero-ambient {
-    background: radial-gradient(circle at 70% 30%, rgb(33 187 205 / 0.1), transparent 45%), radial-gradient(circle at 20% 80%, rgb(115 130 145 / 0.12), transparent 48%);
+    background:
+      linear-gradient(135deg, rgb(33 187 205 / 0.08), transparent 32%),
+      linear-gradient(315deg, rgb(15 46 80 / 0.08), transparent 38%);
   }
   .dark .hero-ambient {
-    background: radial-gradient(circle at 70% 30%, rgb(33 187 205 / 0.14), transparent 45%), radial-gradient(circle at 20% 80%, rgb(6 33 65 / 0.8), transparent 50%);
+    background:
+      linear-gradient(135deg, rgb(33 187 205 / 0.12), transparent 34%),
+      linear-gradient(315deg, rgb(6 33 65 / 0.8), transparent 42%);
   }
   .glass {
     backdrop-filter: blur(16px) saturate(180%);
@@ -202,10 +221,10 @@
     background: oklch(0.12 0.04 245 / 0.72);
   }
   .gradient-brand {
-    background: linear-gradient(135deg, #1abccf 0%, #0d2f54 100%);
+    background: linear-gradient(135deg, var(--brand-cyan) 0%, var(--brand-navy) 100%);
   }
   .gradient-text-brand {
-    background: linear-gradient(135deg, #1abccf 0%, #102943 100%);
+    background: linear-gradient(135deg, var(--brand-cyan) 0%, var(--brand-navy) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -236,10 +255,10 @@
     @apply py-16 sm:py-20 lg:py-24;
   }
   .section-alt {
-    background-color: var(--brand-bg-light);
+    background-color: var(--surface-muted);
   }
   .dark .section-alt {
-    background-color: oklch(0.17 0.04 245);
+    background-color: var(--surface-muted);
   }
   .hero-pattern {
     background-image:
@@ -253,6 +272,7 @@
   }
   .nav-link {
     @apply inline-flex items-center gap-2 rounded-md px-2 py-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--brand-cyan);
+    transition-duration: var(--motion-fast);
   }
   .nav-link-active {
     @apply font-semibold text-(--brand-cyan);
@@ -311,6 +331,33 @@
   }
   .dark header[data-overlay="false"] .nav-link {
     @apply text-white/75 hover:text-white;
+  }
+}
+
+@layer components {
+  input,
+  textarea,
+  select {
+    @apply border-input bg-background text-foreground placeholder:text-muted-foreground/70;
+  }
+
+  .premium-panel {
+    background: var(--surface-elevated);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .technical-border {
+    position: relative;
+  }
+
+  .technical-border::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgb(33 187 205 / 0.18);
+    clip-path: polygon(0 0, 38% 0, 38% 1px, 100% 1px, 100% 100%, 62% 100%, 62% calc(100% - 1px), 0 calc(100% - 1px));
   }
 }
 
