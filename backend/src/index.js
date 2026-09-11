@@ -1,7 +1,7 @@
 import "dotenv/config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { mkdir } from "node:fs/promises";
+import { access, mkdir } from "node:fs/promises";
 import { Readable } from "node:stream";
 import express from "express";
 import cors from "cors";
@@ -274,10 +274,12 @@ app.use((error, req, res, _next) => {
 });
 
 await mkdir(uploadDirectory, { recursive: true });
+await access(path.join(clientDirectory, "index.html"));
+await access(assetDirectory);
 await mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ultrabulb", {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 10000,
   connectTimeoutMS: 10000,
 });
 await SiteContent.bulkWrite(companyContentRows().map((item) => ({ updateOne: { filter: { _id: item.id }, update: { _id: item.id, value: item.value }, upsert: true } })));
-app.listen(port, () => console.log(`Ultrabulb MERN API listening on ${port}`));
+app.listen(port, () => console.log(`Ultrabulb MERN API listening on ${port}; serving client from ${clientDirectory}`));
