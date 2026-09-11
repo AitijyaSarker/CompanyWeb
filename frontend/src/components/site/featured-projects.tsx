@@ -14,11 +14,6 @@ import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const imageUrl = project.imageUrl || project.image || "/UltrabulbLogo.svg";
-  const tags = Array.isArray(project.tags)
-    ? project.tags
-    : typeof project.tags === "string"
-    ? project.tags.split(",").map((t: string) => t.trim())
-    : ["Full-Stack", "Cloud", "UI/UX"];
 
   return (
     <motion.div
@@ -35,13 +30,6 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
-
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="rounded-full border border-white/20 bg-slate-950/70 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
-            {project.category || "Case Study"}
-          </span>
-        </div>
 
         {/* Live Action Trigger on Hover */}
         <div className="absolute top-4 right-4 z-10 flex size-9 items-center justify-center rounded-full bg-cyan-500 text-slate-950 shadow-lg opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 scale-75">
@@ -60,24 +48,17 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           </p>
         </div>
 
-        {/* Tags & Action Link */}
+        {/* Action Link Row */}
         <div className="mt-6 pt-5 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between">
-          <div className="flex flex-wrap gap-1.5 max-w-[70%]">
-            {tags.slice(0, 3).map((tag: string) => (
-              <span
-                key={tag}
-                className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-white/5 dark:text-slate-300"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+            Enterprise Architecture
+          </span>
 
           <Link
             href={`/projects/${project.id}`}
-            className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300 transition-colors"
           >
-            <span>Details</span>
+            <span>Explore Case Study</span>
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

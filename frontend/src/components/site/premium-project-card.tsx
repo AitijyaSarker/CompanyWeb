@@ -20,7 +20,6 @@ export function PremiumProjectCard({ product, index }: PremiumProjectCardProps) 
   const tiltRef = useTilt3D(3);
   const magneticRef = useMagnetic(0.2);
   const [light, setLight] = React.useState({ x: 50, y: 50 });
-  const tags = (product.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean);
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -60,9 +59,6 @@ export function PremiumProjectCard({ product, index }: PremiumProjectCardProps) 
               className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </div>
-          <Badge className="absolute left-4 top-4 rounded-full border-0 bg-slate-950/80 text-white backdrop-blur-md">
-            {product.category}
-          </Badge>
         </div>
 
         <div className="relative flex flex-col gap-3 p-5 sm:p-6">
@@ -70,18 +66,6 @@ export function PremiumProjectCard({ product, index }: PremiumProjectCardProps) 
             {product.title}
           </h3>
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{product.description}</p>
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-white/5 dark:text-slate-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
           {product.link && (
             <div ref={magneticRef} className="mt-auto inline-block transition-transform duration-200">
               <Button

@@ -46,7 +46,6 @@ function ScrollProjectCard({ product, index, featured, onFocus }: ScrollProjectC
   const tiltRef = useTilt3D(3);
   const magneticRef = useMagnetic(0.2);
   const [light, setLight] = React.useState({ x: 50, y: 50 });
-  const tags = (product.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean);
   const num = String(index + 1).padStart(2, "0");
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -96,28 +95,12 @@ function ScrollProjectCard({ product, index, featured, onFocus }: ScrollProjectC
               className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </div>
-          <Badge className="absolute left-4 top-4 rounded-full border-0 bg-(--brand-navy)/90 text-white backdrop-blur">
-            {product.category}
-          </Badge>
         </div>
 
         <div className={`relative flex flex-col gap-4 p-6 sm:p-8 ${featured ? "lg:order-1 lg:justify-center" : ""}`}>
           <span className="text-5xl font-black leading-none text-(--brand-cyan)/20">{num}</span>
           <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{product.title}</h3>
           <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{product.description}</p>
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="rounded-full border-(--brand-cyan)/30 bg-(--brand-cyan-pale)/50 text-xs text-(--brand-navy-dark)"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
           <>
             <div ref={magneticRef} className="mt-2 inline-block transition-transform duration-200">
               <Button

@@ -80,7 +80,7 @@ export function ProjectDetail({ id }: { id?: string }) {
         <div className="site-container relative grid gap-10 pb-16 pt-10 lg:grid-cols-[0.95fr_1.05fr] lg:pb-20 lg:pt-16">
           <div className="flex flex-col justify-center">
             <Badge className="mb-5 w-fit rounded-full border-(--brand-cyan)/30 bg-(--brand-cyan)/10 px-3 py-1 text-(--brand-cyan)">
-              {project.category || "Project"}
+              Enterprise Case Study
             </Badge>
             <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               {project.title}
