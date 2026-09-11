@@ -109,7 +109,8 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
         <Card className="technical-border border-border/60 shadow-xl">
           <CardContent className="flex flex-col gap-6 p-8">
             <div className="flex flex-col items-center gap-3 text-center">
-              <img src="/UltrabulbLogo.svg" alt="ULTRABULB IT" className="size-20 object-contain" />
+              <img src="/UltrabulbLogo.svg" alt="ULTRABULB IT" className="size-20 object-contain block dark:hidden" />
+              <img src="/UltrabulbLogoDark.png" alt="ULTRABULB IT" className="size-20 object-contain hidden dark:block" />
               <div>
                 <h1 className="text-xl font-bold text-foreground">ULTRABULB IT Admin</h1>
                 <p className="text-sm text-muted-foreground">Sign in to manage your website</p>
@@ -258,7 +259,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 border-b border-sidebar-border p-4">
-        <img src="/UltrabulbLogo.svg" alt="ULTRABULB IT" className="size-10 object-contain" />
+        <img src="/UltrabulbLogo.svg" alt="ULTRABULB IT" className="size-10 object-contain block dark:hidden" />
+        <img src="/UltrabulbLogoDark.png" alt="ULTRABULB IT" className="size-10 object-contain hidden dark:block" />
         <div className="flex flex-col">
           <span className="text-sm font-bold text-sidebar-foreground">ULTRABULB IT</span>
           <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">Admin Panel</span>

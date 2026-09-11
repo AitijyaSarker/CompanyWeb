@@ -97,7 +97,7 @@ export function SiteFooter() {
           {/* Brand Col (4 cols) */}
           <div className="flex flex-col gap-4 lg:col-span-4">
             <Link href="/" className="flex items-center gap-3">
-              <SiteLogo alt={brand} className="size-9" showWrapper wrapperClassName="size-10 bg-white" />
+              <SiteLogo alt={brand} className="size-9" showWrapper wrapperClassName="size-10 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10" />
               <span className="text-lg font-bold tracking-tight text-white">{brand}</span>
             </Link>
             <p className="max-w-sm text-sm leading-relaxed text-slate-400">{tagline}</p>

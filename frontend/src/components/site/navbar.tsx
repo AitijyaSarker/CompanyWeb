@@ -437,7 +437,7 @@ export function SiteNavbar() {
                   >
                     <SheetHeader className="mb-6 flex flex-row items-center justify-between border-b border-slate-200 pb-4 dark:border-white/10">
                       <div className="flex items-center gap-3">
-                        <SiteLogo alt={brand} className="size-8" />
+                        <SiteLogo alt={brand} className="size-8" showWrapper wrapperClassName="size-9 bg-white shadow-xs border border-slate-200/80 dark:bg-slate-900 dark:border-white/10" />
                         <SheetTitle className="text-base font-bold text-slate-900 dark:text-white">
                           {brand}
                         </SheetTitle>
