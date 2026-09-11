@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { mkdir } from "node:fs/promises";
 import { Readable } from "node:stream";
 import express from "express";
@@ -15,12 +16,15 @@ import { scryptSync, timingSafeEqual } from "node:crypto";
 import { AdminUser, Award, ContactMessage, GalleryImage, Product, Review, ScheduledCall, ServiceCategory, SiteContent, TimeSlot, Vacancy } from "./models.js";
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 4000);
 const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret && process.env.NODE_ENV === "production") throw new Error("JWT_SECRET is required in production");
 const secret = jwtSecret || "ultrabulb-local-secret";
 const uploadDirectory = path.resolve(process.env.UPLOAD_DIR || "uploads");
-const clientDirectory = path.resolve(process.env.CLIENT_DIR || "../frontend/dist");
+const clientDirectory = process.env.CLIENT_DIR
+  ? path.resolve(process.env.CLIENT_DIR)
+  : path.resolve(__dirname, "../../frontend/dist");
 const isProduction = process.env.NODE_ENV === "production";
 const configuredOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
   .split(",")
