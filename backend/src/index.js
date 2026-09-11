@@ -260,9 +260,16 @@ app.use("/assets", express.static(assetDirectory, {
   immutable: true,
   maxAge: "1y",
 }));
-app.use(express.static(clientDirectory));
+app.use(express.static(clientDirectory, {
+  setHeaders(res, filePath) {
+    if (path.basename(filePath) === "index.html") {
+      res.setHeader("Cache-Control", "no-store");
+    }
+  },
+}));
 app.get("/{*splat}", (req, res, next) => {
   if (req.path.startsWith("/api/")) return next();
+  res.setHeader("Cache-Control", "no-store");
   return res.sendFile(path.join(clientDirectory, "index.html"), (error) => {
     if (error) next(error);
   });

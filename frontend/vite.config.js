@@ -7,6 +7,7 @@ const clientPackage = JSON.parse(fs.readFileSync(path.resolve(__dirname, "packag
 const clientDependencies = Object.keys({ ...clientPackage.dependencies, ...clientPackage.devDependencies })
   .filter((name) => !["react", "react-dom", "tailwindcss", "vite", "@vitejs/plugin-react", "typescript", "@tailwindcss/postcss", "tw-animate-css"].includes(name))
   .map((name) => ({ find: name, replacement: path.resolve(__dirname, "node_modules", name) }));
+const assetVersion = "v20260912";
 
 export default defineConfig({
   root: __dirname,
@@ -15,6 +16,13 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "../backend/dist"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name]-${assetVersion}-[hash].js`,
+        chunkFileNames: `assets/[name]-${assetVersion}-[hash].js`,
+        assetFileNames: `assets/[name]-${assetVersion}-[hash][extname]`,
+      },
+    },
   },
   resolve: {
     alias: [
