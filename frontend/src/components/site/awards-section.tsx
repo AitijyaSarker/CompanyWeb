@@ -13,9 +13,18 @@ import {
   Star,
   Layers,
   ArrowUpRight,
+  Maximize2,
+  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 import { getContent, useSiteData, type Award as AwardType } from "@/hooks/use-site-data";
 import { cn } from "@/lib/utils";
@@ -75,6 +84,7 @@ export function AwardsSection({ hideHeading = false }: { hideHeading?: boolean }
   const { data } = useSiteData();
   const backendAwards = data?.awards ?? [];
   const content = data?.content;
+  const [selectedAward, setSelectedAward] = React.useState<AwardType | null>(null);
 
   // Use backend awards from admin dashboard if available, otherwise show curated recognitions
   const displayedAwards: AwardType[] = backendAwards.length > 0 ? backendAwards : CURATED_AWARDS;
@@ -129,64 +139,125 @@ export function AwardsSection({ hideHeading = false }: { hideHeading?: boolean }
             <motion.div
               key={award.id || `award-${i}`}
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 sm:p-8 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-500/50 hover:shadow-[0_20px_50px_rgba(245,158,11,0.15)] dark:border-white/10 dark:bg-slate-900/80 dark:hover:border-amber-400/40 dark:hover:shadow-[0_20px_50px_rgba(245,158,11,0.2)]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-6 sm:p-7 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-500/50 hover:shadow-[0_20px_50px_rgba(245,158,11,0.18)] dark:border-white/10 dark:bg-slate-900/80 dark:hover:border-amber-400/40 dark:hover:shadow-[0_20px_50px_rgba(245,158,11,0.22)]"
             >
               {/* Card Ambient Glow Orb */}
-              <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-500/20 transition-all duration-300" />
+              <div className="pointer-events-none absolute -right-16 -top-16 size-44 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-500/25 transition-all duration-300" />
 
               <div>
-                {/* Top Row: Icon & Issuer/Year Badge */}
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 via-amber-500/10 to-transparent text-amber-600 shadow-inner border border-amber-500/30 dark:text-amber-400">
-                    {award.imageUrl ? (
+                {/* Prominent Picture Container */}
+                <div
+                  onClick={() => award.imageUrl && setSelectedAward(award)}
+                  className={cn(
+                    "relative mb-5 w-full overflow-hidden rounded-2xl border border-slate-200/90 dark:border-white/10 transition-all duration-300",
+                    award.imageUrl
+                      ? "cursor-pointer bg-slate-100/90 dark:bg-slate-950/80 group-hover:border-amber-500/40 group-hover:shadow-[0_8px_25px_rgba(245,158,11,0.15)]"
+                      : "bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-transparent p-6 flex items-center justify-center min-h-[160px]"
+                  )}
+                >
+                  {award.imageUrl ? (
+                    <div className="relative aspect-[16/10] w-full flex items-center justify-center p-3 sm:p-4">
                       <img
                         src={award.imageUrl}
                         alt={award.title}
-                        className="size-8 object-contain"
+                        className="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105"
                       />
-                    ) : (
-                      <Trophy className="size-7 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
-                    )}
-                  </div>
+                      {/* Hover Overlay with expand icon */}
+                      <div className="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-[2px]">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-lg dark:bg-slate-900 dark:text-white">
+                          <Maximize2 className="size-3.5" />
+                          <span>View Full Photo</span>
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center py-4">
+                      <div className="flex size-16 items-center justify-center rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-inner mb-3">
+                        <Trophy className="size-8 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
+                      </div>
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                        {award.issuer || "Accreditation"}
+                      </span>
+                    </div>
+                  )}
+                </div>
 
-                  <div className="flex flex-col items-end">
-                    {award.year && (
-                      <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-mono font-bold text-amber-700 dark:text-amber-300 shadow-xs">
-                        {award.year}
-                      </span>
-                    )}
-                    {award.issuer && (
-                      <span className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 text-right">
-                        {award.issuer}
-                      </span>
-                    )}
-                  </div>
+                {/* Issuer & Year Badges */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  {award.issuer && (
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 truncate">
+                      {award.issuer}
+                    </span>
+                  )}
+                  {award.year && (
+                    <Badge variant="outline" className="shrink-0 rounded-full border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-amber-700 dark:text-amber-300">
+                      {award.year}
+                    </Badge>
+                  )}
                 </div>
 
                 {/* Award Title */}
-                <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">
+                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors line-clamp-2">
                   {award.title}
                 </h3>
 
                 {/* Description */}
                 {award.description && (
-                  <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
                     {award.description}
                   </p>
                 )}
               </div>
 
               {/* Verified Credential Tagline */}
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs">
+              <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold font-mono text-[11px]">
                   <CheckCircle2 className="size-3.5" />
-                  <span>Verified Distinction</span>
+                  <span>Verified Recognition</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">ID: UB-AWD-{award.id?.slice(-4) || (i + 1)}</span>
               </div>
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Award Image Lightbox Modal */}
+        <Dialog open={Boolean(selectedAward)} onOpenChange={(open) => !open && setSelectedAward(null)}>
+          <DialogContent className="max-w-3xl overflow-hidden p-0 bg-slate-950 border-white/10 text-white shadow-2xl">
+            <DialogHeader className="p-6 pb-2">
+              <div className="flex items-center gap-2 mb-1">
+                {selectedAward?.year && (
+                  <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 font-mono text-xs">
+                    {selectedAward.year}
+                  </Badge>
+                )}
+                {selectedAward?.issuer && (
+                  <span className="text-xs font-semibold text-slate-400">
+                    {selectedAward.issuer}
+                  </span>
+                )}
+              </div>
+              <DialogTitle className="text-xl sm:text-2xl font-bold text-white">
+                {selectedAward?.title}
+              </DialogTitle>
+              {selectedAward?.description && (
+                <DialogDescription className="text-sm text-slate-300 mt-1">
+                  {selectedAward.description}
+                </DialogDescription>
+              )}
+            </DialogHeader>
+
+            {selectedAward?.imageUrl && (
+              <div className="relative flex items-center justify-center p-6 bg-slate-900/90 border-t border-white/10">
+                <img
+                  src={selectedAward.imageUrl}
+                  alt={selectedAward.title}
+                  className="max-h-[70vh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
+                />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* Bottom Trust Stat Bar */}
         <div className="mt-16 grid grid-cols-2 gap-4 rounded-3xl border border-slate-200/90 bg-white/80 p-6 shadow-sm backdrop-blur-xl sm:grid-cols-4 dark:border-white/10 dark:bg-slate-900/60">

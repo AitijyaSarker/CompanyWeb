@@ -262,11 +262,23 @@ export function ReviewsAwards({ hideHeading = false }: { hideHeading?: boolean }
               {awards.map((award: AwardType) => (
                 <div
                   key={award.id}
-                  className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/80 bg-white/60 p-4 text-center dark:border-white/10 dark:bg-slate-900/60"
+                  className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/80 bg-white/60 p-5 text-center dark:border-white/10 dark:bg-slate-900/60 shadow-xs hover:border-amber-500/40 transition-colors"
                 >
-                  <Award className="size-6 text-cyan-500 mb-2" />
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">{award.title}</span>
-                  <span className="text-xs text-slate-500">{award.issuer} • {award.year}</span>
+                  {award.imageUrl ? (
+                    <div className="mb-3 h-20 w-full flex items-center justify-center p-1">
+                      <img
+                        src={award.imageUrl}
+                        alt={award.title}
+                        className="max-h-full max-w-full object-contain drop-shadow-xs"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                      <Award className="size-6" />
+                    </div>
+                  )}
+                  <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">{award.title}</span>
+                  <span className="text-xs text-slate-500 mt-0.5">{award.issuer} • {award.year}</span>
                 </div>
               ))}
             </div>
