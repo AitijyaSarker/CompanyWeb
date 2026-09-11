@@ -57,9 +57,31 @@ const MAX_TEXT_LENGTH = 2000;
 const text = (value, max = 200) => (typeof value === "string" ? value.trim().slice(0, max) : "");
 const isEmail = (value) => EMAIL_RE.test(value);
 
-function isAllowedOrigin(origin) {
+function isAllowedOrigin(origin, req) {
   if (!origin) return true;
-  return configuredOrigins.includes(origin.replace(/\/$/, ""));
+  const normalized = origin.replace(/\/$/, "");
+  if (configuredOrigins.includes(normalized)) return true;
+  try {
+    const parsed = new URL(origin);
+    const hostname = parsed.hostname.toLowerCase();
+    const host = parsed.host.toLowerCase();
+    if (req) {
+      const reqHost = req.get("host")?.toLowerCase();
+      if (reqHost && (host === reqHost || reqHost.startsWith(host))) return true;
+    }
+    if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+    if (
+      hostname === "ultrabulbit.com" ||
+      hostname.endsWith(".ultrabulbit.com") ||
+      hostname === "onrender.com" ||
+      hostname.endsWith(".onrender.com")
+    ) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
 }
 
 function validateSameOrigin(req, res, next) {
@@ -75,7 +97,7 @@ function validateSameOrigin(req, res, next) {
     }
   }
   if (isProduction && !source) return res.status(403).json({ error: "Missing request origin" });
-  if (source && !isAllowedOrigin(source)) return res.status(403).json({ error: "Invalid request origin" });
+  if (source && !isAllowedOrigin(source, req)) return res.status(403).json({ error: "Invalid request origin" });
   next();
 }
 
@@ -100,8 +122,8 @@ app.use((_req, res, next) => {
 });
 app.use(cors({
   origin(origin, callback) {
-    if (isAllowedOrigin(origin)) return callback(null, true);
-    return callback(new Error("Not allowed by CORS"));
+    if (!origin || isAllowedOrigin(origin)) return callback(null, true);
+    return callback(null, false);
   },
   credentials: true,
 }));
