@@ -13,18 +13,9 @@ import {
   CheckCircle2,
   ShieldCheck,
   Cpu,
-  Server,
   Zap,
   Globe,
-  Database,
-  Terminal,
   Sparkles,
-  Lock,
-  Radio,
-  Layers,
-  Code2,
-  Play,
-  RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -49,11 +40,7 @@ export function Hero() {
   const content = data?.content;
   const prefersReducedMotion = useReducedMotion();
 
-  const [activeTab, setActiveTab] = React.useState<"edge" | "ai" | "secops" | "throughput">("edge");
   const [domainIndex, setDomainIndex] = React.useState(0);
-  const [simulating, setSimulating] = React.useState(false);
-  const [simTps, setSimTps] = React.useState(128450);
-  const [simLatency, setSimLatency] = React.useState(11.4);
 
   // Rotating domain text timer
   React.useEffect(() => {
@@ -62,22 +49,6 @@ export function Hero() {
     }, 3200);
     return () => clearInterval(interval);
   }, []);
-
-  // Simulate load spike in telemetry
-  const handleSimulateLoad = () => {
-    if (simulating) return;
-    setSimulating(true);
-    const spikeTps = Math.floor(Math.random() * 40000) + 180000;
-    const spikeLatency = Number((Math.random() * 2 + 13.8).toFixed(1));
-    setSimTps(spikeTps);
-    setSimLatency(spikeLatency);
-
-    setTimeout(() => {
-      setSimTps(128450);
-      setSimLatency(11.4);
-      setSimulating(false);
-    }, 2800);
-  };
 
   const badge = getContent(content, "hero_badge", "Catalyst for bright ideas");
   const title = getContent(content, "hero_title", "We Code Your Ideas");
@@ -216,223 +187,149 @@ export function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* ===== 3. Right Column: Live Interactive Architecture & Telemetry HUD ===== */}
+          {/* ===== 3. Right Column: Clean Glowing Catalyst Architecture Animation ===== */}
           <motion.div
             initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.94, y: 35 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5"
+            className="relative lg:col-span-5 flex items-center justify-center"
           >
-            <div className="relative rounded-3xl border border-slate-800/80 bg-slate-950 shadow-[0_25px_60px_rgba(0,0,0,0.35)] dark:border-cyan-500/30 dark:bg-slate-900/95 dark:shadow-[0_0_60px_rgba(6,182,212,0.18)] backdrop-blur-2xl overflow-hidden text-white">
+            {/* Ambient Background Light Aura */}
+            <div className="pointer-events-none absolute -inset-4 rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-500/15 to-blue-600/20 blur-3xl dark:from-cyan-500/25 dark:via-blue-500/20 dark:to-indigo-500/20" />
+
+            {/* Clean Interactive Visual Container */}
+            <div className="relative w-full max-w-[500px] h-[440px] sm:h-[480px] rounded-3xl border border-slate-200/80 bg-white/40 p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_60px_rgba(6,182,212,0.12)] overflow-hidden flex flex-col items-center justify-center">
               
-              {/* Telemetry Window Header */}
-              <div className="flex items-center justify-between border-b border-white/10 bg-slate-950/95 px-4 py-3 sm:px-5">
-                <div className="flex items-center gap-2">
-                  <div className="size-3 rounded-full bg-rose-500/80 shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
-                  <div className="size-3 rounded-full bg-amber-500/80 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-                  <div className="size-3 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                  <span className="ml-2 font-mono text-xs text-slate-400">ultrabulb-telemetry-v4</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 font-mono text-[11px] text-cyan-400 bg-cyan-950/70 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                    <Activity className="size-3 animate-pulse text-cyan-400" />
-                    <span>99.999% SLA</span>
-                  </span>
-                </div>
+              {/* Subtle Grid Accent */}
+              <div className="pointer-events-none absolute inset-0 bg-grid opacity-10 dark:bg-grid-dark dark:opacity-15" />
+
+              {/* Background Orbital Rings */}
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                {/* Outer Rotating Dashed Ring */}
+                <motion.div
+                  animate={prefersReducedMotion ? {} : { rotate: 360 }}
+                  transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                  className="size-[340px] sm:size-[380px] rounded-full border border-dashed border-cyan-500/20 dark:border-cyan-400/25"
+                />
+                {/* Middle Rotating Counter-Ring */}
+                <motion.div
+                  animate={prefersReducedMotion ? {} : { rotate: -360 }}
+                  transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                  className="absolute size-[250px] sm:size-[280px] rounded-full border border-dotted border-sky-400/30 dark:border-sky-300/30"
+                />
+                {/* Inner Glowing Pulsing Ring */}
+                <motion.div
+                  animate={prefersReducedMotion ? {} : { scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute size-[160px] sm:size-[180px] rounded-full border border-cyan-400/40 bg-gradient-to-tr from-cyan-500/10 to-transparent shadow-[0_0_30px_rgba(6,182,212,0.25)]"
+                />
               </div>
 
-              {/* HUD Mode Tab Switcher */}
-              <div className="grid grid-cols-4 border-b border-white/10 bg-slate-900/80 p-1.5 text-xs font-medium gap-1">
-                <button
-                  onClick={() => setActiveTab("edge")}
-                  className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] transition-all ${
-                    activeTab === "edge"
-                      ? "bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-xs"
-                      : "text-slate-400 hover:text-white"
-                  }`}
+              {/* Central Radiant Catalyst Core */}
+              <div className="relative z-10 flex flex-col items-center justify-center">
+                <motion.div
+                  animate={prefersReducedMotion ? {} : { y: [-6, 6, -6] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative flex size-24 sm:size-28 items-center justify-center rounded-3xl border border-cyan-400/50 bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-blue-600/30 shadow-[0_0_50px_rgba(6,182,212,0.4)] backdrop-blur-xl group cursor-pointer transition-transform hover:scale-110"
                 >
-                  <Server className="size-3 shrink-0" />
-                  <span className="truncate">Edge Node</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("ai")}
-                  className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] transition-all ${
-                    activeTab === "ai"
-                      ? "bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-xs"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Cpu className="size-3 shrink-0" />
-                  <span className="truncate">AI Engine</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("secops")}
-                  className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] transition-all ${
-                    activeTab === "secops"
-                      ? "bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-xs"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <ShieldCheck className="size-3 shrink-0" />
-                  <span className="truncate">SecOps</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("throughput")}
-                  className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] transition-all ${
-                    activeTab === "throughput"
-                      ? "bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-xs"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Radio className="size-3 shrink-0" />
-                  <span className="truncate">Live TPS</span>
-                </button>
-              </div>
-
-              {/* HUD Screen Body */}
-              <div className="p-5 sm:p-6 font-mono text-xs min-h-[320px] flex flex-col justify-between">
-                {activeTab === "edge" && (
-                  <div className="space-y-3.5">
-                    <div className="flex items-center justify-between text-slate-400 pb-2 border-b border-white/5">
-                      <span className="text-cyan-400 font-bold">// CLOUD DISTRIBUTED TOPOLOGY</span>
-                      <span className="text-[10px] text-emerald-400">AWS + Cloudflare Global</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between rounded-xl bg-white/5 p-2.5 border border-white/5">
-                        <div className="flex items-center gap-2 text-slate-200">
-                          <Globe className="size-4 text-cyan-400" />
-                          <span>Anycast Global Edge CDN</span>
-                        </div>
-                        <span className="text-emerald-400 font-bold">{simLatency}ms TTFB</span>
-                      </div>
-
-                      <div className="flex items-center justify-between rounded-xl bg-white/5 p-2.5 border border-white/5">
-                        <div className="flex items-center gap-2 text-slate-200">
-                          <Server className="size-4 text-sky-400" />
-                          <span>Kubernetes Multi-Region Pods</span>
-                        </div>
-                        <span className="text-cyan-400 font-bold">Auto-Scaling</span>
-                      </div>
-
-                      <div className="flex items-center justify-between rounded-xl bg-white/5 p-2.5 border border-white/5">
-                        <div className="flex items-center gap-2 text-slate-200">
-                          <Database className="size-4 text-indigo-400" />
-                          <span>Distributed CockroachDB & Redis</span>
-                        </div>
-                        <span className="text-emerald-400 font-bold">0.3ms P99</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 text-[11px] text-slate-400 flex items-center justify-between">
-                      <span>Zero-Loss Failover: <strong className="text-emerald-400">Armed</strong></span>
-                      <span>DDoS Mitigation: <strong className="text-cyan-400">Active</strong></span>
-                    </div>
+                  {/* Energy Sparkles */}
+                  <div className="absolute inset-0 rounded-3xl bg-radial from-cyan-400/20 via-transparent to-transparent animate-pulse" />
+                  
+                  {/* Core Icon */}
+                  <div className="relative flex size-14 sm:size-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500 to-sky-400 text-slate-950 shadow-lg">
+                    <Sparkles className="size-7 sm:size-8 text-slate-950 animate-spin-slow" />
                   </div>
-                )}
 
-                {activeTab === "ai" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-cyan-400 font-bold pb-2 border-b border-white/5">
-                      <span>// NEURAL AGENT RETRIEVAL PIPELINE</span>
-                      <span className="text-[10px] text-cyan-300">RAG v3.2</span>
-                    </div>
-                    <div className="space-y-1.5 text-slate-300 text-[11px]">
-                      <div className="text-emerald-400">&gt; Vector Database: Pinecone Serverless (1536 dim)</div>
-                      <div className="text-slate-400">&gt; Hybrid Search: Dense + Sparse BM25 rerank</div>
-                      <div className="text-cyan-300">&gt; Semantic Cache Hit Ratio: 96.4%</div>
-                      <div className="text-emerald-400">&gt; Hallucination Verification: Passed (0.00% err)</div>
-                    </div>
-                    <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/40 p-3 mt-2">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs text-cyan-300 font-bold">LLM Token Generation Stream</span>
-                        <span className="text-xs text-cyan-400 font-mono font-bold">168 tokens/s</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 w-[92%]" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "secops" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-cyan-400 font-bold pb-2 border-b border-white/5">
-                      <span>// ZERO-TRUST CONTINUOUS COMPLIANCE</span>
-                      <span className="text-[10px] text-emerald-400">SOC2 Type II</span>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-slate-200">
-                        <span className="flex items-center gap-1.5 text-emerald-400"><CheckCircle2 className="size-3.5" /> OWASP Top 10 SAST Scan</span>
-                        <span className="text-emerald-400 font-bold">0 CVEs</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-200">
-                        <span className="flex items-center gap-1.5 text-emerald-400"><CheckCircle2 className="size-3.5" /> mTLS Encryption & Vault Keys</span>
-                        <span className="text-slate-400">Rotated 2h ago</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-200">
-                        <span className="flex items-center gap-1.5 text-emerald-400"><CheckCircle2 className="size-3.5" /> Automated Unit & E2E Suite</span>
-                        <span className="text-slate-400">1,840 Passed</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-200">
-                        <span className="flex items-center gap-1.5 text-cyan-400"><Zap className="size-3.5" /> Blue/Green Production Gateway</span>
-                        <span className="text-cyan-400 font-bold">ACTIVE</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "throughput" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-cyan-400 font-bold pb-2 border-b border-white/5">
-                      <span>// REAL-TIME CONCURRENCY MONITOR</span>
-                      <span className="text-[10px] text-emerald-400">Cluster Live</span>
-                    </div>
-
-                    <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/40 p-3.5">
-                      <div className="text-[11px] text-slate-400 uppercase tracking-wider">Processed Requests / Sec</div>
-                      <div className="text-2xl sm:text-3xl font-black text-white font-mono mt-1">
-                        {simTps.toLocaleString()} <span className="text-xs font-normal text-cyan-400">req/s</span>
-                      </div>
-                      <div className="mt-2 flex items-center gap-3 text-[11px] text-slate-300">
-                        <span>P99: <strong className="text-emerald-400">{simLatency}ms</strong></span>
-                        <span>Error Rate: <strong className="text-emerald-400">0.0001%</strong></span>
-                      </div>
-                    </div>
-
-                    <Button
-                      onClick={handleSimulateLoad}
-                      disabled={simulating}
-                      size="sm"
-                      className="w-full rounded-xl bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-bold gap-2"
-                    >
-                      {simulating ? (
-                        <>
-                          <RotateCcw className="size-3.5 animate-spin" />
-                          <span>Simulating 50k Concurrency Burst...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Play className="size-3.5" />
-                          <span>Simulate Traffic Spike (Test Cluster)</span>
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-
-                {/* HUD Footer Status Bar */}
-                <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-[11px] text-slate-400">
-                  <div className="flex items-center gap-2">
+                  {/* Micro Live Status Beacon */}
+                  <div className="absolute -bottom-2 -right-2 flex size-6 items-center justify-center rounded-full bg-slate-900 border border-emerald-400/80 shadow-md">
                     <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span>ULTRABULB Cloud Mesh (us-east-1)</span>
                   </div>
-                  <Link href="/services" className="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1">
-                    <span>Inspect Stack</span>
-                    <ArrowUpRight className="size-3" />
-                  </Link>
-                </div>
+                </motion.div>
+
+                {/* Core Title Pill */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 px-3 py-1 text-[11px] font-bold font-mono tracking-wide text-cyan-700 dark:text-cyan-300 border border-cyan-500/30"
+                >
+                  <Activity className="size-3 text-cyan-500 animate-pulse" />
+                  <span>CATALYST CORE • ACTIVE</span>
+                </motion.div>
               </div>
+
+              {/* ===== Floating Feature Satellite Nodes ===== */}
+
+              {/* Node 1: Top Left - AI & Neural Agents */}
+              <motion.div
+                animate={prefersReducedMotion ? {} : { y: [-4, 5, -4], x: [-2, 3, -2] }}
+                transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                className="absolute top-6 left-5 sm:left-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+              >
+                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
+                  <Cpu className="size-4.5" />
+                </div>
+                <div>
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">AI Systems & Agents</div>
+                  <div className="text-[9px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+                    <span className="size-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>Autonomous RAG</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Node 2: Top Right - High-Speed Cloud Mesh */}
+              <motion.div
+                animate={prefersReducedMotion ? {} : { y: [5, -4, 5], x: [2, -2, 2] }}
+                transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute top-8 right-5 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+              >
+                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30">
+                  <Globe className="size-4.5" />
+                </div>
+                <div>
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Global Edge Mesh</div>
+                  <div className="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span className="size-1.5 rounded-full bg-emerald-400" />
+                    <span>&lt;12ms Latency</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Node 3: Bottom Left - Bank-Grade Security */}
+              <motion.div
+                animate={prefersReducedMotion ? {} : { y: [4, -5, 4], x: [-3, 2, -3] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                className="absolute bottom-6 left-5 sm:left-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+              >
+                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                  <ShieldCheck className="size-4.5" />
+                </div>
+                <div>
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Zero-Trust Security</div>
+                  <div className="text-[9px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                    SOC-2 • AES-256
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Node 4: Bottom Right - 2-Week Sprint Velocity */}
+              <motion.div
+                animate={prefersReducedMotion ? {} : { y: [-5, 4, -5], x: [3, -2, 3] }}
+                transition={{ duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute bottom-6 right-5 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+              >
+                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30">
+                  <Zap className="size-4.5" />
+                </div>
+                <div>
+                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Rapid Sprint Velocity</div>
+                  <div className="text-[9px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+                    <span className="size-1.5 rounded-full bg-cyan-400" />
+                    <span>2-Week CI/CD</span>
+                  </div>
+                </div>
+              </motion.div>
+
             </div>
           </motion.div>
         </div>
