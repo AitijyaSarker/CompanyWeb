@@ -95,22 +95,12 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-44 lg:pb-36 bg-gradient-to-b from-slate-50 via-cyan-50/25 to-white text-slate-900 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 dark:text-white transition-colors duration-300"
     >
-      {/* ===== 1. Multi-Layer Cybernetic Canvas Background ===== */}
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-35 dark:bg-grid-dark dark:opacity-30" />
+      {/* ===== 1. Clean Premium Ambient Background ===== */}
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-15 dark:bg-grid-dark dark:opacity-10" />
 
-      {/* Orbiting Cybernetic Circles & Radial Glows */}
-      <div className="pointer-events-none absolute -top-48 left-1/2 -translate-x-1/2 size-[850px] rounded-full bg-gradient-to-tr from-cyan-500/15 via-blue-600/10 to-indigo-600/10 blur-[150px] dark:from-cyan-500/20 dark:via-blue-600/15 dark:to-cyan-400/10" />
-      <div className="pointer-events-none absolute top-1/3 -right-40 size-[500px] rounded-full bg-cyan-400/10 blur-[130px] dark:bg-cyan-500/15" />
-      <div className="pointer-events-none absolute bottom-10 -left-40 size-[450px] rounded-full bg-blue-600/10 blur-[140px] dark:bg-blue-600/15" />
+      {/* Subtle Centered Ambient Glow */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent blur-3xl dark:from-cyan-500/15 dark:via-blue-600/10" />
 
-      {/* Orbital Decorative Vector Lines */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[700px] opacity-15 dark:opacity-25"
-      >
-        <ellipse cx="600" cy="350" rx="550" ry="260" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="4 8" className="text-cyan-500 animate-spin-slow" />
-        <ellipse cx="600" cy="350" rx="380" ry="180" fill="none" stroke="currentColor" strokeWidth="1" className="text-blue-500" />
-      </svg>
 
       <div className="site-container relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8 xl:gap-14">
