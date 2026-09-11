@@ -15,9 +15,9 @@ import {
   Cpu,
   Zap,
   Globe,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -230,18 +230,25 @@ export function Hero() {
                 <motion.div
                   animate={prefersReducedMotion ? {} : { y: [-6, 6, -6] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative flex size-24 sm:size-28 items-center justify-center rounded-3xl border border-cyan-400/50 bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-blue-600/30 shadow-[0_0_50px_rgba(6,182,212,0.4)] backdrop-blur-xl group cursor-pointer transition-transform hover:scale-110"
+                  className="relative flex size-28 sm:size-32 items-center justify-center rounded-3xl border border-cyan-400/40 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 shadow-[0_0_50px_rgba(6,182,212,0.35)] backdrop-blur-2xl group cursor-pointer transition-transform hover:scale-110 p-3.5"
                 >
-                  {/* Energy Sparkles */}
-                  <div className="absolute inset-0 rounded-3xl bg-radial from-cyan-400/20 via-transparent to-transparent animate-pulse" />
+                  {/* Ambient Glow Aura behind logo */}
+                  <div className="absolute inset-0 rounded-3xl bg-radial from-cyan-400/25 via-transparent to-transparent animate-pulse" />
                   
-                  {/* Core Icon */}
-                  <div className="relative flex size-14 sm:size-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500 to-sky-400 text-slate-950 shadow-lg">
-                    <Sparkles className="size-7 sm:size-8 text-slate-950 animate-spin-slow" />
+                  {/* Official ULTRABULB Logo */}
+                  <div className="relative flex size-full items-center justify-center">
+                    <Image
+                      src="/UltrabulbHeroLogo.png"
+                      alt="ULTRABULB IT Logo"
+                      width={120}
+                      height={120}
+                      className="size-full object-contain drop-shadow-[0_0_18px_rgba(6,182,212,0.6)] transition-all group-hover:scale-105"
+                      priority
+                    />
                   </div>
 
                   {/* Micro Live Status Beacon */}
-                  <div className="absolute -bottom-2 -right-2 flex size-6 items-center justify-center rounded-full bg-slate-900 border border-emerald-400/80 shadow-md">
+                  <div className="absolute -bottom-1.5 -right-1.5 flex size-6 items-center justify-center rounded-full bg-slate-950 border border-emerald-400/90 shadow-md">
                     <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
                   </div>
                 </motion.div>
