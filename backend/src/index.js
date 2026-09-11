@@ -22,9 +22,11 @@ const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret && process.env.NODE_ENV === "production") throw new Error("JWT_SECRET is required in production");
 const secret = jwtSecret || "ultrabulb-local-secret";
 const uploadDirectory = path.resolve(process.env.UPLOAD_DIR || "uploads");
-const clientDirectory = process.env.CLIENT_DIR
+const defaultClientDirectory = path.resolve(__dirname, "../../frontend/dist");
+const clientDirectory = process.env.CLIENT_DIR && path.isAbsolute(process.env.CLIENT_DIR)
   ? path.resolve(process.env.CLIENT_DIR)
-  : path.resolve(__dirname, "../../frontend/dist");
+  : defaultClientDirectory;
+const assetDirectory = path.join(clientDirectory, "assets");
 const isProduction = process.env.NODE_ENV === "production";
 const configuredOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
   .split(",")
@@ -253,9 +255,23 @@ app.post("/api/admin/upload", requireAdmin, upload.single("file"), asyncRoute(as
   }
   res.status(201).json({ url: `/uploads/${req.file.filename}` });
 }));
+app.use("/assets", express.static(assetDirectory, {
+  fallthrough: false,
+  immutable: true,
+  maxAge: "1y",
+}));
 app.use(express.static(clientDirectory));
-app.get("/{*splat}", (req, res, next) => req.path.startsWith("/api/") ? next() : res.sendFile(path.join(clientDirectory, "index.html")));
-app.use((error, _req, res, _next) => { console.error(error); res.status(500).json({ error: "Internal server error" }); });
+app.get("/{*splat}", (req, res, next) => {
+  if (req.path.startsWith("/api/")) return next();
+  return res.sendFile(path.join(clientDirectory, "index.html"), (error) => {
+    if (error) next(error);
+  });
+});
+app.use((error, req, res, _next) => {
+  console.error(`${req.method} ${req.originalUrl}`, error);
+  if (error?.status === 404 || error?.statusCode === 404) return res.status(404).json({ error: "Not found" });
+  res.status(500).json({ error: "Internal server error" });
+});
 
 await mkdir(uploadDirectory, { recursive: true });
 await mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ultrabulb", {
