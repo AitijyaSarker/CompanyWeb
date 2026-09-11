@@ -4,6 +4,8 @@ import * as React from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Camera,
+  ChevronDown,
+  ChevronUp,
   ChevronLeft,
   ChevronRight,
   Expand,
@@ -13,8 +15,9 @@ import {
   Calendar,
   Layers,
   Users,
+  Eye,
+  Plus,
 } from "lucide-react";
-import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -84,7 +87,64 @@ const CURATED_GALLERY: GalleryImage[] = [
     order: 6,
     createdAt: new Date().toISOString(),
   },
+  {
+    id: "g-7",
+    title: "GPU Cluster & AI Model Benchmarking Lab",
+    category: "Office",
+    imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+    description: "Stress-testing LLM inference speed, tensor operations, and distributed database sharding.",
+    order: 7,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "g-8",
+    title: "ULTRABULB Annual Hackathon Winner Awards",
+    category: "Events",
+    imageUrl: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
+    description: "Celebrating breakthrough client solutions, developer excellence, and open-source contributions.",
+    order: 8,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "g-9",
+    title: "Open Source Developer Day & Lightning Talks",
+    category: "Events",
+    imageUrl: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=80",
+    description: "Sharing best practices on Next.js 15, Rust tooling, and micro-frontend orchestrations with the tech community.",
+    order: 9,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "g-10",
+    title: "Agile Sprint Retrospective & Product Strategy",
+    category: "Office",
+    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80",
+    description: "Cross-functional synchronization between engineering, design, and product management teams.",
+    order: 10,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "g-11",
+    title: "Engineering Mentorship & Code Review Jam",
+    category: "Office",
+    imageUrl: "https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?auto=format&fit=crop&w=1200&q=80",
+    description: "Pair programming, static AST analysis, and continuous knowledge sharing across development squads.",
+    order: 11,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "g-12",
+    title: "Community Tech Meetup & Live Demo Exhibition",
+    category: "Events",
+    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
+    description: "Live interactive software showcases, technical networking, and future-tech demonstrations.",
+    order: 12,
+    createdAt: new Date().toISOString(),
+  },
 ];
+
+const INITIAL_VISIBLE_COUNT = 6;
+const EXPAND_STEP = 6;
 
 export function Gallery() {
   const { data } = useSiteData();
@@ -110,11 +170,33 @@ export function Gallery() {
 
   const [activeCategory, setActiveCategory] = React.useState<string>("All");
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = React.useState<number>(INITIAL_VISIBLE_COUNT);
 
   const filtered = React.useMemo(() => {
     if (activeCategory === "All") return galleryItems;
     return galleryItems.filter((g) => g.category === activeCategory);
   }, [galleryItems, activeCategory]);
+
+  // Reset visible count when category changes
+  React.useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [activeCategory]);
+
+  const displayedItems = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
+  const remainingCount = Math.max(0, filtered.length - visibleCount);
+
+  const handleSeeMore = () => {
+    setVisibleCount((prev) => Math.min(prev + EXPAND_STEP, filtered.length));
+  };
+
+  const handleShowLess = () => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    const gallerySection = document.getElementById("gallery");
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   const selectedImage = selectedIndex !== null ? filtered[selectedIndex] : null;
 
@@ -179,6 +261,7 @@ export function Gallery() {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
             {categories.map((cat) => {
               const isActive = activeCategory === cat;
+              const count = cat === "All" ? galleryItems.length : galleryItems.filter((g) => g.category === cat).length;
               return (
                 <button
                   key={cat}
@@ -192,9 +275,7 @@ export function Gallery() {
                   )}
                 >
                   <span>{cat}</span>
-                  {cat === "All" && (
-                    <span className="ml-1.5 text-[11px] opacity-75 font-mono">({galleryItems.length})</span>
-                  )}
+                  <span className="ml-1.5 text-[11px] opacity-75 font-mono">({count})</span>
                 </button>
               );
             })}
@@ -211,8 +292,8 @@ export function Gallery() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filtered.map((item, i) => {
-              const isLarge = i === 0 || i === 3;
+            {displayedItems.map((item, i) => {
+              const isLarge = i % 5 === 0 || i % 5 === 3;
               return (
                 <motion.div
                   layout
@@ -220,7 +301,7 @@ export function Gallery() {
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                  transition={{ duration: 0.45, delay: i * 0.05 }}
+                  transition={{ duration: 0.45, delay: (i % 6) * 0.05 }}
                   className={cn(
                     "group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-md backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-cyan-500/50 hover:shadow-[0_25px_60px_rgba(6,182,212,0.18)] dark:border-white/10 dark:bg-slate-900/80",
                     isLarge ? "sm:col-span-2 lg:col-span-2 aspect-[16/9]" : "aspect-[4/3] sm:aspect-auto sm:min-h-[300px]"
@@ -272,6 +353,53 @@ export function Gallery() {
             })}
           </AnimatePresence>
         </motion.div>
+
+        {/* After Rows: "See More" / "Load More" & Interactive Controls */}
+        <div className="mt-12 sm:mt-16 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {hasMore ? (
+              <Button
+                size="lg"
+                onClick={handleSeeMore}
+                className="group relative inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-6 text-sm font-bold text-slate-950 shadow-[0_0_30px_rgba(6,182,212,0.35)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(6,182,212,0.5)] cursor-pointer"
+              >
+                <Sparkles className="size-4 text-slate-950 transition-transform duration-300 group-hover:rotate-12" />
+                <span>See More Moments</span>
+                <span className="rounded-full bg-slate-950/20 px-2.5 py-0.5 text-xs font-mono font-bold">
+                  +{remainingCount} More
+                </span>
+                <ChevronDown className="size-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+              </Button>
+            ) : filtered.length > INITIAL_VISIBLE_COUNT ? (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleShowLess}
+                className="inline-flex items-center gap-2 rounded-full border-slate-300 bg-white/80 px-8 py-6 text-sm font-bold text-slate-800 shadow-sm backdrop-blur-md transition-all hover:border-cyan-500 hover:text-cyan-600 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-400 cursor-pointer"
+              >
+                <ChevronUp className="size-4" />
+                <span>Show Less</span>
+              </Button>
+            ) : null}
+
+            {/* View Full Lightbox Show Trigger */}
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setSelectedIndex(0)}
+              className="inline-flex items-center gap-2 rounded-full border-slate-300/80 bg-white/60 px-6 py-6 text-sm font-semibold text-slate-700 shadow-xs backdrop-blur-md transition-all hover:border-cyan-500 hover:text-cyan-600 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:border-cyan-400 dark:hover:text-cyan-400 cursor-pointer"
+            >
+              <Eye className="size-4" />
+              <span>Full Screen Slideshow</span>
+            </Button>
+          </div>
+
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center">
+            Showing <span className="font-bold text-cyan-600 dark:text-cyan-400">{displayedItems.length}</span> of{" "}
+            <span className="font-bold text-slate-800 dark:text-slate-200">{filtered.length}</span> photos
+            {activeCategory !== "All" && ` in ${activeCategory}`}
+          </p>
+        </div>
       </div>
 
       {/* Lightbox / High-Res Carousel Modal */}
@@ -347,4 +475,3 @@ export function Gallery() {
     </section>
   );
 }
-
