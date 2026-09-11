@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { ReviewForm } from "@/components/site/reviews-awards";
+import { AwardsSection } from "@/components/site/awards-section";
 import { getContent, useSiteData, type Review } from "@/hooks/use-site-data";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -63,7 +64,12 @@ export default function ReviewPage() {
         {loading ? (
           <div className="h-80 animate-pulse rounded-2xl border border-border/60 bg-muted/50" />
         ) : (
-          <PublishedReviews reviews={data?.reviews ?? []} />
+          <>
+            <PublishedReviews reviews={data?.reviews ?? []} />
+            <div className="mt-16">
+              <AwardsSection hideHeading={false} />
+            </div>
+          </>
         )}
       </section>
 

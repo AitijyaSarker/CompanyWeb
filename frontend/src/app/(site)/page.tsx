@@ -9,6 +9,7 @@ import { Technologies } from "@/components/site/technologies";
 import { CostEstimator } from "@/components/site/cost-estimator";
 import { Gallery } from "@/components/site/gallery";
 import { ReviewsAwards } from "@/components/site/reviews-awards";
+import { AwardsSection } from "@/components/site/awards-section";
 import { FinalCTA } from "@/components/site/final-cta";
 
 export default function HomePage() {
@@ -22,6 +23,7 @@ export default function HomePage() {
       <Technologies />
       <CostEstimator />
       <Gallery />
+      <AwardsSection />
       <ReviewsAwards />
       <FinalCTA />
     </>
