@@ -5,11 +5,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Facebook,
-  Github,
   Instagram,
   Linkedin,
   Mail,
-  Phone,
   MapPin,
   ArrowRight,
   ShieldCheck,
@@ -55,8 +53,7 @@ export function SiteFooter() {
     "footer_tagline",
     "Elite software engineering agency architecting high-scale digital products, custom AI systems, and mission-critical cloud platforms."
   );
-  const email = getContent(content, "footer_email", "hello@ultrabulb.com");
-  const phone = getContent(content, "footer_phone", "+880 1700-000000");
+  const email = getContent(content, "footer_email", "contact@ultrabulbit.com");
   const address = getContent(content, "footer_address", "Dhaka, Bangladesh");
   const copyright = getContent(content, "footer_copyright", "ULTRABULB IT. All rights reserved.");
 
@@ -64,7 +61,6 @@ export function SiteFooter() {
     { icon: Facebook, href: getContent(content, "footer_social_facebook", "https://facebook.com"), label: "Facebook" },
     { icon: Linkedin, href: getContent(content, "footer_social_linkedin", "https://linkedin.com"), label: "LinkedIn" },
     { icon: Instagram, href: getContent(content, "footer_social_instagram", "https://instagram.com"), label: "Instagram" },
-    { icon: Github, href: getContent(content, "footer_social_github", "https://github.com"), label: "GitHub" },
   ];
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -188,15 +184,14 @@ export function SiteFooter() {
               </Button>
             </form>
 
-            <div className="pt-2 text-xs text-slate-400 space-y-1.5">
-              <div className="flex items-center gap-2">
+            <div className="pt-2 text-xs text-slate-400 space-y-2">
+              <a
+                href={`mailto:${email}`}
+                className="flex items-center gap-2 text-slate-300 hover:text-cyan-400 transition-colors"
+              >
                 <Mail className="size-3.5 text-cyan-400" />
-                <span>{email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="size-3.5 text-cyan-400" />
-                <span>{phone}</span>
-              </div>
+                <span className="font-medium">{email}</span>
+              </a>
               <div className="flex items-center gap-2">
                 <MapPin className="size-3.5 text-cyan-400" />
                 <span>{address}</span>

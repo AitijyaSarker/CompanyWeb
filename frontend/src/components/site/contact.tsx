@@ -40,8 +40,7 @@ export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
     "contact_subtitle",
     "Have a project blueprint or architectural question? Our engineering leadership responds within 24 business hours."
   );
-  const email = getContent(content, "contact_email", "hello@ultrabulb.com");
-  const phone = getContent(content, "contact_phone", "+880 1700-000000");
+  const email = getContent(content, "contact_email", "contact@ultrabulbit.com");
   const address = getContent(content, "contact_address", "Dhaka, Bangladesh");
 
   const [name, setName] = React.useState("");
@@ -81,7 +80,7 @@ export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
       setSubject("");
       setMessage("");
     } catch {
-      toast.error("Failed to send inquiry. Please email hello@ultrabulb.com directly.");
+      toast.error("Failed to send inquiry. Please email contact@ultrabulbit.com directly.");
     } finally {
       setSubmitting(false);
     }
@@ -139,21 +138,8 @@ export function Contact({ hideHeading = false }: { hideHeading?: boolean }) {
                   <Mail className="size-5" />
                 </div>
                 <div>
-                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Email Us</span>
+                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Direct Email</span>
                   <div className="text-sm font-bold text-slate-900 dark:text-white">{email}</div>
-                </div>
-              </a>
-
-              <a
-                href={`tel:${phone}`}
-                className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm backdrop-blur-xl transition-all hover:border-cyan-500/40 hover:bg-white dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900"
-              >
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
-                  <Phone className="size-5" />
-                </div>
-                <div>
-                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Direct Line</span>
-                  <div className="text-sm font-bold text-slate-900 dark:text-white">{phone}</div>
                 </div>
               </a>
 

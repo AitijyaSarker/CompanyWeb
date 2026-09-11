@@ -194,7 +194,7 @@ export function Career({ hideHeading = false }: { hideHeading?: boolean }) {
         {vacancies.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-300 p-12 text-center text-slate-500 dark:border-white/10">
             <p className="text-base font-medium">No open roles currently posted.</p>
-            <p className="text-xs text-slate-400 mt-1">We are always scouting exceptional engineering talent. Send your GitHub/portfolio to careers@ultrabulb.com.</p>
+            <p className="text-xs text-slate-400 mt-1">We are always scouting exceptional engineering talent. Send your portfolio to contact@ultrabulbit.com.</p>
           </div>
         ) : (
           <motion.div

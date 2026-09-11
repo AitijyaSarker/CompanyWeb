@@ -125,7 +125,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@ultrabulb.com"
+                  placeholder="admin@ultrabulbit.com"
                   autoComplete="username"
                 />
               </div>
