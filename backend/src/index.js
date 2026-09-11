@@ -1,7 +1,6 @@
 import "dotenv/config";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { access, mkdir } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import { Readable } from "node:stream";
 import express from "express";
 import cors from "cors";
@@ -13,20 +12,15 @@ import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
 import mongoose from "mongoose";
 import { scryptSync, timingSafeEqual } from "node:crypto";
+import { assetDirectory, clientDirectory, validateClientBuild } from "./client-build.js";
 import { AdminUser, Award, ContactMessage, GalleryImage, Product, Review, ScheduledCall, ServiceCategory, SiteContent, TimeSlot, Vacancy } from "./models.js";
 
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 4000);
 const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret && process.env.NODE_ENV === "production") throw new Error("JWT_SECRET is required in production");
 const secret = jwtSecret || "ultrabulb-local-secret";
 const uploadDirectory = path.resolve(process.env.UPLOAD_DIR || "uploads");
-const defaultClientDirectory = path.resolve(__dirname, "../dist");
-const clientDirectory = process.env.CLIENT_DIR && path.isAbsolute(process.env.CLIENT_DIR)
-  ? path.resolve(process.env.CLIENT_DIR)
-  : defaultClientDirectory;
-const assetDirectory = path.join(clientDirectory, "assets");
 const isProduction = process.env.NODE_ENV === "production";
 const configuredOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
   .split(",")
@@ -256,10 +250,18 @@ app.post("/api/admin/upload", requireAdmin, upload.single("file"), asyncRoute(as
   res.status(201).json({ url: `/uploads/${req.file.filename}` });
 }));
 app.use("/assets", express.static(assetDirectory, {
-  fallthrough: false,
   immutable: true,
   maxAge: "1y",
 }));
+app.use("/assets", (error, req, res, next) => {
+  if (!error) return next();
+  console.error(`${req.method} ${req.originalUrl}`, error);
+  res.status(error.status || error.statusCode || 500).type("text/plain").send("Asset unavailable");
+});
+app.use("/assets", (req, res) => {
+  console.warn(`Static asset not found: ${req.originalUrl}; serving from ${assetDirectory}`);
+  res.status(404).type("text/plain").send("Asset not found");
+});
 app.use(express.static(clientDirectory, {
   setHeaders(res, filePath) {
     if (path.basename(filePath) === "index.html") {
@@ -281,8 +283,7 @@ app.use((error, req, res, _next) => {
 });
 
 await mkdir(uploadDirectory, { recursive: true });
-await access(path.join(clientDirectory, "index.html"));
-await access(assetDirectory);
+await validateClientBuild();
 await mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ultrabulb", {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 10000,

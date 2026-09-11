@@ -2,7 +2,7 @@ services:
   - type: web
     name: ultrabulb-it
     runtime: node
-    buildCommand: npm --prefix frontend ci && npm --prefix backend ci --omit=dev && npm --prefix frontend run build && test -f backend/dist/index.html && test -d backend/dist/assets
+    buildCommand: npm --prefix frontend ci && npm --prefix backend ci --omit=dev && npm --prefix frontend run build && node backend/src/verify-client-build.js
     startCommand: cd backend && npm start
     healthCheckPath: /api/health
     autoDeploy: true

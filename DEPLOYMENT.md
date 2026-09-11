@@ -40,7 +40,7 @@ cp .env.example .env
 npm start
 ```
 
-Run the backend from `backend/`; it serves `frontend/dist` and listens on port `4000`. Put Caddy or Nginx in front of `localhost:4000` and configure HTTPS. MongoDB stores application data and Cloudinary stores uploaded images.
+Run the backend from `backend/`; it serves the Vite build from `backend/dist` and listens on port `4000`. Put Caddy or Nginx in front of `localhost:4000` and configure HTTPS. MongoDB stores application data and Cloudinary stores uploaded images.
 
 ## Updates
 
