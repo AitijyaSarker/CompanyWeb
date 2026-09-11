@@ -1,17 +1,43 @@
 "use client";
 
+import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 
 import { SiteNavbar } from "@/components/site/navbar";
 import { SiteFooter } from "@/components/site/footer";
+import { Preloader, RouteProgressBar } from "@/components/site/preloader";
 import { useSiteData } from "@/hooks/use-site-data";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const { loading, error } = useSiteData();
+  const [hasPreloaded, setHasPreloaded] = React.useState<boolean>(false);
+
+  // Show preloader on initial application boot
+  const [showPreloader, setShowPreloader] = React.useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const alreadyLoaded = sessionStorage.getItem("ultrabulb_has_preloaded");
+      if (alreadyLoaded) return false;
+    }
+    return true;
+  });
+
+  const handlePreloaderComplete = React.useCallback(() => {
+    setShowPreloader(false);
+    setHasPreloaded(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("ultrabulb_has_preloaded", "true");
+    }
+  }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-cyan-500 selection:text-slate-950">
+      {/* World-Class Initial Boot Preloader */}
+      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
+
+      {/* Top Edge Route Loading Laser */}
+      <RouteProgressBar isRouting={loading && hasPreloaded} />
+
       <SiteNavbar />
 
       <main className="flex-1">
@@ -25,24 +51,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           children
         )}
       </main>
-
-      <AnimatePresence>
-        {loading ? (
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-            className="fixed inset-x-0 top-0 z-60 h-1 overflow-hidden bg-(--brand-navy)/10"
-          >
-            <motion.div
-              className="h-full w-full origin-left bg-linear-to-r from-(--brand-navy) via-(--brand-cyan) to-(--brand-navy)"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: [0, 0.6, 0.85, 1] }}
-              transition={{ duration: 2, ease: [0.22, 1, 0.36, 1], repeat: Infinity }}
-            />
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
 
       <SiteFooter />
     </div>
