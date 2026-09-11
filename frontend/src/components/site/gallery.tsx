@@ -88,7 +88,7 @@ export function Gallery() {
   }, [gallery, activeCategory]);
 
   return (
-    <section id="gallery" aria-labelledby="gallery-title" className="section-pad w-full">
+    <section id="gallery" aria-labelledby="gallery-title" className="section-pad w-full bg-white dark:bg-slate-950 transition-colors duration-300">
       <div className="site-container">
         <SectionHeading badge={badge} title={title} subtitle={subtitle} align="center" />
 

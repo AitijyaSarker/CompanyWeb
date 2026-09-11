@@ -30,11 +30,11 @@ export function Technologies() {
       : TECH_CATEGORIES.filter((c) => c.name === selectedCategory);
 
   return (
-    <section id="technologies" aria-labelledby="tech-title" className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-900/50 dark:bg-slate-950/70 text-foreground">
+    <section id="technologies" aria-labelledby="tech-title" className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/60 dark:bg-slate-950/70 text-foreground transition-colors duration-300">
       <div className="site-container relative">
         {/* Section Heading */}
         <div className="mx-auto max-w-3xl text-center mb-12">
-          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-400">
             <Cpu className="mr-1.5 size-3.5" />
             {badge}
           </Badge>
@@ -53,8 +53,8 @@ export function Technologies() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
                   selectedCategory === cat
-                    ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)]"
-                    : "border border-slate-200 bg-white/70 text-slate-600 hover:border-cyan-500/40 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-white"
+                    ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)] font-bold"
+                    : "border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-cyan-500/40 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:text-white"
                 }`}
               >
                 {cat}
@@ -75,13 +75,13 @@ export function Technologies() {
             <motion.div
               key={cat.name}
               variants={fadeUpSpring}
-              className="group rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-lg dark:border-white/10 dark:bg-slate-900/60"
+              className="group rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-lg dark:border-white/10 dark:bg-slate-900/60"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
                   {cat.name}
                 </h3>
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                   {cat.items.length} tools
                 </span>
               </div>
@@ -89,7 +89,7 @@ export function Technologies() {
                 {cat.items.map((item) => (
                   <span
                     key={item}
-                    className="rounded-xl border border-slate-200/60 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-800 transition-all group-hover:border-cyan-500/20 dark:border-white/5 dark:bg-white/5 dark:text-slate-200"
+                    className="rounded-xl border border-slate-200/80 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-800 transition-all group-hover:border-cyan-500/30 dark:border-white/5 dark:bg-white/5 dark:text-slate-200"
                   >
                     {item}
                   </span>

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Calculator,
   Sparkles,
@@ -98,23 +97,23 @@ export function CostEstimator() {
   const estimatedWeeks = Math.max(3, Math.round(rawWeeks * mult));
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28 bg-slate-950 text-white border-y border-cyan-500/20">
+    <section className="relative overflow-hidden py-20 sm:py-28 bg-slate-50/80 dark:bg-slate-950 text-slate-900 dark:text-white border-y border-slate-200/80 dark:border-cyan-500/20 transition-colors duration-300">
       {/* Ambient background glow */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-dark opacity-30" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-30" />
       <div className="pointer-events-none absolute -top-40 right-10 size-96 rounded-full bg-cyan-500/10 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-40 left-10 size-96 rounded-full bg-blue-600/10 blur-[120px]" />
 
       <div className="site-container relative">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center mb-14">
-          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
+          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-700 dark:text-cyan-400">
             <Calculator className="mr-1.5 size-3.5" />
             Interactive Scope & Architecture Engine
           </Badge>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-white">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-slate-900 dark:text-white">
             Estimate Your Project Scope
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-400">
+          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
             Select your architecture parameters to calculate estimated development sprints, team configuration, and roadmap deliverables.
           </p>
         </div>
@@ -125,8 +124,8 @@ export function CostEstimator() {
           <div className="space-y-8 lg:col-span-7">
             {/* Step 1: Project Type */}
             <div>
-              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-400">
-                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs">1</span>
+              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs text-cyan-700 dark:text-cyan-300 font-bold">1</span>
                 Select Core Architecture Type
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -139,20 +138,20 @@ export function CostEstimator() {
                       onClick={() => setSelectedType(type.id)}
                       className={`group relative flex flex-col rounded-2xl border p-4 text-left transition-all ${
                         isSelected
-                          ? "border-cyan-400 bg-cyan-950/40 shadow-[0_0_25px_rgba(6,182,212,0.2)]"
-                          : "border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/10"
+                          ? "border-cyan-500 bg-cyan-50/90 text-slate-950 shadow-md dark:border-cyan-400 dark:bg-cyan-950/40 dark:text-white dark:shadow-[0_0_25px_rgba(6,182,212,0.2)]"
+                          : "border-slate-200/90 bg-white text-slate-800 shadow-sm hover:border-cyan-500/40 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:border-white/25 dark:hover:bg-white/10"
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <div className={`p-2 rounded-xl ${isSelected ? "bg-cyan-500 text-slate-950" : "bg-white/10 text-cyan-400"}`}>
+                        <div className={`p-2 rounded-xl ${isSelected ? "bg-cyan-500 text-slate-950" : "bg-slate-100 text-cyan-600 dark:bg-white/10 dark:text-cyan-400"}`}>
                           <Icon className="size-5" />
                         </div>
-                        {isSelected && <CheckCircle2 className="size-5 text-cyan-400" />}
+                        {isSelected && <CheckCircle2 className="size-5 text-cyan-600 dark:text-cyan-400" />}
                       </div>
-                      <span className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      <span className="text-base font-bold transition-colors">
                         {type.name}
                       </span>
-                      <span className="mt-1 text-xs text-slate-400 leading-relaxed">
+                      <span className="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                         {type.desc}
                       </span>
                     </button>
@@ -163,8 +162,8 @@ export function CostEstimator() {
 
             {/* Step 2: Advanced Feature Modules */}
             <div>
-              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-400">
-                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs">2</span>
+              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs text-cyan-700 dark:text-cyan-300 font-bold">2</span>
                 Add Required Feature Capabilities
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -177,17 +176,17 @@ export function CostEstimator() {
                       onClick={() => toggleFeature(feat.id)}
                       className={`flex items-center justify-between rounded-xl border p-3 text-left transition-all ${
                         isChecked
-                          ? "border-cyan-500/60 bg-cyan-950/30 text-white"
-                          : "border-white/10 bg-white/5 text-slate-300 hover:border-white/20 hover:bg-white/10"
+                          ? "border-cyan-500 bg-cyan-50 text-slate-950 dark:border-cyan-500/60 dark:bg-cyan-950/30 dark:text-white"
+                          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-white/10"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className={`size-4 ${isChecked ? "text-cyan-400" : "text-slate-400"}`} />
+                        <Icon className={`size-4 ${isChecked ? "text-cyan-600 dark:text-cyan-400" : "text-slate-400"}`} />
                         <span className="text-xs sm:text-sm font-medium">{feat.name}</span>
                       </div>
                       <div
                         className={`size-4 rounded-md border flex items-center justify-center ${
-                          isChecked ? "border-cyan-400 bg-cyan-500 text-slate-950" : "border-slate-600 bg-transparent"
+                          isChecked ? "border-cyan-500 bg-cyan-500 text-white dark:border-cyan-400 dark:text-slate-950" : "border-slate-400 bg-transparent dark:border-slate-600"
                         }`}
                       >
                         {isChecked && <CheckCircle2 className="size-3.5" />}
@@ -200,8 +199,8 @@ export function CostEstimator() {
 
             {/* Step 3: Timeline Cadence */}
             <div>
-              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-400">
-                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs">3</span>
+              <div className="flex items-center gap-2 mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                <span className="flex size-6 items-center justify-center rounded-full bg-cyan-500/20 text-xs text-cyan-700 dark:text-cyan-300 font-bold">3</span>
                 Target Delivery Cadence
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -211,8 +210,8 @@ export function CostEstimator() {
                     onClick={() => setTimeline(t.id)}
                     className={`rounded-xl border p-3 text-center text-xs font-medium transition-all ${
                       timeline === t.id
-                        ? "border-cyan-400 bg-cyan-950/40 text-cyan-300 font-semibold"
-                        : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20"
+                        ? "border-cyan-500 bg-cyan-50 text-cyan-800 font-bold dark:border-cyan-400 dark:bg-cyan-950/40 dark:text-cyan-300"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-white/10 dark:bg-white/5 dark:text-slate-400 dark:hover:border-white/20"
                     }`}
                   >
                     {t.label}
@@ -224,56 +223,56 @@ export function CostEstimator() {
 
           {/* Right Column: Live Estimate & Blueprint Summary */}
           <div className="lg:col-span-5">
-            <div className="sticky top-28 rounded-3xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/90 to-slate-950/95 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-              <div className="flex items-center justify-between border-b border-white/10 pb-5">
+            <div className="sticky top-28 rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-xl backdrop-blur-xl dark:border-cyan-500/30 dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950/95 transition-colors">
+              <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-5">
                 <div>
-                  <span className="text-xs uppercase tracking-widest text-cyan-400 font-semibold">Engineering Blueprint</span>
-                  <h3 className="text-xl font-bold text-white mt-0.5">{currentType.name}</h3>
+                  <span className="text-xs uppercase tracking-widest text-cyan-600 dark:text-cyan-400 font-semibold">Engineering Blueprint</span>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{currentType.name}</h3>
                 </div>
-                <div className="size-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40 text-cyan-300">
+                <div className="size-12 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-300 flex items-center justify-center border border-cyan-500/30">
                   <Sparkles className="size-6" />
                 </div>
               </div>
 
               {/* Estimate Metrics */}
               <div className="my-6 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                  <div className="flex items-center justify-center gap-1 text-slate-400 text-xs mb-1">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-white/10 dark:bg-white/5">
+                  <div className="flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
                     <Clock className="size-3.5" />
                     <span>Est. Timeline</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-cyan-400">
-                    {estimatedWeeks} - {estimatedWeeks + 2} <span className="text-sm font-normal text-slate-400">Weeks</span>
+                  <div className="text-2xl sm:text-3xl font-black text-cyan-600 dark:text-cyan-400">
+                    {estimatedWeeks} - {estimatedWeeks + 2} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">Weeks</span>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                  <div className="flex items-center justify-center gap-1 text-slate-400 text-xs mb-1">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-white/10 dark:bg-white/5">
+                  <div className="flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
                     <Zap className="size-3.5" />
                     <span>Team Matrix</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-cyan-400">
-                    3 - 5 <span className="text-sm font-normal text-slate-400">Engineers</span>
+                  <div className="text-2xl sm:text-3xl font-black text-cyan-600 dark:text-cyan-400">
+                    3 - 5 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">Engineers</span>
                   </div>
                 </div>
               </div>
 
               {/* Scope Checklist */}
-              <div className="space-y-2.5 mb-8 text-xs sm:text-sm text-slate-300">
+              <div className="space-y-2.5 mb-8 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-cyan-400 shrink-0" />
+                  <CheckCircle2 className="size-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   <span>Full-cycle architecture, UI/UX prototyping & QA</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-cyan-400 shrink-0" />
+                  <CheckCircle2 className="size-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   <span>CI/CD cloud deployment & containerized infrastructure</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-cyan-400 shrink-0" />
+                  <CheckCircle2 className="size-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   <span>{selectedFeatures.length} enterprise modules selected</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-cyan-400 shrink-0" />
+                  <CheckCircle2 className="size-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   <span>Dedicated tech lead & weekly milestone demonstrations</span>
                 </div>
               </div>
@@ -283,7 +282,7 @@ export function CostEstimator() {
                 <Button
                   asChild
                   size="lg"
-                  className="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 hover:from-cyan-400 hover:to-cyan-300 font-bold shadow-[0_0_30px_rgba(6,182,212,0.4)] py-6 text-base"
+                  className="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 hover:from-cyan-400 hover:to-cyan-300 font-bold shadow-md py-6 text-base"
                 >
                   <Link href={`/schedule?type=${selectedType}&features=${selectedFeatures.join(",")}`} className="gap-2 justify-center">
                     Schedule Blueprint Review
@@ -295,7 +294,7 @@ export function CostEstimator() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="w-full rounded-2xl border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-cyan-300 py-6 text-sm"
+                  className="w-full rounded-2xl border-slate-300 bg-white text-slate-800 hover:bg-slate-50 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 dark:hover:text-cyan-300 py-6 text-sm"
                 >
                   <Link href={`/contact?subject=Estimation for ${currentType.name}`}>
                     Request Custom Proposal

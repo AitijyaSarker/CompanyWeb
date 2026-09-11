@@ -40,45 +40,45 @@ export function PremiumProjectCard({ product, index }: PremiumProjectCardProps) 
       <div
         ref={tiltRef}
         onMouseMove={onMove}
-        className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition-shadow duration-500 hover:shadow-2xl"
+        className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-sm transition-all duration-500 hover:shadow-2xl dark:border-white/10 dark:bg-slate-900/70"
         style={{ transition: "transform 0.15s ease-out, box-shadow 0.4s ease" }}
       >
         {/* Cursor-following cyan light */}
         <div
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(circle at ${light.x}% ${light.y}%, rgba(33,187,205,0.18), transparent 55%)`,
+            background: `radial-gradient(circle at ${light.x}% ${light.y}%, rgba(6,182,212,0.18), transparent 55%)`,
           }}
         />
 
         <div className="relative overflow-hidden">
-          <div className="aspect-[16/10] w-full overflow-hidden bg-muted">
+          <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
             <motion.img
               src={product.imageUrl}
               alt={product.title}
               loading="lazy"
               className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              style={{ clipPath: "inset(0 round 0)" }}
             />
           </div>
-          <Badge className="absolute left-4 top-4 rounded-full border-0 bg-(--brand-navy)/90 text-white backdrop-blur">
+          <Badge className="absolute left-4 top-4 rounded-full border-0 bg-slate-950/80 text-white backdrop-blur-md">
             {product.category}
           </Badge>
         </div>
 
         <div className="relative flex flex-col gap-3 p-5 sm:p-6">
-          <h3 className="text-xl font-bold tracking-tight text-foreground">{product.title}</h3>
-          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+          <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+            {product.title}
+          </h3>
+          <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{product.description}</p>
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {tags.map((tag) => (
-                <Badge
+                <span
                   key={tag}
-                  variant="outline"
-                  className="rounded-full border-(--brand-cyan)/30 bg-(--brand-cyan-pale)/50 text-xs text-(--brand-navy-dark) opacity-80 transition-opacity group-hover:opacity-100"
+                  className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-white/5 dark:text-slate-300"
                 >
                   {tag}
-                </Badge>
+                </span>
               ))}
             </div>
           )}
@@ -88,7 +88,7 @@ export function PremiumProjectCard({ product, index }: PremiumProjectCardProps) 
                 asChild
                 variant="outline"
                 size="sm"
-                className="rounded-full border-(--brand-navy)/20 hover:border-(--brand-cyan) hover:bg-(--brand-cyan-pale)"
+                className="rounded-full border-slate-300 bg-white text-slate-800 hover:border-cyan-500 hover:bg-cyan-50 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
               >
                 <Link href={product.link} target="_blank" rel="noopener noreferrer" className="gap-1.5">
                   View Project

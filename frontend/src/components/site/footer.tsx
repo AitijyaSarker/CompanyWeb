@@ -180,10 +180,10 @@ export function SiteFooter() {
                 placeholder="work@company.com"
                 value={newsEmail}
                 onChange={(e) => setNewsEmail(e.target.value)}
-                className="bg-white/5 border-white/10 text-xs rounded-xl focus:border-cyan-500"
+                className="bg-white/10 border-white/20 text-white placeholder:text-slate-400 text-xs rounded-xl focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                 required
               />
-              <Button type="submit" size="icon" className="shrink-0 bg-cyan-500 text-slate-950 hover:bg-cyan-400 rounded-xl">
+              <Button type="submit" size="icon" className="shrink-0 bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 hover:from-cyan-300 hover:to-cyan-400 rounded-xl font-bold shadow-md">
                 <Send className="size-4" />
               </Button>
             </form>

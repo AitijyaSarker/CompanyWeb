@@ -367,6 +367,7 @@ export function SiteNavbar() {
                         {brand}
                       </SheetTitle>
                     </div>
+                    <ThemeToggle />
                   </SheetHeader>
 
                   <div className="flex flex-col space-y-1 overflow-y-auto max-h-[75vh] pr-2">

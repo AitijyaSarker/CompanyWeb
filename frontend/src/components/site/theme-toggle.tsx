@@ -9,19 +9,24 @@ import { cn } from "@/lib/utils";
 
 interface ThemeToggleProps {
   overlay?: boolean;
+  className?: string;
 }
 
-export function ThemeToggle({ overlay = false }: ThemeToggleProps) {
-  const { resolvedTheme, setTheme } = useTheme();
+export function ThemeToggle({ overlay = false, className }: ThemeToggleProps) {
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  const isDark = mounted && resolvedTheme === "dark";
+  const current = resolvedTheme || theme || "light";
+  const isDark = mounted && current === "dark";
 
-  const toggle = () => setTheme(isDark ? "light" : "dark");
+  const toggle = () => {
+    const next = isDark ? "light" : "dark";
+    setTheme(next);
+  };
 
   return (
     <Button
@@ -30,16 +35,17 @@ export function ThemeToggle({ overlay = false }: ThemeToggleProps) {
       size="icon"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       className={cn(
-        "relative size-9 rounded-full backdrop-blur transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
+        "relative size-9 rounded-xl border transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs",
         overlay
-          ? "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-          : "border border-border/60 bg-background/80 text-foreground hover:bg-accent hover:text-foreground"
+          ? "border-white/20 bg-white/5 text-white hover:bg-white/10"
+          : "border-slate-200/80 bg-white/80 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800",
+        className
       )}
       onClick={toggle}
-      disabled={!mounted}
+      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
-      <Sun className={cn("size-4 transition-all duration-200 ease-out", isDark ? "rotate-90 scale-0" : "rotate-0 scale-100")} />
-      <Moon className={cn("absolute size-4 transition-all duration-200 ease-out", isDark ? "rotate-0 scale-100" : "-rotate-90 scale-0")} />
+      <Sun className={cn("size-4 text-amber-500 transition-all duration-300", isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100")} />
+      <Moon className={cn("absolute size-4 text-cyan-400 transition-all duration-300", isDark ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0")} />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

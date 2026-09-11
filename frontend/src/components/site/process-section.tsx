@@ -64,23 +64,23 @@ export function ProcessSection() {
     <section
       ref={ref}
       id="process"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-950 text-white"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300"
     >
       {/* Background Cyber Mesh */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-dark opacity-30" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-30" />
       <div className="pointer-events-none absolute top-1/3 right-0 size-96 rounded-full bg-cyan-500/10 blur-[140px]" />
 
       <div className="site-container relative">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
-          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300">
+          <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300">
             <Sparkles className="mr-1.5 size-3.5" />
             Methodology & Execution
           </Badge>
-          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-white">
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-slate-900 dark:text-white">
             Our 5-Stage Engineering Lifecycle
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-400">
+          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
             A battle-tested software delivery engine designed to eliminate project risk, maximize velocity, and guarantee enterprise-grade resilience.
           </p>
         </div>
@@ -98,36 +98,36 @@ export function ProcessSection() {
               <motion.div
                 key={step.step}
                 variants={fadeUpSpring}
-                className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-slate-900/70 p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:bg-slate-900/95 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)]"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/50 hover:shadow-lg dark:border-white/10 dark:bg-slate-900/70 dark:hover:bg-slate-900/95 dark:hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)]"
               >
                 <div>
                   {/* Step Number & Icon */}
                   <div className="flex items-center justify-between mb-6">
-                    <span className="font-mono text-3xl sm:text-4xl font-black text-cyan-500/30 group-hover:text-cyan-400 transition-colors">
+                    <span className="font-mono text-3xl sm:text-4xl font-black text-cyan-600/30 group-hover:text-cyan-600 dark:text-cyan-500/30 dark:group-hover:text-cyan-400 transition-colors">
                       {step.step}
                     </span>
-                    <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all duration-300">
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 dark:bg-cyan-500/20 dark:text-cyan-400 transition-all duration-300">
                       <Icon className="size-6" />
                     </div>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                     {step.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     {step.desc}
                   </p>
                 </div>
 
                 {/* Deliverables Checklist */}
-                <div className="mt-6 pt-5 border-t border-white/10 space-y-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 space-y-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     Key Deliverables
                   </span>
                   {step.deliverables.map((del) => (
-                    <div key={del} className="flex items-center gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className="size-3.5 text-cyan-400 shrink-0" />
+                    <div key={del} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                      <CheckCircle2 className="size-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
                       <span>{del}</span>
                     </div>
                   ))}
@@ -139,21 +139,21 @@ export function ProcessSection() {
           {/* 6th Card: Call to Action */}
           <motion.div
             variants={fadeUpSpring}
-            className="flex flex-col justify-between rounded-3xl border border-cyan-500/40 bg-gradient-to-br from-cyan-950/60 to-slate-950 p-6 sm:p-8 backdrop-blur-xl"
+            className="flex flex-col justify-between rounded-3xl border border-cyan-500/40 bg-gradient-to-br from-cyan-600 via-sky-600 to-blue-700 text-white p-6 sm:p-8 shadow-xl dark:from-cyan-950/60 dark:to-slate-950"
           >
             <div>
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-500 text-slate-950 mb-6">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-white text-slate-950 dark:bg-cyan-500 dark:text-slate-950 mb-6 shadow-sm">
                 <Rocket className="size-6" />
               </div>
               <h3 className="text-2xl font-bold text-white">Ready to start Sprint 0?</h3>
-              <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+              <p className="mt-3 text-sm text-cyan-50 dark:text-slate-300 leading-relaxed">
                 Schedule a 30-minute technical roadmap discovery session with our Lead Software Architect.
               </p>
             </div>
             <div className="pt-6">
               <Button
                 asChild
-                className="w-full rounded-2xl bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 font-bold py-6 shadow-[0_0_25px_rgba(6,182,212,0.35)]"
+                className="w-full rounded-2xl bg-slate-950 text-white hover:bg-slate-900 font-bold py-6 shadow-lg dark:bg-gradient-to-r dark:from-cyan-400 dark:to-cyan-500 dark:text-slate-950 dark:hover:from-cyan-300 dark:hover:to-cyan-400"
               >
                 <Link href="/schedule" className="gap-2 justify-center">
                   <span>Schedule Discovery Call</span>

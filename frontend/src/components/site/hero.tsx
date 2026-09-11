@@ -3,16 +3,11 @@
 import * as React from "react";
 import {
   motion,
-  useInView,
-  useMotionValue,
   useReducedMotion,
-  useSpring,
 } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
-  Sparkles,
-  Terminal,
   Activity,
   CheckCircle2,
   ShieldCheck,
@@ -21,18 +16,11 @@ import {
   Zap,
   Globe,
   Database,
-  Layers,
-  Code2,
-  Play,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
-  SPRING_BOUNCY,
-  SPRING_SMOOTH,
-  TextReveal,
   fadeUpSpring,
   staggerContainer,
 } from "@/components/site/motion";
@@ -59,13 +47,13 @@ export function Hero() {
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-36 bg-slate-950 text-white"
+      className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-36 bg-gradient-to-b from-slate-50 via-cyan-50/20 to-white text-slate-900 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-950 dark:text-white transition-colors duration-300"
     >
       {/* Dynamic Cybernetic Ambient Background */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-dark opacity-35" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-30 dark:bg-grid-dark dark:opacity-35" />
       <div className="hero-ambient pointer-events-none absolute inset-0" />
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-cyan-500/15 blur-[140px]" />
-      <div className="pointer-events-none absolute bottom-10 right-10 size-[450px] rounded-full bg-blue-600/15 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-cyan-500/10 blur-[140px] dark:bg-cyan-500/15" />
+      <div className="pointer-events-none absolute bottom-10 right-10 size-[450px] rounded-full bg-blue-600/10 blur-[120px] dark:bg-blue-600/15" />
 
       <div className="site-container relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8 xl:gap-12">
@@ -79,18 +67,18 @@ export function Hero() {
           >
             {/* Status Pill Badge */}
             <motion.div variants={fadeUpSpring}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
                 {!prefersReducedMotion ? (
                   <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
-                    <span className="relative inline-flex size-2 rounded-full bg-cyan-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-500 opacity-75" />
+                    <span className="relative inline-flex size-2 rounded-full bg-cyan-500" />
                   </span>
                 ) : (
-                  <span className="size-2 rounded-full bg-cyan-400" />
+                  <span className="size-2 rounded-full bg-cyan-500" />
                 )}
                 <span>{badge}</span>
                 <span className="text-cyan-500/60">•</span>
-                <span className="text-slate-300">ISO & SOC2 Ready</span>
+                <span className="text-slate-600 dark:text-slate-300">ISO & SOC2 Ready</span>
               </div>
             </motion.div>
 
@@ -98,10 +86,10 @@ export function Hero() {
             <motion.h1
               id="hero-title"
               variants={fadeUpSpring}
-              className="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl xl:text-7xl xl:leading-[1.08] text-white"
+              className="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl xl:text-7xl xl:leading-[1.08] text-slate-900 dark:text-white"
             >
               We Code Your Ideas <br />
-              <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(6,182,212,0.4)]">
+              <span className="bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 dark:from-cyan-400 dark:via-sky-300 dark:to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(6,182,212,0.3)]">
                 Into Light
               </span>
             </motion.h1>
@@ -109,7 +97,7 @@ export function Hero() {
             {/* Subtitle */}
             <motion.p
               variants={fadeUpSpring}
-              className="max-w-2xl text-base sm:text-lg lg:text-xl text-slate-300/90 leading-relaxed"
+              className="max-w-2xl text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 leading-relaxed"
             >
               {subtitle}
             </motion.p>
@@ -122,7 +110,7 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 hover:from-cyan-300 hover:to-cyan-400 font-bold shadow-[0_0_30px_rgba(6,182,212,0.45)] px-7 py-6 text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
+                className="rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 hover:from-cyan-400 hover:to-cyan-300 font-bold shadow-[0_0_30px_rgba(6,182,212,0.35)] px-7 py-6 text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
               >
                 <Link href="/projects" className="gap-2">
                   <span>{ctaPrimary}</span>
@@ -134,11 +122,11 @@ export function Hero() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-cyan-400/50 hover:text-cyan-300 px-6 py-6 text-sm sm:text-base backdrop-blur-md transition-all"
+                className="rounded-full border-slate-300 bg-white/80 text-slate-800 hover:bg-slate-100 hover:border-cyan-500 hover:text-cyan-700 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 dark:hover:border-cyan-400/50 dark:hover:text-cyan-300 px-6 py-6 text-sm sm:text-base backdrop-blur-md transition-all shadow-sm"
               >
                 <Link href="/schedule" className="gap-2">
                   <span>{ctaSecondary}</span>
-                  <ArrowUpRight className="size-4 text-cyan-400" />
+                  <ArrowUpRight className="size-4 text-cyan-600 dark:text-cyan-400" />
                 </Link>
               </Button>
             </motion.div>
@@ -146,18 +134,18 @@ export function Hero() {
             {/* Quick Micro-Trust Badges */}
             <motion.div
               variants={fadeUpSpring}
-              className="flex flex-wrap items-center gap-6 pt-4 text-xs text-slate-400"
+              className="flex flex-wrap items-center gap-6 pt-4 text-xs text-slate-600 dark:text-slate-400"
             >
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-cyan-400" />
+                <CheckCircle2 className="size-4 text-cyan-600 dark:text-cyan-400" />
                 <span>Zero Technical Debt Guarantee</span>
               </div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-cyan-400" />
+                <ShieldCheck className="size-4 text-cyan-600 dark:text-cyan-400" />
                 <span>Enterprise Security Hardened</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="size-4 text-cyan-400" />
+                <Zap className="size-4 text-cyan-600 dark:text-cyan-400" />
                 <span>Rapid 2-Week Sprints</span>
               </div>
             </motion.div>
@@ -170,10 +158,10 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5"
           >
-            <div className="relative rounded-3xl border border-cyan-500/30 bg-slate-900/90 shadow-[0_0_50px_rgba(6,182,212,0.15)] backdrop-blur-2xl overflow-hidden">
+            <div className="relative rounded-3xl border border-slate-800 bg-slate-950/95 shadow-[0_20px_50px_rgba(0,0,0,0.25)] dark:border-cyan-500/30 dark:bg-slate-900/90 dark:shadow-[0_0_50px_rgba(6,182,212,0.15)] backdrop-blur-2xl overflow-hidden text-white">
               
               {/* Terminal Window Header */}
-              <div className="flex items-center justify-between border-b border-white/10 bg-slate-950/80 px-4 py-3 sm:px-5">
+              <div className="flex items-center justify-between border-b border-white/10 bg-slate-950/90 px-4 py-3 sm:px-5">
                 <div className="flex items-center gap-2">
                   <div className="size-3 rounded-full bg-red-500/80" />
                   <div className="size-3 rounded-full bg-yellow-500/80" />
@@ -336,29 +324,29 @@ export function Hero() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="mt-16 sm:mt-24 grid grid-cols-2 gap-4 rounded-3xl border border-white/10 bg-slate-900/60 p-6 sm:p-8 backdrop-blur-xl lg:grid-cols-4 lg:gap-8"
+          className="mt-16 sm:mt-24 grid grid-cols-2 gap-4 rounded-3xl border border-slate-200/80 bg-white/80 p-6 sm:p-8 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60 lg:grid-cols-4 lg:gap-8 transition-colors"
         >
           <motion.div variants={fadeUpSpring} className="text-center lg:text-left">
-            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-400">150+</div>
-            <div className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">Digital Products Shipped</div>
+            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-600 dark:text-cyan-400">150+</div>
+            <div className="mt-1 text-xs sm:text-sm text-slate-800 dark:text-slate-300 font-medium">Digital Products Shipped</div>
             <div className="text-[11px] text-slate-500">Fintech, AI, Health, SaaS</div>
           </motion.div>
 
           <motion.div variants={fadeUpSpring} className="text-center lg:text-left">
-            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-400">99.8%</div>
-            <div className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">Client Retention & SLA</div>
+            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-600 dark:text-cyan-400">99.8%</div>
+            <div className="mt-1 text-xs sm:text-sm text-slate-800 dark:text-slate-300 font-medium">Client Retention & SLA</div>
             <div className="text-[11px] text-slate-500">Enterprise grade reliability</div>
           </motion.div>
 
           <motion.div variants={fadeUpSpring} className="text-center lg:text-left">
-            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-400">&lt;15ms</div>
-            <div className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">Global Edge Latency</div>
+            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-600 dark:text-cyan-400">&lt;15ms</div>
+            <div className="mt-1 text-xs sm:text-sm text-slate-800 dark:text-slate-300 font-medium">Global Edge Latency</div>
             <div className="text-[11px] text-slate-500">High-performance architecture</div>
           </motion.div>
 
           <motion.div variants={fadeUpSpring} className="text-center lg:text-left">
-            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-400">24/7</div>
-            <div className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">Engineering Support</div>
+            <div className="text-3xl sm:text-4xl font-extrabold text-cyan-600 dark:text-cyan-400">24/7</div>
+            <div className="mt-1 text-xs sm:text-sm text-slate-800 dark:text-slate-300 font-medium">Engineering Support</div>
             <div className="text-[11px] text-slate-500">Dedicated SecOps & Tech Leads</div>
           </motion.div>
         </motion.div>

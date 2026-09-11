@@ -16,13 +16,10 @@ import {
   Palette,
   Sparkles,
   Zap,
-  CheckCircle2,
 } from "lucide-react";
 
-import { SERVICES } from "@/data/services";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { fadeUpSpring, staggerContainer } from "@/components/site/motion";
 
 const EXTENDED_SERVICES = [
@@ -91,7 +88,7 @@ export function ServicesShowcase() {
     <section
       ref={ref}
       id="services"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-900/50 dark:bg-slate-950/70 text-foreground"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/60 dark:bg-slate-950/70 text-foreground transition-colors duration-300"
     >
       {/* Background Decorative Grids */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20" />
@@ -101,13 +98,13 @@ export function ServicesShowcase() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">
-            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+            <Badge className="mb-4 rounded-full border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-semibold text-cyan-700 dark:text-cyan-400">
               <Layers className="mr-1.5 size-3.5" />
               Core Capabilities
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-slate-900 dark:text-white">
               End-to-End Technology <br />
-              <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-sky-300">
+              <span className="bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-sky-300">
                 Engineered for Scale
               </span>
             </h2>
@@ -130,7 +127,7 @@ export function ServicesShowcase() {
               <motion.div
                 key={service.id}
                 variants={fadeUpSpring}
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/70 p-6 sm:p-7 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900/90"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-7 shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] dark:border-white/10 dark:bg-slate-900/60 dark:hover:bg-slate-900/90"
               >
                 {/* Ambient Top Corner Gradient */}
                 <div
@@ -156,7 +153,7 @@ export function ServicesShowcase() {
                 </div>
 
                 {/* Tech Tags & Impact Metric */}
-                <div className="mt-6 pt-5 border-t border-slate-200/60 dark:border-white/10">
+                <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10">
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {service.tags.map((tag) => (
                       <span
@@ -167,7 +164,7 @@ export function ServicesShowcase() {
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                     <Zap className="size-3.5 shrink-0" />
                     <span>{service.metrics}</span>
                   </div>
@@ -178,9 +175,9 @@ export function ServicesShowcase() {
         </motion.div>
 
         {/* Bottom Explorer Action */}
-        <div className="mt-14 flex flex-col sm:flex-row items-center justify-between rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-6 backdrop-blur-md gap-4">
+        <div className="mt-14 flex flex-col sm:flex-row items-center justify-between rounded-2xl border border-cyan-500/20 bg-cyan-50/80 dark:bg-cyan-500/5 p-6 backdrop-blur-md gap-4">
           <div className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
-            <Sparkles className="size-5 text-cyan-500 shrink-0" />
+            <Sparkles className="size-5 text-cyan-600 dark:text-cyan-400 shrink-0" />
             <span>Need a custom architecture or technical audit for an existing codebase?</span>
           </div>
           <Button
