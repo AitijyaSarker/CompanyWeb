@@ -79,7 +79,7 @@ export function Hero() {
     }, 2800);
   };
 
-  const badge = getContent(content, "hero_badge", "Next-Gen Enterprise Engineering Collective");
+  const badge = getContent(content, "hero_badge", "Catalyst for bright ideas");
   const title = getContent(content, "hero_title", "We Code Your Ideas");
   const subtitle = getContent(
     content,

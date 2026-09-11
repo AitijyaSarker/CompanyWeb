@@ -147,7 +147,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
             </form>
 
             <div className="rounded-lg border border-dashed border-border/60 bg-muted/40 p-3 text-center text-xs text-muted-foreground">
-              Demo credentials: <strong className="text-foreground">admin@ultrabulb.com</strong> / <strong className="text-foreground">admin123</strong>
+              Admin credentials: <strong className="text-foreground">admin@ultrabulbit.com</strong> / <strong className="text-foreground">admin123</strong>
             </div>
 
             <Link href="/" className="text-center text-xs text-muted-foreground transition-colors hover:text-foreground">

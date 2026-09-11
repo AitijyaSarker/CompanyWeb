@@ -171,7 +171,7 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
           animate={{ opacity: progress > 15 ? 1 : 0 }}
           className="mt-2 font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400/90"
         >
-          Enterprise Engineering Systems
+          Catalyst for bright ideas.
         </motion.p>
 
         {/* Progress Telemetry Bar */}

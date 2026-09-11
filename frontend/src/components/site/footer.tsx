@@ -51,7 +51,7 @@ export function SiteFooter() {
   const tagline = getContent(
     content,
     "footer_tagline",
-    "Elite software engineering agency architecting high-scale digital products, custom AI systems, and mission-critical cloud platforms."
+    "Catalyst for bright ideas."
   );
   const email = getContent(content, "footer_email", "contact@ultrabulbit.com");
   const address = getContent(content, "footer_address", "Dhaka, Bangladesh");
