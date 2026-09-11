@@ -383,6 +383,49 @@
     border-radius: inherit;
     border: 1px solid rgba(0, 240, 255, 0.15);
   }
+
+  /* Infinite Tech Marquee */
+  .tech-marquee-viewport {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  }
+
+  .tech-marquee-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1rem;
+    animation: marquee-scroll 40s linear infinite;
+    width: max-content;
+  }
+
+  .tech-marquee-track:hover,
+  .tech-marquee-track-reverse:hover {
+    animation-play-state: paused;
+  }
+
+  .tech-marquee-track-reverse {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1rem;
+    animation: marquee-scroll-reverse 40s linear infinite;
+    width: max-content;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  @keyframes marquee-scroll-reverse {
+    from { transform: translate3d(-50%, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
+  }
 }
 
 /* Custom scrollbar */
