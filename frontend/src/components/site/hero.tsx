@@ -65,7 +65,7 @@ export function Hero() {
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-44 lg:pb-36 bg-background text-foreground transition-colors duration-300"
+      className="mobile-hero-section relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-44 lg:pb-36 bg-background text-foreground transition-colors duration-300"
     >
       {/* ===== 1. Clean Premium Ambient Background ===== */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.04] via-transparent to-transparent dark:from-cyan-500/[0.07] transition-opacity duration-300" />
@@ -189,18 +189,18 @@ export function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* ===== 3. Right Column: Clean Glowing Catalyst Architecture Animation ===== */}
+          {/* ===== 3. Right Column: Clean Glowing Catalyst Architecture Animation (Desktop Only) ===== */}
           <motion.div
             initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.94, y: 35 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="relative lg:col-span-5 flex items-center justify-center"
+            className="hidden lg:flex relative lg:col-span-5 items-center justify-center"
           >
             {/* Ambient Background Light Aura */}
             <div className="pointer-events-none absolute -inset-4 rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-500/15 to-blue-600/20 blur-3xl dark:from-cyan-500/25 dark:via-blue-500/20 dark:to-indigo-500/20" />
 
             {/* Clean Interactive Visual Container */}
-            <div className="relative w-full max-w-[500px] h-[390px] xs:h-[420px] sm:h-[480px] rounded-3xl border border-slate-200/80 bg-white/40 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_60px_rgba(6,182,212,0.12)] overflow-hidden flex flex-col items-center justify-center">
+            <div className="mobile-hero-orbit relative w-full max-w-[500px] h-[390px] xs:h-[420px] sm:h-[480px] rounded-3xl border border-slate-200/80 bg-white/40 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_60px_rgba(6,182,212,0.12)] overflow-hidden flex flex-col items-center justify-center">
               
               {/* Subtle Grid Accent */}
               <div className="pointer-events-none absolute inset-0 bg-grid opacity-10 dark:bg-grid-dark dark:opacity-15" />
@@ -349,7 +349,7 @@ export function Hero() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="mt-16 sm:mt-24 grid grid-cols-2 gap-4 rounded-3xl border border-slate-200/80 bg-white/85 p-6 sm:p-8 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60 lg:grid-cols-4 lg:gap-8 transition-colors"
+          className="mobile-metrics-grid mt-16 sm:mt-24 grid grid-cols-2 gap-4 rounded-3xl border border-slate-200/80 bg-white/85 p-6 sm:p-8 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60 lg:grid-cols-4 lg:gap-8 transition-colors"
         >
           <motion.div variants={fadeUpSpring} className="text-center lg:text-left">
             <div className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-cyan-300 bg-clip-text text-transparent">

@@ -171,7 +171,7 @@ export function SiteNavbar() {
         <div className="site-container pt-3 sm:pt-4">
           <div
             className={cn(
-              "relative flex items-center justify-between rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300",
+              "mobile-nav-frame relative flex items-center justify-between rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300",
               scrolled
                 ? "border border-slate-200/80 bg-white/85 shadow-[0_10px_35px_rgba(0,0,0,0.06)] backdrop-blur-2xl dark:border-cyan-500/20 dark:bg-slate-950/85 dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
                 : "border border-slate-200/50 bg-white/70 shadow-xs backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60"
@@ -425,7 +425,7 @@ export function SiteNavbar() {
                   </SheetTrigger>
                   <SheetContent
                     side="right"
-                    className="w-full max-w-sm border-l border-slate-200/80 bg-white/95 p-6 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/95"
+                    className="mobile-menu-panel w-full max-w-sm border-l border-slate-200/80 bg-white/95 p-6 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/95"
                   >
                     <SheetHeader className="mb-6 flex flex-row items-center justify-between border-b border-slate-200 pb-4 dark:border-white/10">
                       <div className="flex items-center gap-3">
