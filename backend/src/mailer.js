@@ -5,7 +5,7 @@ if (typeof dns.setDefaultResultOrder === "function") {
   dns.setDefaultResultOrder("ipv4first");
 }
 
-function getSmtpConfig() {
+function getMailerConfig() {
   const host = process.env.SMTP_HOST?.trim();
   const rawPort = process.env.SMTP_PORT?.trim();
   const port = rawPort ? Number(rawPort) : 465;
@@ -13,10 +13,60 @@ function getSmtpConfig() {
   const pass = (process.env.SMTP_PASS || process.env.SMTP_PASSWORD)?.trim();
   const rawSecure = process.env.SMTP_SECURE?.trim();
   const secure = rawSecure !== undefined ? rawSecure === "true" : port === 465;
+  const resendApiKey = process.env.RESEND_API_KEY?.trim();
+  const brevoApiKey = process.env.BREVO_API_KEY?.trim();
   const recipient = (process.env.NOTIFICATION_EMAIL || "contact@ultrabulbit.com").trim();
   const from = (process.env.MAIL_FROM || (user ? `"ULTRABULB IT" <${user}>` : `"ULTRABULB IT" <${recipient}>`)).trim();
 
-  return { host, port, user, pass, secure, recipient, from };
+  return { host, port, user, pass, secure, resendApiKey, brevoApiKey, recipient, from };
+}
+
+async function sendViaResend(apiKey, { from, to, subject, html, text, replyTo }) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: replyTo,
+      subject,
+      html,
+      text,
+    }),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Resend API error (${res.status}): ${errText}`);
+  }
+  const data = await res.json();
+  return { messageId: data.id, provider: "resend" };
+}
+
+async function sendViaBrevo(apiKey, { from, to, subject, html, text, replyTo }) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { email: from.includes("<") ? from.replace(/.*<([^>]+)>.*/, "$1") : from, name: "ULTRABULB IT" },
+      to: [{ email: to }],
+      replyTo: replyTo ? { email: replyTo } : undefined,
+      subject,
+      htmlContent: html,
+      textContent: text,
+    }),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Brevo API error (${res.status}): ${errText}`);
+  }
+  const data = await res.json();
+  return { messageId: data.messageId, provider: "brevo" };
 }
 
 let activeTransporter = null;
@@ -47,7 +97,7 @@ async function createAndVerifyTransport(host, port, user, pass, secure) {
 }
 
 export async function getTransporter() {
-  const cfg = getSmtpConfig();
+  const cfg = getMailerConfig();
   const signature = `${cfg.host}:${cfg.port}:${cfg.user}:${Boolean(cfg.pass)}:${cfg.secure}`;
 
   if (activeTransporter && lastConfigSignature === signature) {
@@ -80,7 +130,7 @@ export async function getTransporter() {
         return altTransporter;
       } catch (altErr) {
         console.error(`[Mailer] Both ports ${primaryPort} and ${alternatePort} failed for ${cfg.host}:`, altErr.message || altErr);
-        // Fallback to unverified primary transport so sendMail attempt produces detailed error
+        // Fallback to unverified primary transport
         const fallbackTransporter = nodemailer.createTransport({
           host: cfg.host,
           port: primaryPort,
@@ -125,9 +175,10 @@ export async function getTransporter() {
 }
 
 export async function verifyMailerConnection() {
-  const cfg = getSmtpConfig();
+  const cfg = getMailerConfig();
   const result = {
-    configured: Boolean(cfg.host && cfg.user && cfg.pass),
+    configured: Boolean((cfg.host && cfg.user && cfg.pass) || cfg.resendApiKey || cfg.brevoApiKey),
+    provider: cfg.resendApiKey ? "resend_api" : cfg.brevoApiKey ? "brevo_api" : cfg.host ? "smtp" : "none",
     host: cfg.host || null,
     port: cfg.port,
     user: cfg.user || null,
@@ -138,7 +189,17 @@ export async function verifyMailerConnection() {
     error: null,
   };
 
-  if (!result.configured) {
+  if (cfg.resendApiKey) {
+    result.verified = true;
+    return result;
+  }
+
+  if (cfg.brevoApiKey) {
+    result.verified = true;
+    return result;
+  }
+
+  if (!cfg.host || !cfg.user || !cfg.pass) {
     result.error = "Missing SMTP_HOST, SMTP_USER, or SMTP_PASS in environment variables.";
     return result;
   }
@@ -157,10 +218,11 @@ export async function verifyMailerConnection() {
 }
 
 export async function sendBookingNotification(booking) {
-  const cfg = getSmtpConfig();
+  const cfg = getMailerConfig();
   try {
-    const transporter = await getTransporter();
     const { name, email, phone, topic, date, timeSlot, company, message } = booking;
+    const subject = `[New Booking] ${topic} — ${name} (${date} at ${timeSlot})`;
+    const text = `New Meeting Booking:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nCompany: ${company || "N/A"}\nTopic: ${topic}\nDate: ${date}\nTime: ${timeSlot}\n\nMessage:\n${message || "N/A"}`;
 
     const html = `
 <!DOCTYPE html>
@@ -234,12 +296,27 @@ export async function sendBookingNotification(booking) {
 </html>
     `;
 
+    if (cfg.resendApiKey) {
+      console.log(`[Mailer] Sending booking alert via Resend API to ${cfg.recipient}...`);
+      const res = await sendViaResend(cfg.resendApiKey, { from: cfg.from, to: cfg.recipient, subject, html, text, replyTo: email });
+      console.log(`[Mailer] Booking notification delivered via Resend; ID: ${res.messageId}`);
+      return res;
+    }
+
+    if (cfg.brevoApiKey) {
+      console.log(`[Mailer] Sending booking alert via Brevo API to ${cfg.recipient}...`);
+      const res = await sendViaBrevo(cfg.brevoApiKey, { from: cfg.from, to: cfg.recipient, subject, html, text, replyTo: email });
+      console.log(`[Mailer] Booking notification delivered via Brevo; ID: ${res.messageId}`);
+      return res;
+    }
+
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: cfg.from,
       to: cfg.recipient,
       replyTo: email,
-      subject: `[New Booking] ${topic} — ${name} (${date} at ${timeSlot})`,
-      text: `New Meeting Booking:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nCompany: ${company || "N/A"}\nTopic: ${topic}\nDate: ${date}\nTime: ${timeSlot}\n\nMessage:\n${message || "N/A"}`,
+      subject,
+      text,
       html,
     });
 
@@ -261,10 +338,11 @@ export async function sendBookingNotification(booking) {
 }
 
 export async function sendContactNotification(contact) {
-  const cfg = getSmtpConfig();
+  const cfg = getMailerConfig();
   try {
-    const transporter = await getTransporter();
     const { name, email, subject, message, phone } = contact;
+    const mailSubject = `[Contact Form] ${subject || "Inquiry"} — ${name}`;
+    const text = `Contact Message:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nSubject: ${subject}\n\nMessage:\n${message}`;
 
     const html = `
 <!DOCTYPE html>
@@ -303,12 +381,27 @@ export async function sendContactNotification(contact) {
 </html>
     `;
 
+    if (cfg.resendApiKey) {
+      console.log(`[Mailer] Sending contact inquiry via Resend API to ${cfg.recipient}...`);
+      const res = await sendViaResend(cfg.resendApiKey, { from: cfg.from, to: cfg.recipient, subject: mailSubject, html, text, replyTo: email });
+      console.log(`[Mailer] Contact inquiry delivered via Resend; ID: ${res.messageId}`);
+      return res;
+    }
+
+    if (cfg.brevoApiKey) {
+      console.log(`[Mailer] Sending contact inquiry via Brevo API to ${cfg.recipient}...`);
+      const res = await sendViaBrevo(cfg.brevoApiKey, { from: cfg.from, to: cfg.recipient, subject: mailSubject, html, text, replyTo: email });
+      console.log(`[Mailer] Contact inquiry delivered via Brevo; ID: ${res.messageId}`);
+      return res;
+    }
+
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: cfg.from,
       to: cfg.recipient,
       replyTo: email,
-      subject: `[Contact Form] ${subject || "Inquiry"} — ${name}`,
-      text: `Contact Message:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nSubject: ${subject}\n\nMessage:\n${message}`,
+      subject: mailSubject,
+      text,
       html,
     });
 
@@ -326,30 +419,33 @@ export async function sendContactNotification(contact) {
 }
 
 export async function sendTestEmail(targetEmail) {
-  const cfg = getSmtpConfig();
+  const cfg = getMailerConfig();
   const to = (targetEmail || cfg.recipient).trim();
+  const subject = `[SMTP Diagnostic Test] ULTRABULB IT Mailer Verification`;
+  const text = `This is a diagnostic test email from ULTRABULB IT server.\n\nServer timestamp: ${new Date().toISOString()}\nHost: ${cfg.host || "Sandbox"}\nPort: ${cfg.port}\nAuth User: ${cfg.user || "Sandbox"}\nSecure: ${cfg.secure}\n`;
+  const html = `
+    <div style="font-family: sans-serif; background: #030712; color: #ffffff; padding: 24px; border-radius: 12px; max-width: 500px;">
+      <h2 style="color: #00f0ff;">ULTRABULB IT — Mailer Active</h2>
+      <p>Your mail server configuration is working properly!</p>
+      <ul style="color: #94a3b8; font-size: 13px; line-height: 1.8;">
+        <li><strong>Provider:</strong> ${cfg.resendApiKey ? "Resend API (Port 443)" : cfg.brevoApiKey ? "Brevo API (Port 443)" : cfg.host ? "Custom SMTP" : "Sandbox"}</li>
+        <li><strong>Host:</strong> ${cfg.host || "N/A"}</li>
+        <li><strong>Port:</strong> ${cfg.port}</li>
+        <li><strong>Auth User:</strong> ${cfg.user || "N/A"}</li>
+        <li><strong>Sender:</strong> ${cfg.from}</li>
+        <li><strong>Timestamp:</strong> ${new Date().toISOString()}</li>
+      </ul>
+    </div>
+  `;
+
+  if (cfg.resendApiKey) {
+    return sendViaResend(cfg.resendApiKey, { from: cfg.from, to, subject, html, text });
+  }
+
+  if (cfg.brevoApiKey) {
+    return sendViaBrevo(cfg.brevoApiKey, { from: cfg.from, to, subject, html, text });
+  }
+
   const transporter = await getTransporter();
-
-  const info = await transporter.sendMail({
-    from: cfg.from,
-    to,
-    subject: `[SMTP Diagnostic Test] ULTRABULB IT Mailer Verification`,
-    text: `This is a diagnostic test email from ULTRABULB IT server.\n\nServer timestamp: ${new Date().toISOString()}\nHost: ${cfg.host || "Sandbox"}\nPort: ${cfg.port}\nAuth User: ${cfg.user || "Sandbox"}\nSecure: ${cfg.secure}\n`,
-    html: `
-      <div style="font-family: sans-serif; background: #030712; color: #ffffff; padding: 24px; border-radius: 12px; max-width: 500px;">
-        <h2 style="color: #00f0ff;">ULTRABULB IT — Mailer Active</h2>
-        <p>Your SMTP mail server configuration is working properly!</p>
-        <ul style="color: #94a3b8; font-size: 13px; line-height: 1.8;">
-          <li><strong>Host:</strong> ${cfg.host || "Sandbox"}</li>
-          <li><strong>Port:</strong> ${cfg.port}</li>
-          <li><strong>Auth User:</strong> ${cfg.user || "Sandbox"}</li>
-          <li><strong>Secure (SSL):</strong> ${cfg.secure}</li>
-          <li><strong>Sender:</strong> ${cfg.from}</li>
-          <li><strong>Timestamp:</strong> ${new Date().toISOString()}</li>
-        </ul>
-      </div>
-    `,
-  });
-
-  return info;
+  return transporter.sendMail({ from: cfg.from, to, subject, text, html });
 }
