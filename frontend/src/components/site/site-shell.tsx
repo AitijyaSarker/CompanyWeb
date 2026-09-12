@@ -31,7 +31,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-cyan-500 selection:text-slate-950">
+    <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-300">
       {/* World-Class Initial Boot Preloader */}
       {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
 

@@ -23,7 +23,7 @@ import "./app/globals.css";
 
 function App() {
   const site = (element) => <SiteShell>{element}</SiteShell>;
-  return <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="ultrabulb-theme"><BrowserRouter><Routes>
+  return <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="ultrabulb-theme" disableTransitionOnChange={false}><BrowserRouter><Routes>
     <Route path="/admin" element={<AdminPage />} />
     <Route path="/" element={site(<HomePage />)} />
     <Route path="/about" element={site(<AboutPage />)} />

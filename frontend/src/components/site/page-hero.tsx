@@ -18,13 +18,14 @@ export function PageHero({ badge, title, subtitle, className }: PageHeroProps) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden border-b border-slate-200/80 pt-32 pb-16 sm:pt-36 sm:pb-20 bg-gradient-to-b from-slate-100 via-cyan-50/20 to-white text-slate-900 dark:from-slate-950 dark:via-slate-900/90 dark:to-slate-950 dark:text-white dark:border-white/10 transition-colors duration-300",
+        "relative overflow-hidden border-b border-border pt-32 pb-16 sm:pt-36 sm:pb-20 bg-background text-foreground transition-colors duration-300",
         className
       )}
     >
       {/* Ambient background glow */}
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-35" />
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 size-96 rounded-full bg-cyan-500/10 blur-[120px] dark:bg-cyan-500/15" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.04] via-transparent to-transparent dark:from-cyan-500/[0.07] transition-opacity duration-300" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-35 transition-opacity duration-300" />
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 size-96 rounded-full bg-cyan-500/10 blur-[120px] dark:bg-cyan-500/15 transition-all duration-300" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
