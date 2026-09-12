@@ -1,3 +1,5 @@
+import nodemailer from "nodemailer";
+
 function getSmtpConfig() {
   const host = process.env.SMTP_HOST?.trim();
   const rawPort = process.env.SMTP_PORT?.trim();
