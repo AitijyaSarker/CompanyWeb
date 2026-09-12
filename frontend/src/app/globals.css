@@ -155,13 +155,52 @@
     @apply border-border outline-ring/50;
   }
 
-  /* Global smooth dark/light mode transition */
-  *,
-  *::before,
-  *::after {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-decoration-color;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  :root {
+    background: var(--background);
+  }
+
+  html,
+  body {
+    transition: background-color 350ms cubic-bezier(0.4, 0, 0.2, 1), color 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth, synchronized theme transitions during active theme toggle */
+  html.theme-switching,
+  html.theme-switching body,
+  html.theme-switching header,
+  html.theme-switching footer,
+  html.theme-switching section,
+  html.theme-switching main,
+  html.theme-switching nav,
+  html.theme-switching aside,
+  html.theme-switching div,
+  html.theme-switching article,
+  html.theme-switching button,
+  html.theme-switching a,
+  html.theme-switching input,
+  html.theme-switching textarea,
+  html.theme-switching p,
+  html.theme-switching span,
+  html.theme-switching h1,
+  html.theme-switching h2,
+  html.theme-switching h3,
+  html.theme-switching h4,
+  html.theme-switching h5,
+  html.theme-switching h6,
+  html.theme-switching table,
+  html.theme-switching tr,
+  html.theme-switching td,
+  html.theme-switching th {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow !important;
+    transition-duration: 350ms !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* View Transitions API smooth crossfade configuration */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 350ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Exempt continuous animations, canvas, video and marquees from transition overhead */
@@ -220,6 +259,22 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+.theme-toggle-button::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.22), transparent 58%);
+  opacity: 0;
+  transform: scale(0.55);
+  transition: opacity 250ms ease, transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle-button:hover::before {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Custom utilities */
@@ -677,6 +732,211 @@
 @media (min-width: 1024px) and (max-width: 1199px) {
   .mobile-hero-visual {
     display: none !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .enterprise-value-section {
+    padding-top: clamp(4.5rem, 9vw, 6rem);
+    padding-bottom: clamp(4.75rem, 10vw, 6.25rem);
+  }
+
+  .enterprise-value-section::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent 34%),
+      radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12), transparent 42%);
+  }
+
+  .dark .enterprise-value-section::before {
+    background:
+      linear-gradient(180deg, rgba(3, 7, 18, 0.72), transparent 34%),
+      radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12), transparent 44%);
+  }
+
+  .enterprise-value-header {
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+    max-width: 46rem;
+  }
+
+  .enterprise-value-header h2 {
+    max-width: 12ch;
+    margin-inline: auto;
+    font-size: clamp(2.05rem, 7vw, 3.7rem);
+    line-height: 1.02;
+  }
+
+  .enterprise-value-header p {
+    max-width: 38rem;
+    font-size: clamp(0.98rem, 2.3vw, 1.08rem);
+    line-height: 1.72;
+  }
+
+  .enterprise-value-controls {
+    margin-top: clamp(1.35rem, 4vw, 2rem);
+  }
+
+  .enterprise-value-controls > div {
+    width: 100%;
+    max-width: 39rem;
+    border-radius: 1.15rem;
+    padding: 0.35rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .enterprise-value-controls button {
+    min-height: 3rem;
+    justify-content: center;
+    border-radius: 0.9rem;
+    padding-inline: clamp(0.75rem, 2.5vw, 1.15rem);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .enterprise-value-controls button span {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .enterprise-value-grid {
+    gap: 1rem;
+  }
+
+  .enterprise-value-card {
+    border-radius: 1.35rem;
+    padding: clamp(1.15rem, 3vw, 1.6rem);
+    box-shadow: 0 18px 42px -32px rgba(15, 23, 42, 0.55);
+    transform: none !important;
+  }
+
+  .enterprise-value-card:hover {
+    transform: none !important;
+  }
+
+  .enterprise-value-card h3 {
+    font-size: clamp(1.15rem, 3.3vw, 1.65rem);
+    line-height: 1.16;
+  }
+
+  .enterprise-value-card p {
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .enterprise-value-card .size-14 {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+  }
+
+  .enterprise-value-card .size-12 {
+    width: 2.85rem;
+    height: 2.85rem;
+    border-radius: 1rem;
+  }
+
+  .enterprise-value-card [class*="font-mono"] {
+    overflow-wrap: anywhere;
+  }
+
+  .enterprise-squad-panel {
+    border-radius: 1.1rem;
+    padding: 0.85rem;
+  }
+
+  .enterprise-squad-panel .grid {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .enterprise-value-card table,
+  .enterprise-value-card [class*="overflow-x-auto"],
+  .enterprise-comparison-panel {
+    border-radius: 1.35rem;
+  }
+
+  .enterprise-comparison-panel > div:first-child {
+    padding: clamp(1.05rem, 3vw, 1.5rem);
+  }
+
+  .enterprise-comparison-panel table {
+    min-width: 42rem;
+  }
+
+  .enterprise-value-cta {
+    margin-top: clamp(2rem, 5vw, 3.25rem);
+    align-items: stretch;
+    border-radius: 1.35rem;
+    padding: clamp(1.1rem, 3.5vw, 1.55rem);
+    background:
+      radial-gradient(circle at 15% 0%, rgba(6, 182, 212, 0.24), transparent 36%),
+      linear-gradient(135deg, #0f172a, #020617);
+  }
+
+  .enterprise-value-cta > div:first-child {
+    align-items: flex-start;
+  }
+
+  .enterprise-value-cta h4 {
+    line-height: 1.3;
+  }
+
+  .enterprise-value-cta a {
+    width: 100%;
+    min-height: 3.25rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .enterprise-value-header h2 {
+    max-width: 11ch;
+  }
+
+  .enterprise-value-controls > div {
+    grid-template-columns: 1fr;
+  }
+
+  .enterprise-value-controls button {
+    min-height: 2.85rem;
+  }
+
+  .enterprise-value-card > div:first-child > div:first-child {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .enterprise-value-card > div:first-child > div:first-child > div + div,
+  .enterprise-value-card > div:first-child > div:first-child > span {
+    max-width: calc(100% - 3.5rem);
+    white-space: normal;
+    text-align: right;
+  }
+
+  .enterprise-value-card .grid-cols-3 {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    text-align: left;
+  }
+
+  .enterprise-value-card .grid-cols-3 > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0.9rem;
+    background: color-mix(in oklab, var(--card) 88%, transparent);
+    padding: 0.75rem 0.85rem;
+  }
+
+  .enterprise-value-cta {
+    text-align: left;
   }
 }
 

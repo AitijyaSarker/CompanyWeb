@@ -20,11 +20,11 @@ export function FinalCTA() {
   );
 
   return (
-    <section id="cta" aria-labelledby="cta-title" className="relative overflow-hidden bg-background text-foreground border-t border-border py-24 sm:py-32 transition-colors duration-300">
+    <section id="cta" aria-labelledby="cta-title" className="relative overflow-hidden bg-background text-foreground border-t border-border py-24 sm:py-32">
       {/* Dynamic Ambient Background Glows */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.03] via-transparent to-transparent dark:from-cyan-500/[0.06] transition-opacity duration-300" />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20 transition-opacity duration-300" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[140px] transition-all duration-300" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.03] via-transparent to-transparent dark:from-cyan-500/[0.06]" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[140px]" />
 
       <div className="site-container relative text-center">
         <Badge className="mb-5 rounded-full border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-700 dark:text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.15)]">

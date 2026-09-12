@@ -101,7 +101,7 @@ export function AwardsSection({ hideHeading = false }: { hideHeading?: boolean }
     <section
       id="awards"
       aria-labelledby="awards-title"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950/80 text-foreground transition-colors duration-300"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950/80 text-foreground"
     >
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 right-1/4 size-[500px] rounded-full bg-amber-500/10 blur-[140px] dark:bg-amber-500/15" />

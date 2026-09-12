@@ -64,7 +64,7 @@ export function ProcessSection() {
     <section
       ref={ref}
       id="process"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white"
     >
       {/* Background Cyber Mesh */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-30" />

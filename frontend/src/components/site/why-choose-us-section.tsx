@@ -106,7 +106,7 @@ export function WhyChooseUsSection() {
     <section
       ref={ref}
       id="why-choose-us"
-      className="relative overflow-hidden py-24 sm:py-32 lg:py-36 bg-slate-50/70 dark:bg-slate-950/80 text-foreground transition-colors duration-300"
+      className="enterprise-value-section relative overflow-hidden py-24 sm:py-32 lg:py-36 bg-slate-50/70 dark:bg-slate-950/80 text-foreground"
     >
       {/* Dynamic Ambient Background Elements */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20" />
@@ -115,7 +115,7 @@ export function WhyChooseUsSection() {
 
       <div className="site-container relative">
         {/* Section Header */}
-        <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-16">
+        <div className="enterprise-value-header mx-auto max-w-3xl text-center mb-12 sm:mb-16">
           <Badge className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-700 dark:text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
             <ShieldCheck className="size-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>{badge}</span>
@@ -131,7 +131,7 @@ export function WhyChooseUsSection() {
           </p>
 
           {/* Interactive Mode & Persona Selector */}
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="enterprise-value-controls mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {/* View Mode Toggle */}
             <div className="inline-flex rounded-full border border-slate-200/80 bg-white/80 p-1 shadow-xs backdrop-blur-md dark:border-white/10 dark:bg-slate-900/80">
               <button
@@ -170,12 +170,12 @@ export function WhyChooseUsSection() {
             variants={staggerContainer}
             initial="hidden"
             animate={inView ? "show" : "hidden"}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
+            className="enterprise-value-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
           >
             {/* Bento Card 1: Top 3% Senior Squads with Live Engineering HUD (7 cols) */}
             <motion.div
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-8 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] md:col-span-2 lg:col-span-7 dark:border-white/10 dark:bg-slate-900/80 dark:hover:shadow-[0_20px_50px_rgba(6,182,212,0.2)]"
+              className="enterprise-value-card group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-8 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-cyan-500/50 hover:shadow-[0_20px_50px_rgba(6,182,212,0.15)] md:col-span-2 lg:col-span-7 dark:border-white/10 dark:bg-slate-900/80 dark:hover:shadow-[0_20px_50px_rgba(6,182,212,0.2)]"
             >
               {/* Background ambient badge */}
               <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-cyan-500/10 blur-3xl group-hover:bg-cyan-500/20 transition-all duration-500" />
@@ -201,7 +201,7 @@ export function WhyChooseUsSection() {
                 </p>
 
                 {/* Interactive Simulated Squad Roster */}
-                <div className="mt-6 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-white/10 dark:bg-slate-950/60">
+                <div className="enterprise-squad-panel mt-6 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-white/10 dark:bg-slate-950/60">
                   <div className="text-[11px] font-mono uppercase tracking-wider font-bold text-cyan-600 dark:text-cyan-400 mb-3 flex items-center justify-between">
                     <span>Active Squad Allocation</span>
                     <span className="text-slate-400 font-normal">Dedicated pod</span>
@@ -249,7 +249,7 @@ export function WhyChooseUsSection() {
             {/* Bento Card 2: Bank-Grade Security & Compliance (5 cols) */}
             <motion.div
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-8 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] md:col-span-2 lg:col-span-5 dark:border-white/10 dark:bg-slate-900/80"
+              className="enterprise-value-card group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-8 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] md:col-span-2 lg:col-span-5 dark:border-white/10 dark:bg-slate-900/80"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
@@ -306,7 +306,7 @@ export function WhyChooseUsSection() {
             {/* Bento Card 3: 2-Week Sprint Velocity with Animated Step-by-Step Simulator (4 cols) */}
             <motion.div
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-amber-500/50 hover:shadow-[0_20px_50px_rgba(245,158,11,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
+              className="enterprise-value-card group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-amber-500/50 hover:shadow-[0_20px_50px_rgba(245,158,11,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
             >
               <div>
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 shadow-inner dark:bg-amber-500/20 dark:text-amber-400 mb-5">
@@ -355,7 +355,7 @@ export function WhyChooseUsSection() {
             {/* Bento Card 4: 99.999% High Availability SLA & Multi-AZ Cluster (4 cols) */}
             <motion.div
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
+              className="enterprise-value-card group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
             >
               <div>
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-inner dark:bg-emerald-500/20 dark:text-emerald-400 mb-5">
@@ -399,7 +399,7 @@ export function WhyChooseUsSection() {
             {/* Bento Card 5: 100% IP & Clean Code Ownership (4 cols) */}
             <motion.div
               variants={fadeUpSpring}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-indigo-500/50 hover:shadow-[0_20px_50px_rgba(99,102,241,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
+              className="enterprise-value-card group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-indigo-500/50 hover:shadow-[0_20px_50px_rgba(99,102,241,0.15)] md:col-span-1 lg:col-span-4 dark:border-white/10 dark:bg-slate-900/80"
             >
               <div>
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 shadow-inner dark:bg-indigo-500/20 dark:text-indigo-400 mb-5">
@@ -438,7 +438,7 @@ export function WhyChooseUsSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={SPRING_SMOOTH}
-            className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/80"
+            className="enterprise-comparison-panel overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/80"
           >
             <div className="border-b border-slate-100 p-6 sm:p-8 bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 dark:border-white/10">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -503,7 +503,7 @@ export function WhyChooseUsSection() {
         )}
 
         {/* Bottom CTA Bar */}
-        <div className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-slate-200/90 bg-gradient-to-r from-slate-900 to-slate-950 p-6 sm:p-8 text-white shadow-xl dark:border-white/10">
+        <div className="enterprise-value-cta mt-14 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-slate-200/90 bg-gradient-to-r from-slate-900 to-slate-950 p-6 sm:p-8 text-white shadow-xl dark:border-white/10">
           <div className="flex items-center gap-4">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500 text-slate-950 font-bold shadow-lg">
               <Sparkles className="size-6" />

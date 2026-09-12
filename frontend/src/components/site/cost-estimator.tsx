@@ -97,7 +97,7 @@ export function CostEstimator() {
   const estimatedWeeks = Math.max(3, Math.round(rawWeeks * mult));
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28 bg-slate-50/80 dark:bg-slate-950 text-slate-900 dark:text-white border-y border-slate-200/80 dark:border-cyan-500/20 transition-colors duration-300">
+    <section className="relative overflow-hidden py-20 sm:py-28 bg-slate-50/80 dark:bg-slate-950 text-slate-900 dark:text-white border-y border-slate-200/80 dark:border-cyan-500/20">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-20 dark:bg-grid-dark dark:opacity-30" />
       <div className="pointer-events-none absolute -top-40 right-10 size-96 rounded-full bg-cyan-500/10 blur-[120px]" />

@@ -6,21 +6,29 @@
     <meta name="description" content="ULTRABULB IT — Catalyst for bright ideas. Elite software engineering, AI systems, cloud architecture, and modern digital transformation." />
     <meta name="keywords" content="ULTRABULB IT, Catalyst for bright ideas, software engineering, web development, mobile app development, enterprise AI, cloud architecture, IT consulting, custom software" />
     <meta name="author" content="ULTRABULB IT" />
+    <meta name="application-name" content="ULTRABULB IT" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#030712" />
+    <link rel="canonical" href="https://ultrabulbit.com/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ultrabulbit.com/" />
+    <meta property="og:site_name" content="ULTRABULB IT" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="ULTRABULB IT — Catalyst for bright ideas" />
     <meta property="og:description" content="Catalyst for bright ideas. Delivering world-class enterprise software, AI solutions, web & mobile applications." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://ultrabulbit.com/UltrabulbHeroLogo.png" />
+    <meta property="og:image:alt" content="ULTRABULB IT logo and brand mark" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://ultrabulbit.com/" />
     <meta name="twitter:title" content="ULTRABULB IT — Catalyst for bright ideas" />
     <meta name="twitter:description" content="Catalyst for bright ideas. Delivering world-class enterprise software, AI solutions, web & mobile applications." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://ultrabulbit.com/UltrabulbHeroLogo.png" />
+    <meta name="twitter:image:alt" content="ULTRABULB IT logo and brand mark" />
 
     <!-- Browser Favicons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
@@ -39,29 +47,100 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SoftwareCompany",
-        "name": "ULTRABULB IT",
-        "url": "https://ultrabulbit.com",
-        "logo": "https://ultrabulbit.com/favicon.png",
-        "description": "ULTRABULB IT builds digital products, enterprise software, websites, mobile applications, AI solutions, and modern technology systems.",
-        "email": "contact@ultrabulbit.com",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Sylhet",
-          "addressCountry": "BD"
-        },
-        "sameAs": [
-          "https://facebook.com",
-          "https://linkedin.com",
-          "https://instagram.com"
-        ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "email": "contact@ultrabulbit.com",
-          "contactType": "customer service",
-          "areaServed": "Global",
-          "availableLanguage": ["English", "Bengali"]
-        }
+        "@graph": [
+          {
+            "@type": ["Organization", "ProfessionalService"],
+            "@id": "https://ultrabulbit.com/#organization",
+            "name": "ULTRABULB IT",
+            "url": "https://ultrabulbit.com/",
+            "logo": "https://ultrabulbit.com/UltrabulbHeroLogo.png",
+            "image": "https://ultrabulbit.com/UltrabulbHeroLogo.png",
+            "slogan": "Catalyst for bright ideas",
+            "description": "ULTRABULB IT builds enterprise software, websites, mobile applications, AI systems, cloud architecture, and modern digital products.",
+            "email": "contact@ultrabulbit.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Sylhet",
+              "addressCountry": "BD"
+            },
+            "areaServed": ["Bangladesh", "United States", "United Kingdom", "European Union", "Global"],
+            "knowsAbout": [
+              "Enterprise software engineering",
+              "Web platform development",
+              "Mobile app development",
+              "Enterprise AI systems",
+              "Cloud infrastructure",
+              "DevOps",
+              "UI/UX product design",
+              "Database architecture"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "contact@ultrabulbit.com",
+              "contactType": "sales and customer support",
+              "areaServed": "Global",
+              "availableLanguage": ["English", "Bengali"]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://ultrabulbit.com/#website",
+            "url": "https://ultrabulbit.com/",
+            "name": "ULTRABULB IT",
+            "publisher": { "@id": "https://ultrabulbit.com/#organization" },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://ultrabulbit.com/#services",
+            "name": "ULTRABULB IT Services",
+            "itemListElement": [
+              { "@type": "Service", "position": 1, "name": "Web Platform Engineering", "provider": { "@id": "https://ultrabulbit.com/#organization" }, "areaServed": "Global" },
+              { "@type": "Service", "position": 2, "name": "Enterprise AI and LLM Systems", "provider": { "@id": "https://ultrabulbit.com/#organization" }, "areaServed": "Global" },
+              { "@type": "Service", "position": 3, "name": "Mobile App Development", "provider": { "@id": "https://ultrabulbit.com/#organization" }, "areaServed": "Global" },
+              { "@type": "Service", "position": 4, "name": "Cloud Infrastructure and DevOps", "provider": { "@id": "https://ultrabulbit.com/#organization" }, "areaServed": "Global" },
+              { "@type": "Service", "position": 5, "name": "UI/UX and Product Design", "provider": { "@id": "https://ultrabulbit.com/#organization" }, "areaServed": "Global" }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://ultrabulbit.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What does ULTRABULB IT do?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ULTRABULB IT designs and builds enterprise software, websites, mobile apps, AI systems, cloud infrastructure, and digital products for startups and growing companies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where is ULTRABULB IT based?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ULTRABULB IT is based in Sylhet, Bangladesh and serves clients globally."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which services does ULTRABULB IT offer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ULTRABULB IT offers web platform engineering, enterprise AI and LLM systems, mobile app development, cloud infrastructure, DevOps, data systems, UI/UX design, and technology consulting."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can clients contact ULTRABULB IT?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Clients can contact ULTRABULB IT by emailing contact@ultrabulbit.com or booking a discovery call through the website."
+                }
+              }
+            ]
+          }
+        ]
       }
     </script>
   </head>

@@ -65,14 +65,14 @@ export function Hero() {
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="mobile-hero-section relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-44 lg:pb-36 bg-background text-foreground transition-colors duration-300"
+      className="mobile-hero-section relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-44 lg:pb-36 bg-background text-foreground"
     >
       {/* ===== 1. Clean Premium Ambient Background ===== */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.04] via-transparent to-transparent dark:from-cyan-500/[0.07] transition-opacity duration-300" />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-15 dark:bg-grid-dark dark:opacity-10 transition-opacity duration-300" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-cyan-500/[0.04] via-transparent to-transparent dark:from-cyan-500/[0.07]" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-15 dark:bg-grid-dark dark:opacity-10" />
 
       {/* Subtle Centered Ambient Glow */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent blur-3xl dark:from-cyan-500/15 dark:via-blue-600/10 transition-all duration-300" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent blur-3xl dark:from-cyan-500/15 dark:via-blue-600/10" />
 
 
       <div className="site-container relative">

@@ -73,7 +73,7 @@ export function Technologies() {
     <section
       id="technologies"
       aria-labelledby="tech-title"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950/80 text-foreground transition-colors duration-300"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/70 dark:bg-slate-950/80 text-foreground"
     >
       {/* Ambient background glow accents */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 size-[600px] -translate-x-1/2 rounded-full bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent blur-3xl dark:from-cyan-500/15 dark:via-blue-600/10" />

@@ -228,7 +228,7 @@ export function Gallery() {
     <section
       id="gallery"
       aria-labelledby="gallery-title"
-      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/60 dark:bg-slate-950/70 text-foreground transition-colors duration-300"
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32 bg-slate-50/60 dark:bg-slate-950/70 text-foreground"
     >
       {/* Dynamic Ambient Background Glows */}
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-25 dark:bg-grid-dark dark:opacity-20" />

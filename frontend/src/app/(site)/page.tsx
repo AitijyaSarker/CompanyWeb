@@ -10,6 +10,7 @@ import { CostEstimator } from "@/components/site/cost-estimator";
 import { Gallery } from "@/components/site/gallery";
 import { ReviewsAwards } from "@/components/site/reviews-awards";
 import { AwardsSection } from "@/components/site/awards-section";
+import { AnswerEngineFAQ } from "@/components/site/answer-engine-faq";
 import { FinalCTA } from "@/components/site/final-cta";
 
 export default function HomePage() {
@@ -25,6 +26,7 @@ export default function HomePage() {
       <Gallery />
       <AwardsSection />
       <ReviewsAwards />
+      <AnswerEngineFAQ />
       <FinalCTA />
     </>
   );
