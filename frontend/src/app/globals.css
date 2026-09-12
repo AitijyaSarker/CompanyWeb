@@ -156,32 +156,17 @@
   }
 
   /* Global smooth dark/light mode transition */
-  html,
-  body,
-  header,
-  nav,
-  main,
-  footer,
-  section,
-  article,
-  aside,
-  div,
-  span,
-  p,
-  h1, h2, h3, h4, h5, h6,
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  svg {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-decoration-color;
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Exempt continuous animations, canvas, video and marquees from transition overhead */
   canvas,
+  canvas *,
   video,
   iframe,
   .tech-marquee-track,
@@ -193,7 +178,7 @@
   .animate-pulse,
   .no-theme-transition,
   .no-theme-transition * {
-    transition-property: none !important;
+    transition: none !important;
   }
 
   body {
