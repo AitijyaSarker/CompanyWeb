@@ -22,6 +22,30 @@ function getSmtpConfig() {
 let activeTransporter = null;
 let lastConfigSignature = "";
 
+async function createAndVerifyTransport(host, port, user, pass, secure) {
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    requireTLS: !secure,
+    family: 4,
+    auth: {
+      user,
+      pass,
+    },
+    tls: {
+      rejectUnauthorized: false,
+      servername: host,
+    },
+    connectionTimeout: 8000,
+    greetingTimeout: 8000,
+    socketTimeout: 15000,
+  });
+
+  await transporter.verify();
+  return transporter;
+}
+
 export async function getTransporter() {
   const cfg = getSmtpConfig();
   const signature = `${cfg.host}:${cfg.port}:${cfg.user}:${Boolean(cfg.pass)}:${cfg.secure}`;
@@ -31,37 +55,44 @@ export async function getTransporter() {
   }
 
   if (cfg.host && cfg.user && cfg.pass) {
-    console.log(`[Mailer] Configuring custom SMTP transport for ${cfg.user} on ${cfg.host}:${cfg.port} (secure: ${cfg.secure}, IPv4 forced)`);
-    const transporter = nodemailer.createTransport({
-      host: cfg.host,
-      port: cfg.port,
-      secure: cfg.secure,
-      family: 4,
-      auth: {
-        user: cfg.user,
-        pass: cfg.pass,
-      },
-      tls: {
-        rejectUnauthorized: true,
-        servername: cfg.host,
-      },
-      connectionTimeout: 15000,
-      greetingTimeout: 10000,
-      socketTimeout: 20000,
-    });
+    const primaryPort = cfg.port;
+    const primarySecure = cfg.secure;
+    const alternatePort = primaryPort === 465 ? 587 : 465;
+    const alternateSecure = alternatePort === 465;
 
+    // Try primary port first
     try {
-      await transporter.verify();
-      console.log(`[Mailer] Successfully verified SMTP connection to ${cfg.host}:${cfg.port}`);
+      console.log(`[Mailer] Testing SMTP transport on ${cfg.host}:${primaryPort} (secure: ${primarySecure})...`);
+      const transporter = await createAndVerifyTransport(cfg.host, primaryPort, cfg.user, cfg.pass, primarySecure);
+      console.log(`[Mailer] Successfully verified SMTP connection on ${cfg.host}:${primaryPort}`);
       activeTransporter = transporter;
       lastConfigSignature = signature;
       return transporter;
-    } catch (verifyErr) {
-      console.error(`[Mailer] SMTP verification failed for ${cfg.host}:${cfg.port}:`, verifyErr.message || verifyErr);
-      // Return the transporter anyway so sendMail can provide exact SMTP handshake error
-      activeTransporter = transporter;
-      lastConfigSignature = signature;
-      return transporter;
+    } catch (primaryErr) {
+      console.warn(`[Mailer] SMTP connection on ${cfg.host}:${primaryPort} failed (${primaryErr.message}). Trying alternate port ${alternatePort}...`);
+
+      // Try alternate port (e.g. 587 if 465 timed out)
+      try {
+        const altTransporter = await createAndVerifyTransport(cfg.host, alternatePort, cfg.user, cfg.pass, alternateSecure);
+        console.log(`[Mailer] Successfully verified SMTP connection on alternate port ${cfg.host}:${alternatePort}!`);
+        activeTransporter = altTransporter;
+        lastConfigSignature = signature;
+        return altTransporter;
+      } catch (altErr) {
+        console.error(`[Mailer] Both ports ${primaryPort} and ${alternatePort} failed for ${cfg.host}:`, altErr.message || altErr);
+        // Fallback to unverified primary transport so sendMail attempt produces detailed error
+        const fallbackTransporter = nodemailer.createTransport({
+          host: cfg.host,
+          port: primaryPort,
+          secure: primarySecure,
+          family: 4,
+          auth: { user: cfg.user, pass: cfg.pass },
+          tls: { rejectUnauthorized: false, servername: cfg.host },
+        });
+        activeTransporter = fallbackTransporter;
+        lastConfigSignature = signature;
+        return fallbackTransporter;
+      }
     }
   }
 
