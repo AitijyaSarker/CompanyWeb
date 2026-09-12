@@ -198,15 +198,6 @@ export function SiteNavbar() {
                   </span>
                 </div>
               </Link>
-
-              {/* Live Availability Status Pill */}
-              <div className="hidden 2xl:flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-                <span className="relative flex size-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-                </span>
-                <span>Sprint Kickoff Available</span>
-              </div>
             </div>
 
             {/* Middle: Desktop Navigation Links & Mega-Menus */}

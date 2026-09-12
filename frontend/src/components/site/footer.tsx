@@ -80,7 +80,7 @@ export function SiteFooter() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 flex select-none items-end justify-center"
       >
-        <span className="translate-y-1/3 text-[18vw] font-black leading-none text-white/[0.02]">
+        <span className="translate-y-1/3 text-[clamp(4rem,14vw,200px)] font-black leading-none text-white/[0.02]">
           ULTRABULB
         </span>
       </div>
