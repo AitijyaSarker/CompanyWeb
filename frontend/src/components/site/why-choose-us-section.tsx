@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { fadeUpSpring, staggerContainer, SPRING_SMOOTH } from "@/components/site/motion";
 import { getContent, useSiteData } from "@/hooks/use-site-data";
 import { cn } from "@/lib/utils";
@@ -516,13 +517,16 @@ export function WhyChooseUsSection() {
               </p>
             </div>
           </div>
-          <a
-            href="#contact"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 px-6 py-3 text-xs sm:text-sm font-bold text-slate-950 shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] cursor-pointer"
+          <Button
+            asChild
+            size="lg"
+            className="rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 px-6 py-6 text-xs sm:text-sm font-bold text-slate-950 shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] active:scale-95"
           >
-            <span>Schedule Discovery Call</span>
-            <ArrowRight className="size-4" />
-          </a>
+            <Link href="/schedule" className="gap-2">
+              <span>Schedule Discovery Call</span>
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
