@@ -1,59 +1,124 @@
-import nodemailer from "nodemailer";
+function getSmtpConfig() {
+  const host = process.env.SMTP_HOST?.trim();
+  const rawPort = process.env.SMTP_PORT?.trim();
+  const port = rawPort ? Number(rawPort) : 465;
+  const user = (process.env.SMTP_USER || process.env.SMTP_USERNAME)?.trim();
+  const pass = (process.env.SMTP_PASS || process.env.SMTP_PASSWORD)?.trim();
+  const rawSecure = process.env.SMTP_SECURE?.trim();
+  const secure = rawSecure !== undefined ? rawSecure === "true" : port === 465;
+  const recipient = (process.env.NOTIFICATION_EMAIL || "contact@ultrabulbit.com").trim();
+  const from = (process.env.MAIL_FROM || (user ? `"ULTRABULB IT" <${user}>` : `"ULTRABULB IT" <${recipient}>`)).trim();
 
-const notificationRecipient = process.env.NOTIFICATION_EMAIL || "contact@ultrabulbit.com";
-const defaultFrom = process.env.MAIL_FROM || `"ULTRABULB IT" <${notificationRecipient}>`;
+  return { host, port, user, pass, secure, recipient, from };
+}
 
-let transporterPromise = null;
+let activeTransporter = null;
+let lastConfigSignature = "";
 
-async function getTransporter() {
-  if (transporterPromise) return transporterPromise;
+export async function getTransporter() {
+  const cfg = getSmtpConfig();
+  const signature = `${cfg.host}:${cfg.port}:${cfg.user}:${Boolean(cfg.pass)}:${cfg.secure}`;
 
-  transporterPromise = (async () => {
-    const host = process.env.SMTP_HOST;
-    const port = Number(process.env.SMTP_PORT || 587);
-    const user = process.env.SMTP_USER || process.env.SMTP_USERNAME;
-    const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
-    const secure = process.env.SMTP_SECURE === "true" || port === 465;
+  if (activeTransporter && lastConfigSignature === signature) {
+    return activeTransporter;
+  }
 
-    if (host && user && pass) {
-      const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure,
-        auth: { user, pass },
-      });
-      console.log(`[Mailer] Initialized SMTP transport (${host}:${port})`);
+  if (cfg.host && cfg.user && cfg.pass) {
+    console.log(`[Mailer] Configuring custom SMTP transport for ${cfg.user} on ${cfg.host}:${cfg.port} (secure: ${cfg.secure})`);
+    const transporter = nodemailer.createTransport({
+      host: cfg.host,
+      port: cfg.port,
+      secure: cfg.secure,
+      auth: {
+        user: cfg.user,
+        pass: cfg.pass,
+      },
+      tls: {
+        rejectUnauthorized: true,
+        servername: cfg.host,
+      },
+      connectionTimeout: 15000,
+      greetingTimeout: 10000,
+      socketTimeout: 20000,
+    });
+
+    try {
+      await transporter.verify();
+      console.log(`[Mailer] Successfully verified SMTP connection to ${cfg.host}:${cfg.port}`);
+      activeTransporter = transporter;
+      lastConfigSignature = signature;
+      return transporter;
+    } catch (verifyErr) {
+      console.error(`[Mailer] SMTP verification failed for ${cfg.host}:${cfg.port}:`, verifyErr.message || verifyErr);
+      // Return the transporter anyway so sendMail can provide exact SMTP handshake error
+      activeTransporter = transporter;
+      lastConfigSignature = signature;
       return transporter;
     }
+  }
 
-    // Fallback: Create Ethereal sandbox test account
-    try {
-      const testAccount = await nodemailer.createTestAccount();
-      const testTransporter = nodemailer.createTransport({
-        host: testAccount.smtp.host,
-        port: testAccount.smtp.port,
-        secure: testAccount.smtp.secure,
-        auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
-        },
-      });
-      console.log(`[Mailer] Initialized Ethereal Sandbox mailer (${testAccount.user})`);
-      return testTransporter;
-    } catch (err) {
-      console.warn("[Mailer] Could not create Ethereal test account, using fallback stream transport", err);
-      return nodemailer.createTransport({
-        streamTransport: true,
-        newline: "windows",
-        buffer: true,
-      });
-    }
-  })();
+  // Fallback: Create Ethereal sandbox test account
+  try {
+    const testAccount = await nodemailer.createTestAccount();
+    const testTransporter = nodemailer.createTransport({
+      host: testAccount.smtp.host,
+      port: testAccount.smtp.port,
+      secure: testAccount.smtp.secure,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+    console.log(`[Mailer] No custom SMTP configured. Initialized Ethereal Sandbox mailer (${testAccount.user})`);
+    activeTransporter = testTransporter;
+    lastConfigSignature = "ethereal";
+    return testTransporter;
+  } catch (err) {
+    console.warn("[Mailer] Could not create Ethereal test account, using stream transport fallback", err);
+    activeTransporter = nodemailer.createTransport({
+      streamTransport: true,
+      newline: "windows",
+      buffer: true,
+    });
+    lastConfigSignature = "stream";
+    return activeTransporter;
+  }
+}
 
-  return transporterPromise;
+export async function verifyMailerConnection() {
+  const cfg = getSmtpConfig();
+  const result = {
+    configured: Boolean(cfg.host && cfg.user && cfg.pass),
+    host: cfg.host || null,
+    port: cfg.port,
+    user: cfg.user || null,
+    secure: cfg.secure,
+    recipient: cfg.recipient,
+    from: cfg.from,
+    verified: false,
+    error: null,
+  };
+
+  if (!result.configured) {
+    result.error = "Missing SMTP_HOST, SMTP_USER, or SMTP_PASS in environment variables.";
+    return result;
+  }
+
+  try {
+    const transporter = await getTransporter();
+    await transporter.verify();
+    result.verified = true;
+    return result;
+  } catch (err) {
+    result.error = err.message || String(err);
+    result.code = err.code;
+    result.response = err.response;
+    return result;
+  }
 }
 
 export async function sendBookingNotification(booking) {
+  const cfg = getSmtpConfig();
   try {
     const transporter = await getTransporter();
     const { name, email, phone, topic, date, timeSlot, company, message } = booking;
@@ -123,7 +188,7 @@ export async function sendBookingNotification(booking) {
     ` : ""}
 
     <div class="footer">
-      <p>Delivered automatically to <strong>${notificationRecipient}</strong> by ULTRABULB IT System Scheduler.</p>
+      <p>Delivered automatically to <strong>${cfg.recipient}</strong> by ULTRABULB IT System Scheduler.</p>
     </div>
   </div>
 </body>
@@ -131,27 +196,33 @@ export async function sendBookingNotification(booking) {
     `;
 
     const info = await transporter.sendMail({
-      from: defaultFrom,
-      to: notificationRecipient,
+      from: cfg.from,
+      to: cfg.recipient,
       replyTo: email,
       subject: `[New Booking] ${topic} — ${name} (${date} at ${timeSlot})`,
       text: `New Meeting Booking:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nCompany: ${company || "N/A"}\nTopic: ${topic}\nDate: ${date}\nTime: ${timeSlot}\n\nMessage:\n${message || "N/A"}`,
       html,
     });
 
-    console.log(`[Mailer] Booking notification sent to ${notificationRecipient}; Message ID: ${info.messageId}`);
+    console.log(`[Mailer] Booking notification sent to ${cfg.recipient}; Message ID: ${info.messageId}`);
     const previewUrl = nodemailer.getTestMessageUrl(info);
     if (previewUrl) {
       console.log(`[Mailer] Sandbox Email Preview URL: ${previewUrl}`);
     }
     return info;
   } catch (err) {
-    console.error("[Mailer] Failed to send booking notification email:", err);
+    console.error("[Mailer] Failed to send booking notification email:", {
+      message: err.message,
+      code: err.code,
+      response: err.response,
+      command: err.command,
+    });
     return null;
   }
 }
 
 export async function sendContactNotification(contact) {
+  const cfg = getSmtpConfig();
   try {
     const transporter = await getTransporter();
     const { name, email, subject, message, phone } = contact;
@@ -187,25 +258,59 @@ export async function sendContactNotification(contact) {
       <div class="label">Message:</div>
       <div class="message-box">${message}</div>
     </div>
-    <div class="footer">Delivered to <strong>${notificationRecipient}</strong></div>
+    <div class="footer">Delivered to <strong>${cfg.recipient}</strong></div>
   </div>
 </body>
 </html>
     `;
 
     const info = await transporter.sendMail({
-      from: defaultFrom,
-      to: notificationRecipient,
+      from: cfg.from,
+      to: cfg.recipient,
       replyTo: email,
       subject: `[Contact Form] ${subject || "Inquiry"} — ${name}`,
       text: `Contact Message:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nSubject: ${subject}\n\nMessage:\n${message}`,
       html,
     });
 
-    console.log(`[Mailer] Contact notification sent to ${notificationRecipient}; ID: ${info.messageId}`);
+    console.log(`[Mailer] Contact notification sent to ${cfg.recipient}; ID: ${info.messageId}`);
     return info;
   } catch (err) {
-    console.error("[Mailer] Failed to send contact email:", err);
+    console.error("[Mailer] Failed to send contact email:", {
+      message: err.message,
+      code: err.code,
+      response: err.response,
+      command: err.command,
+    });
     return null;
   }
+}
+
+export async function sendTestEmail(targetEmail) {
+  const cfg = getSmtpConfig();
+  const to = (targetEmail || cfg.recipient).trim();
+  const transporter = await getTransporter();
+
+  const info = await transporter.sendMail({
+    from: cfg.from,
+    to,
+    subject: `[SMTP Diagnostic Test] ULTRABULB IT Mailer Verification`,
+    text: `This is a diagnostic test email from ULTRABULB IT server.\n\nServer timestamp: ${new Date().toISOString()}\nHost: ${cfg.host || "Sandbox"}\nPort: ${cfg.port}\nAuth User: ${cfg.user || "Sandbox"}\nSecure: ${cfg.secure}\n`,
+    html: `
+      <div style="font-family: sans-serif; background: #030712; color: #ffffff; padding: 24px; border-radius: 12px; max-width: 500px;">
+        <h2 style="color: #00f0ff;">ULTRABULB IT — Mailer Active</h2>
+        <p>Your SMTP mail server configuration is working properly!</p>
+        <ul style="color: #94a3b8; font-size: 13px; line-height: 1.8;">
+          <li><strong>Host:</strong> ${cfg.host || "Sandbox"}</li>
+          <li><strong>Port:</strong> ${cfg.port}</li>
+          <li><strong>Auth User:</strong> ${cfg.user || "Sandbox"}</li>
+          <li><strong>Secure (SSL):</strong> ${cfg.secure}</li>
+          <li><strong>Sender:</strong> ${cfg.from}</li>
+          <li><strong>Timestamp:</strong> ${new Date().toISOString()}</li>
+        </ul>
+      </div>
+    `,
+  });
+
+  return info;
 }

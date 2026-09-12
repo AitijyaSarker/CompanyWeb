@@ -14,7 +14,7 @@ import mongoose from "mongoose";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { assetDirectory, clientDirectory, validateClientBuild } from "./client-build.js";
 import { AdminUser, Award, ContactMessage, GalleryImage, Product, Review, ScheduledCall, ServiceCategory, SiteContent, TimeSlot, Vacancy } from "./models.js";
-import { sendBookingNotification, sendContactNotification } from "./mailer.js";
+import { sendBookingNotification, sendContactNotification, verifyMailerConnection, sendTestEmail } from "./mailer.js";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -244,6 +244,9 @@ app.put("/api/admin/content", requireAdmin, asyncRoute(async (req, res) => {
 app.get("/api/admin/messages", requireAdmin, asyncRoute(async (_req, res) => res.json((await ContactMessage.find().sort({ createdAt: -1 }).lean()).map(serialize))));
 app.patch("/api/admin/messages/:id", requireAdmin, asyncRoute(async (req, res) => res.json(serialize(await ContactMessage.findByIdAndUpdate(req.params.id, { read: Boolean(req.body.read) }, { new: true }).lean()))));
 app.delete("/api/admin/messages/:id", requireAdmin, asyncRoute(async (req, res) => { await ContactMessage.findByIdAndDelete(req.params.id); res.json({ ok: true }); }));
+app.get("/api/admin/messages", requireAdmin, asyncRoute(async (_req, res) => res.json((await ContactMessage.find().sort({ createdAt: -1 }).lean()).map(serialize))));
+app.patch("/api/admin/messages/:id", requireAdmin, asyncRoute(async (req, res) => res.json(serialize(await ContactMessage.findByIdAndUpdate(req.params.id, { read: Boolean(req.body.read) }, { new: true }).lean()))));
+app.delete("/api/admin/messages/:id", requireAdmin, asyncRoute(async (req, res) => { await ContactMessage.findByIdAndDelete(req.params.id); res.json({ ok: true }); }));
 
 const adminCollections = { products: Product, "service-categories": ServiceCategory, vacancies: Vacancy, gallery: GalleryImage, awards: Award, "time-slots": TimeSlot };
 for (const [name, Collection] of Object.entries(adminCollections)) {
@@ -258,6 +261,17 @@ app.delete("/api/admin/reviews/:id", requireAdmin, asyncRoute(async (req, res) =
 app.get("/api/admin/calls", requireAdmin, asyncRoute(async (_req, res) => res.json((await ScheduledCall.find().sort({ createdAt: -1 }).lean()).map(serialize))));
 app.patch("/api/admin/calls/:id", requireAdmin, asyncRoute(async (req, res) => res.json(serialize(await ScheduledCall.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true }).lean()))));
 app.delete("/api/admin/calls/:id", requireAdmin, asyncRoute(async (req, res) => { await ScheduledCall.findByIdAndDelete(req.params.id); res.json({ ok: true }); }));
+app.get("/api/admin/mailer/status", requireAdmin, asyncRoute(async (_req, res) => res.json(await verifyMailerConnection())));
+app.post("/api/admin/mailer/test", requireAdmin, asyncRoute(async (req, res) => {
+  const { email } = req.body || {};
+  try {
+    const info = await sendTestEmail(email);
+    res.json({ ok: true, info });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message || String(err) });
+  }
+}));
+app.get("/api/mailer-diagnostic", asyncRoute(async (_req, res) => res.json(await verifyMailerConnection())));
 
 const upload = multer({
   storage: cloudinaryEnabled ? multer.memoryStorage() : multer.diskStorage({ destination: uploadDirectory }),
