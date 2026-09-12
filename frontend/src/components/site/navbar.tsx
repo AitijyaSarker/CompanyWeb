@@ -391,18 +391,19 @@ export function SiteNavbar() {
 
             {/* Right: Quick Search, Theme Toggle, CTA & Mobile Trigger */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Command Palette Trigger */}
-              <button
+              {/* Command Palette Icon Trigger */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-slate-100/80 px-3 py-1.5 text-xs text-slate-500 hover:border-cyan-500/50 hover:bg-slate-100 hover:text-slate-900 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-400 dark:hover:border-cyan-500/50 dark:hover:text-white transition-all shadow-xs"
+                className="relative size-9 rounded-xl border border-slate-200/80 bg-white/80 text-slate-700 hover:bg-slate-100 hover:text-slate-900 hover:scale-105 active:scale-95 shadow-xs dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800 transition-all duration-200"
                 title="Search and Navigation (Cmd+K)"
+                aria-label="Search and Navigation (Cmd+K)"
               >
-                <Search className="size-3.5 text-cyan-500" />
-                <span className="hidden md:inline-block">Search</span>
-                <kbd className="hidden md:inline-block rounded border border-slate-300 bg-white px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:border-white/20 dark:bg-slate-800 dark:text-slate-400">
-                  ⌘K
-                </kbd>
-              </button>
+                <Search className="size-4 text-cyan-600 dark:text-cyan-400 transition-transform duration-200 group-hover:scale-110" />
+                <span className="sr-only">Search</span>
+              </Button>
 
               {/* Theme Toggle */}
               <ThemeToggle />
