@@ -1,4 +1,9 @@
 import nodemailer from "nodemailer";
+import dns from "node:dns";
+
+if (typeof dns.setDefaultResultOrder === "function") {
+  dns.setDefaultResultOrder("ipv4first");
+}
 
 function getSmtpConfig() {
   const host = process.env.SMTP_HOST?.trim();
@@ -26,11 +31,12 @@ export async function getTransporter() {
   }
 
   if (cfg.host && cfg.user && cfg.pass) {
-    console.log(`[Mailer] Configuring custom SMTP transport for ${cfg.user} on ${cfg.host}:${cfg.port} (secure: ${cfg.secure})`);
+    console.log(`[Mailer] Configuring custom SMTP transport for ${cfg.user} on ${cfg.host}:${cfg.port} (secure: ${cfg.secure}, IPv4 forced)`);
     const transporter = nodemailer.createTransport({
       host: cfg.host,
       port: cfg.port,
       secure: cfg.secure,
+      family: 4,
       auth: {
         user: cfg.user,
         pass: cfg.pass,

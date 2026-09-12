@@ -1,4 +1,8 @@
 import "dotenv/config";
+import dns from "node:dns";
+if (typeof dns.setDefaultResultOrder === "function") {
+  dns.setDefaultResultOrder("ipv4first");
+}
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { Readable } from "node:stream";
