@@ -456,8 +456,8 @@ export function WhyChooseUsSection() {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto scrollbar-thin">
+              <table className="w-full min-w-[620px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200/80 bg-slate-100/70 text-xs uppercase tracking-wider text-slate-600 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-400">
                     <th className="py-4 px-6 font-bold">Pillar / Capability</th>

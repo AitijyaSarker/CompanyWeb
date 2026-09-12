@@ -201,11 +201,11 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom Legal & Compliance Line */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10 text-xs text-slate-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10 text-xs text-slate-500 text-center sm:text-left">
           <div>
             © {new Date().getFullYear()} {copyright}
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms of Service</Link>
             <Link href="/security" className="hover:text-slate-300 transition-colors">Security Overview</Link>

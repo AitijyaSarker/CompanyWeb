@@ -200,7 +200,7 @@ export function Hero() {
             <div className="pointer-events-none absolute -inset-4 rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-500/15 to-blue-600/20 blur-3xl dark:from-cyan-500/25 dark:via-blue-500/20 dark:to-indigo-500/20" />
 
             {/* Clean Interactive Visual Container */}
-            <div className="relative w-full max-w-[500px] h-[440px] sm:h-[480px] rounded-3xl border border-slate-200/80 bg-white/40 p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_60px_rgba(6,182,212,0.12)] overflow-hidden flex flex-col items-center justify-center">
+            <div className="relative w-full max-w-[500px] h-[390px] xs:h-[420px] sm:h-[480px] rounded-3xl border border-slate-200/80 bg-white/40 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/60 dark:shadow-[0_0_60px_rgba(6,182,212,0.12)] overflow-hidden flex flex-col items-center justify-center">
               
               {/* Subtle Grid Accent */}
               <div className="pointer-events-none absolute inset-0 bg-grid opacity-10 dark:bg-grid-dark dark:opacity-15" />
@@ -211,19 +211,19 @@ export function Hero() {
                 <motion.div
                   animate={prefersReducedMotion ? {} : { rotate: 360 }}
                   transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                  className="size-[340px] sm:size-[380px] rounded-full border border-dashed border-cyan-500/20 dark:border-cyan-400/25"
+                  className="size-[290px] xs:size-[340px] sm:size-[380px] rounded-full border border-dashed border-cyan-500/20 dark:border-cyan-400/25"
                 />
                 {/* Middle Rotating Counter-Ring */}
                 <motion.div
                   animate={prefersReducedMotion ? {} : { rotate: -360 }}
                   transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
-                  className="absolute size-[250px] sm:size-[280px] rounded-full border border-dotted border-sky-400/30 dark:border-sky-300/30"
+                  className="absolute size-[210px] xs:size-[250px] sm:size-[280px] rounded-full border border-dotted border-sky-400/30 dark:border-sky-300/30"
                 />
                 {/* Inner Glowing Pulsing Ring */}
                 <motion.div
                   animate={prefersReducedMotion ? {} : { scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute size-[160px] sm:size-[180px] rounded-full border border-cyan-400/40 bg-gradient-to-tr from-cyan-500/10 to-transparent shadow-[0_0_30px_rgba(6,182,212,0.25)]"
+                  className="absolute size-[140px] xs:size-[160px] sm:size-[180px] rounded-full border border-cyan-400/40 bg-gradient-to-tr from-cyan-500/10 to-transparent shadow-[0_0_30px_rgba(6,182,212,0.25)]"
                 />
               </div>
 
@@ -232,10 +232,10 @@ export function Hero() {
                 <motion.div
                   animate={prefersReducedMotion ? {} : { y: [-6, 6, -6] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative flex size-28 sm:size-32 items-center justify-center rounded-3xl border border-cyan-400/40 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 shadow-[0_0_50px_rgba(6,182,212,0.35)] backdrop-blur-2xl group cursor-pointer transition-transform hover:scale-110 p-3.5"
+                  className="relative flex size-24 sm:size-32 items-center justify-center rounded-2xl sm:rounded-3xl border border-cyan-400/40 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 shadow-[0_0_50px_rgba(6,182,212,0.35)] backdrop-blur-2xl group cursor-pointer transition-transform hover:scale-110 p-2.5 sm:p-3.5"
                 >
                   {/* Ambient Glow Aura behind logo */}
-                  <div className="absolute inset-0 rounded-3xl bg-radial from-cyan-400/25 via-transparent to-transparent animate-pulse" />
+                  <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-radial from-cyan-400/25 via-transparent to-transparent animate-pulse" />
                   
                   {/* Official ULTRABULB Logo */}
                   <div className="relative flex size-full items-center justify-center">
@@ -250,8 +250,8 @@ export function Hero() {
                   </div>
 
                   {/* Micro Live Status Beacon */}
-                  <div className="absolute -bottom-1.5 -right-1.5 flex size-6 items-center justify-center rounded-full bg-slate-950 border border-emerald-400/90 shadow-md">
-                    <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
+                  <div className="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 flex size-5 sm:size-6 items-center justify-center rounded-full bg-slate-950 border border-emerald-400/90 shadow-md">
+                    <span className="size-1.5 sm:size-2 rounded-full bg-emerald-400 animate-ping" />
                   </div>
                 </motion.div>
 
@@ -259,9 +259,9 @@ export function Hero() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 px-3 py-1 text-[11px] font-bold font-mono tracking-wide text-cyan-700 dark:text-cyan-300 border border-cyan-500/30"
+                  className="mt-2.5 sm:mt-3 inline-flex items-center gap-1.5 rounded-full bg-cyan-500/10 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold font-mono tracking-wide text-cyan-700 dark:text-cyan-300 border border-cyan-500/30"
                 >
-                  <Activity className="size-3 text-cyan-500 animate-pulse" />
+                  <Activity className="size-2.5 sm:size-3 text-cyan-500 animate-pulse" />
                   <span>CATALYST CORE • ACTIVE</span>
                 </motion.div>
               </div>
@@ -272,16 +272,16 @@ export function Hero() {
               <motion.div
                 animate={prefersReducedMotion ? {} : { y: [-4, 5, -4], x: [-2, 3, -2] }}
                 transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                className="absolute top-6 left-5 sm:left-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+                className="absolute top-3 left-3 sm:top-6 sm:left-6 z-20 flex items-center gap-2 sm:gap-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white/95 p-2 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/95 hover:scale-105 transition-transform"
               >
-                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
-                  <Cpu className="size-4.5" />
+                <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg sm:rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 shrink-0">
+                  <Cpu className="size-3.5 sm:size-4.5" />
                 </div>
                 <div>
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">AI Systems & Agents</div>
-                  <div className="text-[9px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
-                    <span className="size-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                    <span>Autonomous RAG</span>
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight">AI Systems</div>
+                  <div className="text-[8px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+                    <span className="size-1 sm:size-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>Auto RAG</span>
                   </div>
                 </div>
               </motion.div>
@@ -290,16 +290,16 @@ export function Hero() {
               <motion.div
                 animate={prefersReducedMotion ? {} : { y: [5, -4, 5], x: [2, -2, 2] }}
                 transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute top-8 right-5 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+                className="absolute top-3 right-3 sm:top-8 sm:right-6 z-20 flex items-center gap-2 sm:gap-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white/95 p-2 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/95 hover:scale-105 transition-transform"
               >
-                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30">
-                  <Globe className="size-4.5" />
+                <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg sm:rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 shrink-0">
+                  <Globe className="size-3.5 sm:size-4.5" />
                 </div>
                 <div>
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Global Edge Mesh</div>
-                  <div className="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                    <span className="size-1.5 rounded-full bg-emerald-400" />
-                    <span>&lt;12ms Latency</span>
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight">Edge Mesh</div>
+                  <div className="text-[8px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span className="size-1 sm:size-1.5 rounded-full bg-emerald-400" />
+                    <span>&lt;12ms</span>
                   </div>
                 </div>
               </motion.div>
@@ -308,15 +308,15 @@ export function Hero() {
               <motion.div
                 animate={prefersReducedMotion ? {} : { y: [4, -5, 4], x: [-3, 2, -3] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                className="absolute bottom-6 left-5 sm:left-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+                className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 z-20 flex items-center gap-2 sm:gap-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white/95 p-2 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/95 hover:scale-105 transition-transform"
               >
-                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                  <ShieldCheck className="size-4.5" />
+                <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shrink-0">
+                  <ShieldCheck className="size-3.5 sm:size-4.5" />
                 </div>
                 <div>
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Zero-Trust Security</div>
-                  <div className="text-[9px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                    SOC-2 • AES-256
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight">Zero-Trust</div>
+                  <div className="text-[8px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                    SOC-2 Ready
                   </div>
                 </div>
               </motion.div>
@@ -325,16 +325,16 @@ export function Hero() {
               <motion.div
                 animate={prefersReducedMotion ? {} : { y: [-5, 4, -5], x: [3, -2, 3] }}
                 transition={{ duration: 4.1, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-6 right-5 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-slate-200/80 bg-white/90 p-2.5 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/90 hover:scale-105 transition-transform"
+                className="absolute bottom-3 right-3 sm:bottom-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white/95 p-2 sm:p-3 shadow-lg backdrop-blur-xl dark:border-white/15 dark:bg-slate-900/95 hover:scale-105 transition-transform"
               >
-                <div className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30">
-                  <Zap className="size-4.5" />
+                <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg sm:rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 shrink-0">
+                  <Zap className="size-3.5 sm:size-4.5" />
                 </div>
                 <div>
-                  <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white">Rapid Sprint Velocity</div>
-                  <div className="text-[9px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
-                    <span className="size-1.5 rounded-full bg-cyan-400" />
-                    <span>2-Week CI/CD</span>
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white leading-tight">Fast Sprint</div>
+                  <div className="text-[8px] sm:text-[10px] font-mono text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+                    <span className="size-1 sm:size-1.5 rounded-full bg-cyan-400" />
+                    <span>2-Wk CI/CD</span>
                   </div>
                 </div>
               </motion.div>
